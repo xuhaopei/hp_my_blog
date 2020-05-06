@@ -1,0 +1,47 @@
+/*标签样式*/
+html{
+  width: 100%;
+  height: 100%;
+}
+body{
+  width: 100%;
+  height: 100%; 
+}
+*{
+  margin: 0;
+  padding: 0;
+}
+li{
+  list-style: none;
+}
+
+/*全局样式*/
+/*鼠标移动到导航时出现下划线已经字体变蓝*/
+.g-navHref:hover{
+  color: #2196f3;
+  text-decoration: underline #2196f3 dotted;
+  cursor: pointer;
+  text-underline-position:under;
+}
+/*鼠标移动到导航时背景变为透明灰色+鼠标*/
+.g-mouseMoveOnNav:hover{
+  background-color: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+/*鼠标移动到导航时背景变为透明白色+鼠标*/
+.g-mouseMoveOnNav-color-white:hover{
+  background-color: white;
+  cursor: pointer;
+}
+
+/*flex布局,元素在两端*/
+.g_layout_flex_justify-content_space-between{
+  display: flex;
+  justify-content: space-between;
+
+}
+/*flex布局,元素在右端*/
+.g_layout_flex_justify-content_end{
+  display: flex;
+  justify-content: end;
+}
