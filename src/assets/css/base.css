@@ -13,6 +13,7 @@ body{
 }
 li{
   list-style: none;
+  padding-left:10px ;
 }
 
 /*全局样式*/

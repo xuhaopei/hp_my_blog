@@ -3,7 +3,7 @@
   <div id="HpNavItem">
     <div v-for="(value, index) in item" :key="index">
       <div
-        class="HpNavItem-title  g-mouseMoveOnNav g_layout_flex_justify-content_space-between"
+        class="HpNavItem-title   g_layout_flex_justify-content_space-between g-navHref"
         v-on:click="showMsg(index, $event)"
         v-on:click.right="showMenu"
         style="text-indent:10px"
@@ -12,8 +12,8 @@
         <i class="iconfont icon-sanjiaoxing"></i>
       </div>
       <div class="HpNavItem-body" flage="false">
-        <li
-          class="HpNavItem-item g-mouseMoveOnNav"
+        <div
+          class="HpNavItem-item "
           v-for="(val, index) in value.smallItems"
           :key="index"
           
@@ -23,8 +23,8 @@
             v-if="val[0].smallItems && val[0].smallItems.length > 0"
             :item="val"
           ></hp-nav-item>
-          <span v-else> {{ val }}</span>
-        </li>
+          <li v-else class="g-navHref"><span> {{ val }}</span></li>
+        </div>
       </div>
     </div>
   </div>
@@ -66,7 +66,7 @@ export default {
     };
   },
   mounted() {
-    this.goRight();
+    //this.goRight();
   },
   methods: {
     /**
@@ -103,31 +103,40 @@ export default {
          menu.parentNode.removeChild(menu);
       })
       var item_director = document.createElement("li");   // 创建目录
+      item_director.setAttribute("class"," g-navHref")
       item_director.innerText="创建目录";
+      item_director.setAttribute("class"," g-navHref")
       var item_artical = document.createElement("li");  // 创建文章
+      item_artical.setAttribute("class"," g-navHref")
       item_artical.innerText = "创建文章";
       menu.appendChild(item_director);
       menu.appendChild(item_artical);
       document.body.appendChild(menu)
     },
     /**
-     * 设置文章章节随着目录的添加向右缩进
+     * 移动到此处时，给这个元素的className添加class
      */
-    goRight() {
-      let HpNavItem_title = document.getElementsByClassName("HpNavItem-title")[0];
-      let HpNavItem_body = document.getElementsByClassName("HpNavItem-body")[0];
-      let right = parseInt(HpNavItem_title.style["text-indent"]);
-      let HpNavItem_body_childrens = HpNavItem_body.children;
-      for(let i = 0; i < HpNavItem_body_childrens.length; i++) {
-        HpNavItem_body_childrens[i].style["text-indent"] = right + 10 + "px";
-        console.log( HpNavItem_body_childrens[i].style["text-indent"])
+    addClass(e) {
+      var obj = e.target;
+      var str = obj.className;
+      if(!str.match(/g-navHref/)) {
+        obj.className = str + " g-navHref";
       }
-      HpNavItem_title.style["text-indent"] = right + 10 + "px";
+      console.log(obj.className);
+    },
+    /**
+     * 离开到此处时，删除添加的元素
+     */
+    removeClass(e) {
+      var obj = e.target;
+      obj.className.replace(/g-navHref/g,"") ;
+      console.log(obj.className);
     }
   }
 };
 </script>
 <style >
+
 #HpNavItem {
   position: relative;
   width: 100%;
@@ -137,7 +146,6 @@ export default {
   height: 50px;
   line-height: 50px;
   background: white;
-  text-indent: 10px;
 }
 
 .HpNavItem-body {
@@ -145,7 +153,7 @@ export default {
   height: 0;
   overflow: auto;
   transition: height 0.5s; /*设置当height出现变化时，出现移动效果 */
-  background: white;
+  padding-left: 10px;
 }
 
 .HpNavItem-body-show {
@@ -155,7 +163,6 @@ export default {
  /* text-indent: 20px;文字向右缩进20PX*/
   line-height: 50px;
   background: white;
-  text-indent: 10px;
 }
 /*全局样式*/
 /*鼠标移动到导航时出现下划线已经字体变蓝*/
@@ -179,22 +186,21 @@ export default {
   left: 0;
   top: 0;
   box-shadow: 2px 2px 5px 5px rgba(0, 0, 0, 0.2);
-  z-index: 999;
 }
 #HpNavItem_menu  li {
   padding: 0;
   text-indent: 0;
   height: 40px;
   line-height: 40px;
-  border-bottom:1px solid black ;
+  border-bottom:1px solid #2196f3 ;
   text-align: center;
 }
 #HpNavItem_menu  li:last-child{
   border-bottom:0px;
 }
 #HpNavItem_menu  li:hover {
-  background-color: rgba(0, 0, 0, 0.2);
+  
   cursor: pointer;
-  border:1px solid black ;
+  border:1px solid #2196f3 ;
 }
 </style>
