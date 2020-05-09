@@ -23,7 +23,7 @@
             v-if="val[0].smallItems && val[0].smallItems.length > 0"
             :item="val"
           ></hp-nav-item>
-          <li v-else class="g-navHref"><span> {{ val }}</span></li>
+          <li v-else class="g-navHref" v-on:click.right="showMenu"><span> {{ val }}</span></li>
         </div>
       </div>
     </div>
@@ -102,13 +102,25 @@ export default {
       menu.addEventListener("mouseleave",function(event){
          menu.parentNode.removeChild(menu);
       })
-      var item_director = document.createElement("li");   // 创建目录
+
+      var item_director = document.createElement("li"); // 创建目录
       item_director.setAttribute("class"," g-navHref")
       item_director.innerText="创建目录";
-      item_director.setAttribute("class"," g-navHref")
-      var item_artical = document.createElement("li");  // 创建文章
+
+      var item_artical = document.createElement("li"); // 创建文章
       item_artical.setAttribute("class"," g-navHref")
       item_artical.innerText = "创建文章";
+
+      var item_manager = document.createElement("li"); // 编辑
+      item_manager.setAttribute("class"," g-navHref")
+      item_manager.innerText="编辑";
+
+      var item_delete = document.createElement("li"); // 删除
+      item_delete.setAttribute("class"," g-navHref")
+      item_delete.innerText="删除";      
+
+      menu.appendChild(item_delete);
+      menu.appendChild(item_manager);
       menu.appendChild(item_director);
       menu.appendChild(item_artical);
       document.body.appendChild(menu)
@@ -182,7 +194,6 @@ export default {
   background: white;
   position: absolute;;
   width: 200px;
-  height: 80px;
   left: 0;
   top: 0;
   box-shadow: 2px 2px 5px 5px rgba(0, 0, 0, 0.2);

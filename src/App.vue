@@ -2,7 +2,7 @@
   <div id="app">
     <TopNav></TopNav>
     <LeftNav></LeftNav>
-    <Home></Home>
+    <router-view/>
   </div>
 </template>
 
@@ -10,7 +10,6 @@
 <script>
  import LeftNav from '@/views/LeftNav/LeftNav.vue'
  import TopNav from '@/views/TopNav/TopNav.vue'
- import Home from '@/views/Home/Home.vue'
  
   export default {
     data(){
@@ -20,7 +19,6 @@
     components:{
       LeftNav,
       TopNav,
-      Home
     },
     methods:{
     },
