@@ -1,0 +1,128 @@
+<!--
+   --  富文本编辑器的简单实现原理
+   --  参考文档：
+   --  1.  w3cshool：https://www.w3cschool.cn/javascript/javascript-execcommand.html
+   --  2. 火狐开发者中心：https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand
+   --
+   --  要点：1. 添加div标签的一个属性contenteditable设置为true，使该div元素可编辑；
+   --              2. js调用document.execCommand(指令参数[命令], false, 动态参数[值])函数，
+   --              3. 函数中第二个参数应始终为false，因为参数为true会显示对话框，而火狐并不支持。
+   --              4. document.execCommand("paste"); 为粘贴命令，浏览器默认未开启，需要在user.js配置文件中开启。
+   -->
+   <!DOCTYPE html>
+   <html>
+       <head>
+           <title>富文本编辑器实现原理</title>
+           <meta charset="utf-8">
+           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+           <style>
+                #edit{
+                        height:260px;
+                        width:100%;
+                        overflow: scroll; 
+                        border:solid 1px black
+                }
+           </style>
+       </head>
+       <body>
+           <div id="edit" name="edit" contenteditable="true"></div>
+               <br>
+           <button name="button-edit" data-name="justifyCenter">居中</button>
+           <button name="button-edit"  data-name="justifyLeft">左对齐</button>
+           <button name="button-edit"  data-name="justifyRight">右对齐</button>
+           <button name="button-edit"  data-name="indent">添加缩进</button>
+           <button name="button-edit"  data-name="outdent">去掉缩进</button> 
+           <button name="button-edit"  data-name="fontname" data-value="宋体">宋体</button>
+           <button name="button-edit"  data-name="fontsize" data-value="5">大字体</button>
+           <button name="button-edit"  data-name="forecolor" data-value="red">红色字体</button>
+           <button name="button-edit"  data-name="backColor" data-value="lightgreen">浅绿背景</button>
+           <button name="button-edit"  data-name="bold">加粗</button>
+           <button name="button-edit"  data-name="italic">斜体</button>    
+           <button name="button-edit"  data-name="underline">下划线</button> 
+           <button name="button-edit"  data-name="copy">复制</button>
+           <button name="button-edit"  data-name="cut">剪切</button>    
+           <!--paste命令浏览器默认未开启，需要在user.js配置文件中开启，详见火狐开发者中心文档-->
+           <!--链接：https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand-->
+           <button name="button-edit"  data-name="paste">粘贴</button>
+           <button name="button-edit"  data-name="selectAll">全选</button>
+           <button name="button-edit"  data-name="delete">删除</button>    
+           <button name="button-edit"  data-name="forwarddelete">后删除</button>    
+           <button name="button-edit"  data-name="removeFormat">清空格式</button>
+           <button name="button-edit"  data-name="redo">前进一步</button>    
+           <button name="button-edit"  data-name="undo">后退一步</button>
+           <button name="button-edit"  data-name="print">打印</button>    
+           <button name="button-edit"  data-name="formatblock" data-value="div">插入div</button>
+           <button name="button-edit"  data-name="inserthorizontalrule">插入hr</button>    
+           <button name="button-edit"  data-name="insertorderedlist">插入ol</button>    
+           <button name="button-edit"  data-name="insertunorderedlist">插入ul</button>
+           <button name="button-edit"  data-name="formatblock" data-value="p">插入p</button>
+           <button name="button-edit"  data-name="inserttext" data-value="这是我插入的内容！">插入文本</button>
+           <button name="button-edit"  data-name="insertimage" data-value="http://images.cnblogs.com/cnblogs_com/qingsong/545927/o_39.gif">插入图像</button>    
+           <button name="button-edit"  data-name="createlink" data-value="https://www.w3cschool.cn/javascript/javascript-execcommand.html">增加链接</button>
+           <button name="button-edit"  data-name="unlink">删除链接</button> 
+           <input type="button" onclick="isPaste()" value="检测paste粘贴命令是否支持">
+           <input type="button" value="代码获取" onclick="showContent()">
+   
+       <script>
+   
+            /**  当文档载入完毕后，在富文本框内设置焦点，
+              *  并且在第一行插入p标签。
+              **/
+            window.onload = function(){
+                 edit.focus();
+                 document.execCommand("formatblock", false, "p");
+             }
+            
+            /**  在编辑框内，当键盘输入时自动在当前行插入p标签，
+               *  也可以自动插入其它标签，
+               *  当编辑框内检测到</li>标签时禁止插入p标签。
+               */
+           edit.onkeydown = function(){
+                   var str = edit.innerHTML;
+                   var val = str.search(/<\/li>/i);
+                   if(val < 0){
+                         document.execCommand("formatblock", false, "p");
+                   }
+             }
+         
+           var btns = document.getElementsByName('button-edit');
+            
+            /**  编辑按钮的js操作命令接口。
+               *  按钮的data-name属性存放命令，data-value属性存放值。
+               *  也可用其它标签代替。
+               **/
+           for(var i = 0; i < btns.length; i++){
+               btns[i].onclick = function(){
+                       if(this.('data-value') == ""){
+                           document.execComgetAttributemand(this.getAttribute('data-name'));
+                       }else{
+                           document.execCommand(this.getAttribute('data-name'),false,this.getAttribute('data-value'));
+                       }
+                   }
+               }
+   
+             /**  富文本内的值是通过div的innerHTML获取的，
+                *  表单提交时需提前用js转移到隐藏域里，然后提交，
+                *  为了便于理解富文本的结构，这里省略这一步了。
+                **/
+             function showContent() {
+                   alert(edit.innerHTML);
+               }
+               
+             /**  检测浏览器是否开启或支持paste命令，
+                 *  函数反回值为Boolean，
+                 *  true为支持，false为未开启或不支持paste粘贴命令
+                 *  paste粘贴命令需要在user.js配置文件中开启。
+                 *  详见火狐开发者中心相关文档：
+                 *  https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand
+                 **/
+            function isPaste(){
+                     if(document.execCommand("paste")) {
+                                 alert("浏览器支持或开启了paste粘贴命令！");
+                       }else{
+                                 alert("浏览器不支持paste粘贴命令，\n或未在user.js配置文件中开启！");
+                       }
+               }
+           </script>
+       </body>
+   </html>

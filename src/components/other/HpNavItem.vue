@@ -104,6 +104,9 @@ export default {
       })
 
       var item_director = document.createElement("li"); // 创建目录
+      item_director.addEventListener('click',()=>{
+        this.$router.push("/Article");
+      },false);
       item_director.setAttribute("class"," g-navHref")
       item_director.innerText="创建目录";
 
