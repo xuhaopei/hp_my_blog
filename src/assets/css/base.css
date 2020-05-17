@@ -46,3 +46,12 @@ li{
   display: flex;
   justify-content: end;
 }
+
+/*取消btn的默认样式*/
+.g_cancleBtn{
+  margin: 0;
+  padding: 0;
+  border: 0px;  
+  outline: none;   
+  background-color: white;
+}

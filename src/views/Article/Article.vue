@@ -81,7 +81,7 @@ export default {
 .Article-wrapper {
   background: white;
   width: 80%;
-  height: 500px;
+  height: 700px;
   box-shadow: 0px 0px 10px 10px black;
 }
 </style>

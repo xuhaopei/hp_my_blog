@@ -36,7 +36,7 @@
            <button name="button-edit"  data-name="fontsize" data-value="5">大字体</button>
            <button name="button-edit"  data-name="forecolor" data-value="red">红色字体</button>
            <button name="button-edit"  data-name="backColor" data-value="lightgreen">浅绿背景</button>
-           <button name="button-edit"  data-name="bold">加粗</button>
+           <span name="button-edit"  data-name="bold">加粗</span>
            <button name="button-edit"  data-name="italic">斜体</button>    
            <button name="button-edit"  data-name="underline">下划线</button> 
            <button name="button-edit"  data-name="copy">复制</button>
@@ -59,10 +59,10 @@
            <button name="button-edit"  data-name="inserttext" data-value="这是我插入的内容！">插入文本</button>
            <button name="button-edit"  data-name="insertimage" data-value="http://images.cnblogs.com/cnblogs_com/qingsong/545927/o_39.gif">插入图像</button>    
            <button name="button-edit"  data-name="createlink" data-value="https://www.w3cschool.cn/javascript/javascript-execcommand.html">增加链接</button>
-           <button name="button-edit"  data-name="unlink">删除链接</button> 
+           <button name="button-edit"  data-name="unlink" msg="aaaa">删除链接</button> 
            <input type="button" onclick="isPaste()" value="检测paste粘贴命令是否支持">
            <input type="button" value="代码获取" onclick="showContent()">
-   
+            <div contenteditable="true">xzcascas</div>
        <script>
    
             /**  当文档载入完毕后，在富文本框内设置焦点，
@@ -92,14 +92,17 @@
                *  也可用其它标签代替。
                **/
            for(var i = 0; i < btns.length; i++){
-               btns[i].onclick = function(){
-                       if(this.('data-value') == ""){
+                btns[i].addEventListener('click',function(){
+                    edit.focus();
+                    console.log(this.getAttribute('msg'))
+                       if(this['data-value']== ""){
                            document.execComgetAttributemand(this.getAttribute('data-name'));
                        }else{
-                           document.execCommand(this.getAttribute('data-name'),false,this.getAttribute('data-value'));
+                           console.log(1111)
+                           console.log(document.execCommand(this.getAttribute('data-name'),false,this.getAttribute('data-value')));
                        }
-                   }
-               }
+                },false);
+            }
    
              /**  富文本内的值是通过div的innerHTML获取的，
                 *  表单提交时需提前用js转移到隐藏域里，然后提交，
