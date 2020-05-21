@@ -15,117 +15,108 @@
            <title>富文本编辑器实现原理</title>
            <meta charset="utf-8">
            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+           <link rel="stylesheet" href="//at.alicdn.com/t/font_1824663_f9ct9epwouj.css">
            <style>
+               @font-face {font-family: "iconfont";
+  src: url('//at.alicdn.com/t/font_1824663_f9ct9epwouj.eot?t=1589726941217'); /* IE9 */
+  src: url('//at.alicdn.com/t/font_1824663_f9ct9epwouj.eot?t=1589726941217#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAgIAAsAAAAAEBwAAAe5AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCFDAqQGI0mATYCJANACyIABCAFhG0HgU8bvw1RVJEiyD4SY8fWWIJI5EqNHm8iwNaw2dstEEgCYUk31QSKQKNvalSNw8f4V0RFoT/38++cf26SCvc2bbFSvIOJAhP1VNiwQlMoFlZSRNPNy5N5p8pMrPKk2/Py1P42736tnjbwUHSYhkRo0Np2vr99GT5MrV3kEqKVkEQ1cq8TCpRCJxViJMSOwmjLgX4kXFVcTQBKpegNTUyawYESgwkBrTYcxVZQ2pIxIZ6BUpL7HJkQWg0FlNkq6ilwoX59eIWxoATIyCKwa02vT7TBmAe2I0RL7yWz0Q3H+XG8HQciMAAkED76Zt1D1PGASrBf52Qj0Err+uYHdTgynBDuHh4RnhM2hnPDtWF3R0pH6P17Hlh/PadLHg5bHiRI4vqUf+IZgBKYmgZLjkAoSgoyNIYKhEIAKaf6t9VV4IEVwykBD+pwSsFDpMBNE2CMS7tDkIaOAFMIOgdMGSgHJoAawWSguWCKQWvBFIG6EU4BeEwOJ4LHlHASeAyZa6+tPqIbGAXZKYjjwFw2VASIgmcxqNHHNIhsRiBXYaOOVTFRr0Chg1KRmMiysQzJVyoZlXhXrTYiIjWJUWu1SloVFVaLvN5YfoMUY1u/UYcCPo42jAt+Xoa8B1xY8q3nRSjoN5K9dYHPyrxHCNt2WDqEVZ52XuSHpMP2yiPudieRkzD+JdkgBGRhCNep1oMYTYJTMNNGOTU2NpYSsx5/SFuc2evWZY43mKk6XQolzku5J4ZrihMafd9y/u+MwQ5zIFwXCJiCQbPfb/T58izETIxkAWfembq9r7EMpPUxHo60bQAdFVm+ESF3kCEHt3q9Zv5G7PGRAgBpQx1M9Eo4aCXniD+I3AHsOdsZtcWSNstGA3Ah2+YHycf55U2wCpl7KXqa8jUL2iqeXcAmzOF8km3amIA3xXBFLKgaMWDEVcQREFtYg0a1z8dRVceaFjyMDgRyt70coD7/OoXe+Waw5tyr5PILb9yvPS+lV+be3NDT7j7C60ztnu7cKMnU39jYR1lbdPPUGndtDtnQ743cR+JIPoZ5LM5lRAIsOMUemiaURNoQTerVfYdlL6x5FTA+X0NN9AyWeV+4HptUHG4kuQssVlpFYTUqCMXSRM425R3opxy6EOxFKAJYdOEGxV1uSGIaSRuSNP+u/AMbuTlo1mjbQx0xtkfD5/INw7pbgjz6436B3D3FKl4TsW/zuQqxPjVKAPUnFv54J4kJjqwrz8otUEaIV7dOQccgNjJBe3PQTWey6hBsLBC6up9v0neKX/m0ILc1Fp+u0qfpN40Zu5L8qlL29BtWxkfpV10tYLUJkWzBVVtlZPzKMWPQvjNKTxi1mnnCoYwkq9ledafxJPPjD/RJCqlykgH/4QdGgcS5b5q2bxvWu+lYZtOoQ9usf/auC9tX9++5CAL1hSS0egqzeiZ+i1+SEH6OQ+TlpMRFQzlTxlAcGrxsdYgEZ+AhZquN85InhaO4H2sGsxpOdLJbuiVwtFBaIOQu6rRrrlkuJbgqcm0WniuNmsf0m3dr/wGXy1JWU5LYij5qqfro1sYLz6eaFTUpLrMc2lcfSDuwKiUtZaX6w8PEk3nDtv0+aNu8z0bNGVRg+nX4dGroTOOvu8aOGDMChv8qbGkZ3dI6prV1dGtLbWq0NWE0ag3jUXY2Gv+lABW78ci2TWKz0igZJKPyS1XRvJDIPO7fvUUdmbT/5w1pJ0+N699v9uz+4/v3X7as3iOjfvkyZtusZZD6CV53Ont2RXxkIiz4an5p/zItJV2jV/dP6fey3PSS16CivyZOk/7zBvB3p4GxzED9uqj/f1WunL/09t5tVz0c9LuVLNmothZlWwSo2GUjW/Re6d/NQg4HmmWbhamzkAWPw9Ufhqfdtky8HYpLX3heLxdHOUdBME20ibmTcuVLD4S6qbry0eOj5pZO7vF8xPPcibkIGv8DK4prVLvqvUqdSnxJ7d+sh1oH8nXRS7vtWTPUWiS4pm6x/PfJhbXwvUf9QKfjt2tX+AeM0dtNt7Ot4OrqgMR8zYh/lOQSN+1zh/CWslyK19INFKNOLAo3rz4pDiB/n/TvFpZSnb7HQKRN+TdWzUqBVmRAKc8DOcmr9a5MsSG26Y4pxpogo5AMIqXO6qTvDQoQA0AhpdGgVC+Tjy8TzYmGUgSAPsseANE6AShqNwBN65ma0b8FMjq/ADltoAFmCtFnJLoGBx7v5K0ibzMU1hscRUKlXUgTsdZ6Hl/sKrc6rRbVx8Q7qx2lhr4ZWc7ayXwl78xjn+qa4n6iaDfYnUKFYdLjenx5uWCocgqlfJGYUSKKVcMyM+1++2YUCRWAjefEsxLlkDYGherjOhQRVLI7FmHX58/DK+ZSzsoZMuhPXBOeUzXH6g36ypAVQz2ZVMYatC4dq9Uo1o9IuJ1B7OkkqGAwiXBeOa8SGFT5b1aKV0SUoSRFRZVhMslk9rgko3yxYsrPg1Ls8OpAIRoxSIbkSIGUKOKMv68KsUiNNEiLIkGx67BWljoq5SWCS3Q52GqXYIN8pY2vFPuhQX9k1RZa3+9rXeQSRKvoECr7MYVCuQ1Nial38TZXPZ/f4BAdgUplnWgnRHms08BXFtusctFVFYLKa1hZXOfgI4yZbuQsd1TyaCwqAQAAAA==') format('woff2'),
+  url('//at.alicdn.com/t/font_1824663_f9ct9epwouj.woff?t=1589726941217') format('woff'),
+  url('//at.alicdn.com/t/font_1824663_f9ct9epwouj.ttf?t=1589726941217') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('//at.alicdn.com/t/font_1824663_f9ct9epwouj.svg?t=1589726941217#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-qianjin:before {
+  content: "\e654";
+}
+
+.icon-houtui:before {
+  content: "\e655";
+}
+
+.icon-suojinindent2:before {
+  content: "\e71d";
+}
+
+.icon-suojinindent3:before {
+  content: "\e71e";
+}
+
+.icon-a:before {
+  content: "\e681";
+}
+
+.icon-baojiaquotation2:before {
+  content: "\e63c";
+}
+
+.icon-bold:before {
+  content: "\e677";
+}
+
+.icon-H:before {
+  content: "\e65d";
+}
+
+.icon-yueduye_zitijianxiao:before {
+  content: "\e60d";
+}
+
+.icon-yueduye_zitizengda:before {
+  content: "\e60e";
+}
+
+.icon-tupian:before {
+  content: "\e650";
+}
+
+.icon-qingxie:before {
+  content: "\e7dc";
+}
+
+.icon-Underline:before {
+  content: "\e628";
+}
+
+.icon-A:before {
+  content: "\e611";
+}
+
+.icon-h:before {
+  content: "\e61a";
+}
+
+
                 #edit{
                         height:260px;
                         width:100%;
                         overflow: scroll; 
                         border:solid 1px black
                 }
+                div {
+                    width: 20px;
+                    height: 20px;
+                }
+                .input_type_color {
+                    opacity: 0;
+                    position: absolute;
+                    left: 0;
+                    top:0 ;
+                    width: 20px;
+                }
            </style>
        </head>
        <body>
-           <div id="edit" name="edit" contenteditable="true"></div>
-               <br>
-           <button name="button-edit" data-name="justifyCenter">居中</button>
-           <button name="button-edit"  data-name="justifyLeft">左对齐</button>
-           <button name="button-edit"  data-name="justifyRight">右对齐</button>
-           <button name="button-edit"  data-name="indent">添加缩进</button>
-           <button name="button-edit"  data-name="outdent">去掉缩进</button> 
-           <button name="button-edit"  data-name="fontname" data-value="宋体">宋体</button>
-           <button name="button-edit"  data-name="fontsize" data-value="5">大字体</button>
-           <button name="button-edit"  data-name="forecolor" data-value="red">红色字体</button>
-           <button name="button-edit"  data-name="backColor" data-value="lightgreen">浅绿背景</button>
-           <span name="button-edit"  data-name="bold">加粗</span>
-           <button name="button-edit"  data-name="italic">斜体</button>    
-           <button name="button-edit"  data-name="underline">下划线</button> 
-           <button name="button-edit"  data-name="copy">复制</button>
-           <button name="button-edit"  data-name="cut">剪切</button>    
-           <!--paste命令浏览器默认未开启，需要在user.js配置文件中开启，详见火狐开发者中心文档-->
-           <!--链接：https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand-->
-           <button name="button-edit"  data-name="paste">粘贴</button>
-           <button name="button-edit"  data-name="selectAll">全选</button>
-           <button name="button-edit"  data-name="delete">删除</button>    
-           <button name="button-edit"  data-name="forwarddelete">后删除</button>    
-           <button name="button-edit"  data-name="removeFormat">清空格式</button>
-           <button name="button-edit"  data-name="redo">前进一步</button>    
-           <button name="button-edit"  data-name="undo">后退一步</button>
-           <button name="button-edit"  data-name="print">打印</button>    
-           <button name="button-edit"  data-name="formatblock" data-value="div">插入div</button>
-           <button name="button-edit"  data-name="inserthorizontalrule">插入hr</button>    
-           <button name="button-edit"  data-name="insertorderedlist">插入ol</button>    
-           <button name="button-edit"  data-name="insertunorderedlist">插入ul</button>
-           <button name="button-edit"  data-name="formatblock" data-value="p">插入p</button>
-           <button name="button-edit"  data-name="inserttext" data-value="这是我插入的内容！">插入文本</button>
-           <button name="button-edit"  data-name="insertimage" data-value="http://images.cnblogs.com/cnblogs_com/qingsong/545927/o_39.gif">插入图像</button>    
-           <button name="button-edit"  data-name="createlink" data-value="https://www.w3cschool.cn/javascript/javascript-execcommand.html">增加链接</button>
-           <button name="button-edit"  data-name="unlink" msg="aaaa">删除链接</button> 
-           <input type="button" onclick="isPaste()" value="检测paste粘贴命令是否支持">
-           <input type="button" value="代码获取" onclick="showContent()">
-            <div contenteditable="true">xzcascas</div>
-       <script>
-   
-            /**  当文档载入完毕后，在富文本框内设置焦点，
-              *  并且在第一行插入p标签。
-              **/
-            window.onload = function(){
-                 edit.focus();
-                 document.execCommand("formatblock", false, "p");
-             }
-            
-            /**  在编辑框内，当键盘输入时自动在当前行插入p标签，
-               *  也可以自动插入其它标签，
-               *  当编辑框内检测到</li>标签时禁止插入p标签。
-               */
-           edit.onkeydown = function(){
-                   var str = edit.innerHTML;
-                   var val = str.search(/<\/li>/i);
-                   if(val < 0){
-                         document.execCommand("formatblock", false, "p");
-                   }
-             }
-         
-           var btns = document.getElementsByName('button-edit');
-            
-            /**  编辑按钮的js操作命令接口。
-               *  按钮的data-name属性存放命令，data-value属性存放值。
-               *  也可用其它标签代替。
-               **/
-           for(var i = 0; i < btns.length; i++){
-                btns[i].addEventListener('click',function(){
-                    edit.focus();
-                    console.log(this.getAttribute('msg'))
-                       if(this['data-value']== ""){
-                           document.execComgetAttributemand(this.getAttribute('data-name'));
-                       }else{
-                           console.log(1111)
-                           console.log(document.execCommand(this.getAttribute('data-name'),false,this.getAttribute('data-value')));
-                       }
-                },false);
-            }
-   
-             /**  富文本内的值是通过div的innerHTML获取的，
-                *  表单提交时需提前用js转移到隐藏域里，然后提交，
-                *  为了便于理解富文本的结构，这里省略这一步了。
-                **/
-             function showContent() {
-                   alert(edit.innerHTML);
-               }
-               
-             /**  检测浏览器是否开启或支持paste命令，
-                 *  函数反回值为Boolean，
-                 *  true为支持，false为未开启或不支持paste粘贴命令
-                 *  paste粘贴命令需要在user.js配置文件中开启。
-                 *  详见火狐开发者中心相关文档：
-                 *  https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand
-                 **/
-            function isPaste(){
-                     if(document.execCommand("paste")) {
-                                 alert("浏览器支持或开启了paste粘贴命令！");
-                       }else{
-                                 alert("浏览器不支持paste粘贴命令，\n或未在user.js配置文件中开启！");
-                       }
-               }
-           </script>
+        <div class="iconfont icon-a" style="position:relative">
+            <input class="input_type_color" name="edit-action" title="背景颜色" edit-action="backColor" type="color"/> 
+            </div>   
        </body>
    </html>

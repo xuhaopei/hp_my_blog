@@ -34,7 +34,12 @@ li{
   background-color: white;
   cursor: pointer;
 }
-
+/*鼠标移动到导航时背景变为透明灰色+鼠标+白色字体*/
+.g-mouseMoveOnNav-bgcolorGray:hover{
+  background-color: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  color:white;
+}
 /*flex布局,元素在两端*/
 .g_layout_flex_justify-content_space-between{
   display: flex;
