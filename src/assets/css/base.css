@@ -53,10 +53,31 @@ li{
 }
 
 /*取消btn的默认样式*/
-.g_cancleBtn{
+.g_btn{
+  position: relative;
   margin: 0;
   padding: 0;
   border: 0px;  
   outline: none;   
   background-color: white;
+  border-radius: 6px;
+}
+.g_btn:hover{
+  cursor: pointer;
+}
+.g_btn:active{
+  top:1px;
+  left:1px;
+  border: 1px solid gray;
+}
+.g_btn_larger{
+  width: 120px;
+  height: 40px;
+}
+.g_btn_success{
+  background-color: rgb(49, 152, 236);
+  color:white;
+}
+.g_btn_success:hover{
+  background-color: rgb(49, 97, 255);
 }

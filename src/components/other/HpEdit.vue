@@ -3,27 +3,28 @@
         
         <input class="input_Wrapper" type="text" placeholder="请输入您的标题">
         
-        <div class="i_wrapper">
-            <button class="iconfont icon-qianjin g-navHref g_cancleBtn" name="edit-action" title="前进" edit-action="redo"></button>
-            <button class="iconfont icon-houtui g-navHref g_cancleBtn" name="edit-action" title="后退" edit-action="undo"></button>
-            <button class="iconfont icon-bold g-navHref g_cancleBtn" name="edit-action" title="加粗" edit-action="bold" ></button>
-            <button class="iconfont icon-qingxie g-navHref g_cancleBtn" name="edit-action" title="倾斜" edit-action="italic"></button>
-            <button class="iconfont icon-suojinindent2 g-navHref g_cancleBtn" name="edit-action" title="缩进" edit-action="indent" ></button>
-            <button class="iconfont icon-suojinindent3 g-navHref g_cancleBtn" name="edit-action" title="缩出" edit-action="outdent"></button>
-            <button class="iconfont icon-Underline g-navHref g_cancleBtn" name="edit-action" title="下划线" edit-action="underline"></button>
-            <button class="iconfont icon-baojiaquotation2 g-navHref g_cancleBtn" name="edit-action" title="双引号" edit-action="insertHTML" edit-action-value="&#8243;" ></button>
-            <button class="iconfont icon-h g-navHref g_cancleBtn" name="edit-action" title="标题" edit-action="formatBlock" edit-action-value="h1"></button>
-            <button class="iconfont icon-H g-navHref g_cancleBtn" name="edit-action" title="标题列表" edit-action="hs" v-on:mouseover="createHs"></button>
-            <button class="iconfont icon-yueduye_zitizengda g-navHref g_cancleBtn" name="edit-action" title="加大" edit-action="fontsize" edit-action-value="1"></button>
-            <button class="iconfont icon-yueduye_zitijianxiao g-navHref g_cancleBtn" name="edit-action" title="减小" edit-action="fontsize" edit-action-value="-1"></button>
-            <div class="iconfont icon-A g-navHref g_cancleBtn" style="position:relative"><input class="input_type_color" name="edit-action" title="字体颜色" edit-action="foreColor" type="color"/></div>
-            <div class="iconfont icon-a  g-navHref g_cancleBtn" style="position:relative"><input class="input_type_color" name="edit-action" title="背景颜色" edit-action="backColor" type="color"/> </div>
-            <div class="iconfont icon-tupian g-navHref g_cancleBtn" style="position:relative"><input class="input_type_color" name="edit-action" title="插入图片" edit-action="insertImage" type="file"/> </div>
+        <div class="btn_wrapper">
+            <button class="iconfont icon-qianjin g-navHref g_btn" name="edit-action" title="前进" edit-action="redo"></button>
+            <button class="iconfont icon-houtui g-navHref g_btn" name="edit-action" title="后退" edit-action="undo"></button>
+            <button class="iconfont icon-bold g-navHref g_btn" name="edit-action" title="加粗" edit-action="bold" ></button>
+            <button class="iconfont icon-qingxie g-navHref g_btn" name="edit-action" title="倾斜" edit-action="italic"></button>
+            <button class="iconfont icon-suojinindent2 g-navHref g_btn" name="edit-action" title="缩进" edit-action="indent" ></button>
+            <button class="iconfont icon-suojinindent3 g-navHref g_btn" name="edit-action" title="缩出" edit-action="outdent"></button>
+            <button class="iconfont icon-Underline g-navHref g_btn" name="edit-action" title="下划线" edit-action="underline"></button>
+            <button class="iconfont icon-baojiaquotation2 g-navHref g_btn" name="edit-action" title="双引号" edit-action="insertHTML" edit-action-value="&#8243;" ></button>
+            <button class="iconfont icon-h g-navHref g_btn" name="edit-action" title="标题" edit-action="formatBlock" edit-action-value="h1"></button>
+            <button class="iconfont icon-H g-navHref g_btn" name="edit-action" title="标题列表" edit-action="hs" v-on:click="createHs"></button>
+            <button class="iconfont icon-yueduye_zitizengda g-navHref g_btn" name="edit-action" title="加大" edit-action="fontsize" edit-action-value="1"></button>
+            <button class="iconfont icon-yueduye_zitijianxiao g-navHref g_btn" name="edit-action" title="减小" edit-action="fontsize" edit-action-value="-1"></button>
+            <div class="iconfont icon-A g-navHref g_btn" style="position:relative"><input class="input_type_color g-navHref" name="edit-action" title="字体颜色" edit-action="foreColor" type="color"/></div>
+            <div class="iconfont icon-a  g-navHref g_btn" style="position:relative"><input class="input_type_color g-navHref" name="edit-action" title="背景颜色" edit-action="backColor" type="color"/> </div>
+            <div class="iconfont icon-tupian g-navHref g_btn" style="position:relative"><input class="input_type_color g-navHref" name="edit-action" title="插入图片" edit-action="insertImage" type="file"/> </div>
         </div>
         <div class="HpEdit_editContent" contenteditable="true">
-            &#8243;1&#8243;
         </div>
-
+        <div class="HpEdit_footerWrapper">
+            <button class="g_btn g_btn_larger g_btn_success" v-on:click="commitArticle">上传</button>
+        </div>
     </div>
 </template>
 <script>
@@ -45,8 +46,10 @@ export default {
         editInit(){
             var btns = document.getElementsByName('edit-action');
             var that = this;
+            var flag = false;   // 用来解决input file change时 多次重复执行。 
             for(var i = 0; i < btns.length; i++){
                 btns[i].onclick = function(){
+                    flag = true;
                     var str = this.getAttribute('edit-action');
                     switch(str) {
                         case "hs":
@@ -69,21 +72,22 @@ export default {
                             break;
                         case "insertImage":
                             this.addEventListener("change",()=>{
-                                var src = this.value.replace(/\\/g,"/");
-                                console.log(src)
-                                document.execCommand('insertHTML', false, '<img src="' + src + '" width=500 height=500>');
+                                if(flag) {
+                                    var src = this.value.replace(/\\/g,"/");
+                                    document.execCommand('insertHTML', false, '<img src="' + src + '" width=100 height=100>');
+                                    flag = false;
+                                }
                             },false);
+                            break;
                         default :
-                            document.execCommand(this.getAttribute('edit-action'),false,this.getAttribute('edit-action-value'));    
+                           console.log(document.execCommand(this.getAttribute('edit-action'),false,this.getAttribute('edit-action-value')));    
                     }
-                    
-
                     
                 }
             }
         },
         /**
-         * 创建可视化标签 
+         * 创建可视化H标签 
          */
         createHs(event){
            // console.log(event)
@@ -98,8 +102,6 @@ export default {
             objDiv.style["display"] = "flex";
             objDiv.style["flex-direction"] = "column";
             objDiv.style["background"] = "white";
-            //objDiv.style["left"] = event.offsetLeft + 70 + "px";
-            //objDiv.style["top"] = event.offsetTop + 20 + "px"; 
             
             objDiv.style["left"] = event.clientX + "px";
             objDiv.style["top"] = event.clientY  + "px"; 
@@ -107,28 +109,35 @@ export default {
 
             for(var i = 1; i <= 6; i++) {
                 var liObj = document.createElement("button");
-                liObj.setAttribute("class",`g-mouseMoveOnNav-bgcolorGray`);
+                liObj.setAttribute("class",`g-mouseMoveOnNav-bgcolorGray g_btn`);
                 liObj.setAttribute("style",'text-align: center;')
+                liObj.setAttribute("onclick",`document.execCommand("formatBlock",false,"h"+${i})`)  // 只能通过这种形式添加，其它形式例如addEventlinsten则失效
                 liObj.innerText = "H" + i;
-                liObj.addEventListener('mouseover',function(){
-                    console.log(document.execCommand("formatBlock",false,"h"+i));  
-                },false);
                 objDiv.appendChild(liObj);
             }
             body.appendChild(objDiv);
+        },
+        /**
+         * 上传文章
+         */
+        commitArticle(e){
+            var innerHTML = document.getElementsByClassName('HpEdit_editContent')[0].innerHTML;
+            e.stopPropagation();
+            window.history.back();
         }
     }
 }
 </script>
 <style >
+
+/**隐藏颜色表 */
 #HpEdit .input_type_color {
     opacity: 0;
     position: absolute;
     left: 0;
-    top:0 ;
+    top:10px;
     width: 20px;
 }
-
 #HpEdit{
     position: relative;
     background: white;
@@ -137,9 +146,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    height: 100%;
-    
-    
+    height: 100%; 
 }
 #HpEdit .input_Wrapper {
     height: 40px;
@@ -147,7 +154,11 @@ export default {
     outline: none;
     border: 0;
 }
-#HpEdit .i_wrapper {
+
+#HpEdit .HpEdit_editContent {
+    overflow: auto;
+}
+#HpEdit .btn_wrapper {
     display: flex;
     flex-direction: row;
     height: 40px;
@@ -162,5 +173,11 @@ export default {
     outline: none;
     padding: 10px;
 }
-
+#HpEdit .HpEdit_footerWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+ }
 </style>

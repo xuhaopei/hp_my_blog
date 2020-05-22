@@ -1,6 +1,6 @@
 <template>
-  <div id="Article" >
-    <div class="Article-wrapper">
+  <div id="Article" v-on:click.self="cancleEdit" >
+    <div class="Article-wrapper" >
         <HpEdit></HpEdit>
     </div>
   </div>
@@ -22,6 +22,12 @@ export default {
   beforeDestroy() {
   },
   methods: {
+    /**
+     * 退出
+     */
+    cancleEdit(){
+      window.history.back();
+    }
   }
 };
 </script>
