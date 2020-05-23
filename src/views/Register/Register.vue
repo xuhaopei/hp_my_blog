@@ -1,45 +1,55 @@
 <template>
-    <div id="login">
-        <div class="form-warpper">
+    <div id="register">
+        <form class="form-warpper" >
             <div class="tip-wrapper">
                 <span style="color:red">{{tip}}</span>
             </div>
             <div class="header">
-                login
+                reigster
             </div>
             <div class="input-wrapper">
                 <div class="border-wrapper">
-                    <input type="text"  name="username" placeholder="username" class="border-item">
+                    <input type="text"  name="username" placeholder="username" class="border-item"  v-model="username" >
                 </div>
             </div>
             <div class="input-wrapper">
                 <div class="border-wrapper">
-                    <input type="password"  name="password" placeholder="password" class="border-item">
+                    <input type="password"  name="password" placeholder="password" class="border-item"  v-model="password">
+                </div>
+            </div>
+            <div class="input-wrapper">
+                <div class="border-wrapper">
+                    <input type="email"  name="email" placeholder="email" class="border-item"  v-model="email">
                 </div>
             </div>
             <div class="action">
-                <div class="btn" @click="checkForm">login</div>
+                <div class="btn" @click="checkForm">register</div>
             </div>
             <div class="icon-wrapper">
                 <i class="iconfont icon-gongzuozongjie"></i>
                 <i class="iconfont icon-github"></i>
             </div>
             <div class="tip-wrapper">
-                没有账号？赶快<router-link to="/register">注册</router-link>吧
+                已有账号？赶快<router-link to="/Login">登录</router-link>吧
             </div>
-        </div>
+        </form>
     </div>
 </template>
 <script>
+
 const hpValidateForm = require('hp-validate-form');
+
+import {doRegister,doQuery} from '@/network/Register.js';
+
 export default {
     props:{},
-    name:'login',
+    name:'register',
     data(){
         return {
             hpValidateForm,
             username:'',
             password:'',
+            email:'',
             tip:''
         }
     },
@@ -48,7 +58,10 @@ export default {
          * 检查表单提交情况
          */
         checkForm(){
-            var msg = '';
+            var msg = '';           // 存储出错信息
+            var that = this;        
+            var obj = {};           // 存储表单信息 提交给后台
+            
             msg = this.hpValidateForm.checkUserName(this.username,1);
             if(msg != '正确') {
                 this.tip = msg;
@@ -61,13 +74,34 @@ export default {
                 return;
             }
 
-            this.tip = '';
+            msg = this.hpValidateForm.checkEmail(this.email);
+            if(msg != '正确') {
+                this.tip = msg;
+                return;
+            }
+
+            obj = {
+                username:that.username,
+                password:that.password,
+                email:that.email
+            };
+            
+            this.$store.commit('changeLoading');
+
+            doRegister('/user/add',obj).then((response)=>{
+                this.$router.push('/Login');
+                    
+                this.$store.commit('changeLoading');
+            }).catch((err)=>{
+                console.log(err);
+                this.$store.commit('changeLoading');
+            })
         }
     }
 }
 </script>
 <style >
-#login {
+#register {
     width: 100%;
     height: 100%;
     position: fixed;

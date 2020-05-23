@@ -1,122 +1,68 @@
-<!--
-   --  富文本编辑器的简单实现原理
-   --  参考文档：
-   --  1.  w3cshool：https://www.w3cschool.cn/javascript/javascript-execcommand.html
-   --  2. 火狐开发者中心：https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand
-   --
-   --  要点：1. 添加div标签的一个属性contenteditable设置为true，使该div元素可编辑；
-   --              2. js调用document.execCommand(指令参数[命令], false, 动态参数[值])函数，
-   --              3. 函数中第二个参数应始终为false，因为参数为true会显示对话框，而火狐并不支持。
-   --              4. document.execCommand("paste"); 为粘贴命令，浏览器默认未开启，需要在user.js配置文件中开启。
-   -->
-   <!DOCTYPE html>
-   <html>
-       <head>
-           <title>富文本编辑器实现原理</title>
-           <meta charset="utf-8">
-           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-           <link rel="stylesheet" href="//at.alicdn.com/t/font_1824663_f9ct9epwouj.css">
-           <style>
-               @font-face {font-family: "iconfont";
-  src: url('//at.alicdn.com/t/font_1824663_f9ct9epwouj.eot?t=1589726941217'); /* IE9 */
-  src: url('//at.alicdn.com/t/font_1824663_f9ct9epwouj.eot?t=1589726941217#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('data:application/x-font-woff2;charset=utf-8;base64,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') format('woff2'),
-  url('//at.alicdn.com/t/font_1824663_f9ct9epwouj.woff?t=1589726941217') format('woff'),
-  url('//at.alicdn.com/t/font_1824663_f9ct9epwouj.ttf?t=1589726941217') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
-  url('//at.alicdn.com/t/font_1824663_f9ct9epwouj.svg?t=1589726941217#iconfont') format('svg'); /* iOS 4.1- */
+<!DOCTYPE html>
+<html>
+	<style>
+	
+	 .AnimationTick_errorLeft {
+  stroke-dasharray: 400 400;
+	stroke-dashoffset:400;	
+	transition: all 1s;
 }
-
-.iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+ .AnimationTick_errorRihgt {
+  stroke-dasharray: 400 400;
+	stroke-dashoffset:400;	
+	transition: all 1s;
 }
+	</style>
+<body>
 
-.icon-qianjin:before {
-  content: "\e654";
-}
-
-.icon-houtui:before {
-  content: "\e655";
-}
-
-.icon-suojinindent2:before {
-  content: "\e71d";
-}
-
-.icon-suojinindent3:before {
-  content: "\e71e";
-}
-
-.icon-a:before {
-  content: "\e681";
-}
-
-.icon-baojiaquotation2:before {
-  content: "\e63c";
-}
-
-.icon-bold:before {
-  content: "\e677";
-}
-
-.icon-H:before {
-  content: "\e65d";
-}
-
-.icon-yueduye_zitijianxiao:before {
-  content: "\e60d";
-}
-
-.icon-yueduye_zitizengda:before {
-  content: "\e60e";
-}
-
-.icon-tupian:before {
-  content: "\e650";
-}
-
-.icon-qingxie:before {
-  content: "\e7dc";
-}
-
-.icon-Underline:before {
-  content: "\e628";
-}
-
-.icon-A:before {
-  content: "\e611";
-}
-
-.icon-h:before {
-  content: "\e61a";
-}
-
-
-                #edit{
-                        height:260px;
-                        width:100%;
-                        overflow: scroll; 
-                        border:solid 1px black
-                }
-                div {
-                    width: 20px;
-                    height: 20px;
-                }
-                .input_type_color {
-                    opacity: 0;
-                    position: absolute;
-                    left: 0;
-                    top:0 ;
-                    width: 20px;
-                }
-           </style>
-       </head>
-       <body>
-        <div class="iconfont icon-a" style="position:relative">
-            <input class="input_type_color" name="edit-action" title="背景颜色" edit-action="backColor" type="color"/> 
-            </div>   
-       </body>
-   </html>
+<svg width="400" height="400" class="AnimationTick_svg">
+      <circle
+        fill="none"
+        stroke="#68E534"
+        stroke-width="20"
+        cx="200"
+        cy="200"
+        r="190"
+        stroke-linecap="round"
+        transform="rotate(-90,200,200)"
+        class="AnimationTick_circle"
+      />
+      <polyline
+        fill="none"
+        stroke="#68E534"
+        stroke-width="24"
+        points="88,214 173,284 304,138"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="AnimationTick_tick"
+      />
+      <polyline
+        fill="none"
+        stroke="red"
+        stroke-width="24"
+        points="100,100 300,300"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="AnimationTick_errorLeft"
+      />
+		
+	  <polyline
+        fill="none"
+        stroke="red"
+        stroke-width="24"
+        points="300,100 100,300"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="AnimationTick_errorRihgt"
+      />
+    </svg>
+	<button onclick="a()">a</button>
+</body>
+	<script>
+	 function a(){
+     const errorLeft = document.getElementsByClassName("AnimationTick_errorLeft")[0];
+     console.log(errorLeft)
+		 errorLeft.style['stroke-dashoffset'] = "0";
+	 }
+	</script>
+</html>

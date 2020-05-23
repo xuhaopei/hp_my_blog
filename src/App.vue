@@ -2,6 +2,7 @@
   <div id="app">
     <TopNav></TopNav>
     <LeftNav></LeftNav>
+    <Animation :loading="$store.state.loading" size=3></Animation>
     <router-view/>
   </div>
 </template>
@@ -10,7 +11,8 @@
 <script>
  import LeftNav from '@/views/LeftNav/LeftNav.vue'
  import TopNav from '@/views/TopNav/TopNav.vue'
- 
+ import Animation from '@/components/other/AnimationTick.vue'
+ //<Animation :loading="$store.state.loading" size=3></Animation>
   export default {
     data(){
       return{
@@ -19,6 +21,7 @@
     components:{
       LeftNav,
       TopNav,
+      Animation
     },
     methods:{
     },
