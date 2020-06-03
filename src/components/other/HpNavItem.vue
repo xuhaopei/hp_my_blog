@@ -1,29 +1,30 @@
 <!--这是导航模块-->
 <template>
   <div id="HpNavItem">
-    <div v-for="(value, index) in item" :key="index">
+    <!--zone代表每个学习区-->
+    <div v-for="(zone, index) in item" :key="index">
       <div
         class="HpNavItem-title   g_layout_flex_justify-content_space-between g-navHref"
         v-on:click="showMsg(index, $event)"
         v-on:click.right="showMenu"
         style="text-indent:10px"
       >
-        {{ value.title }}
+        {{ zone.title }}
         <i class="iconfont icon-sanjiaoxing"></i>
       </div>
       <div class="HpNavItem-body" flage="false">
+        <!--article代表文章信息，如果article的长度大于0说明是区，则递归调用此组件-->
         <div
           class="HpNavItem-item "
-          v-for="(val, index) in value.smallItems"
+          v-for="(article, index) in zone.smallItems"
           :key="index"
-          
         >
-          <!--val[0]判断是否为数组，用val is Array 测试不出来-->
-          <hp-nav-item 
-            v-if="val[0].smallItems && val[0].smallItems.length > 0"
-            :item="val"
-          ></hp-nav-item>
-          <li v-else class="g-navHref" v-on:click.right="showMenu"><span> {{ val }}</span></li>
+          <!--如果是数组 则递归调用这个组建-->
+          <hp-nav-item v-if="article.length > 0" :item="article"></hp-nav-item>
+          <!--不是数组 则输出文章名-->
+          <li v-else class="g-navHref" v-on:click.right="showMenu">
+            <span> {{ article.articleName }}</span>
+          </li>
         </div>
       </div>
     </div>
@@ -36,33 +37,154 @@ export default {
     item: {
       type: Array,
       default: function() {
-        return [
+       return [
           {
-            title: "开发指南1",
+            title: "学业区",
             smallItems: [
-              "目录1",
-              "目录2",
+              {
+                articleName: "我是如何爱上JS1的11",
+                articleId: "1"
+              },
+              {
+                articleName: "我是如何爱上JS2的11",
+                articleId: "1"
+              },
+              {
+                articleName: "我是如何爱上JS3的11",
+                articleId: "1"
+              },
               [
-                { title: "教程", smallItems: ["1111", [{title: "教程32",smallItems:["123","1111"]}],[{title: "教程",smallItems:["123","1111"]}]] },
-                { title: "教程2", smallItems: ["1111", [{title: "教程32",smallItems:["123","1111"]}],[{title: "教程",smallItems:["123","1111"]}]] }
-                ]
+                {
+                  title: "教程",
+                  smallItems: [
+                    {
+                      articleName: "我是如何爱上JS1的22",
+                      articleId: "1"
+                    },
+                    [
+                      {
+                        title: "教程3333333333",
+                        smallItems: [
+                          {
+                            articleName: "我是如何爱上JS1的33",
+                            articleId: "1"
+                          },
+                          {
+                            articleName: "我是如何爱上JS1的33",
+                            articleId: "1"
+                          },
+                          []
+                        ]
+                      }
+                    ]
+                  ]
+                },
+                {
+                  title: "教程2",
+                  smallItems: [
+                    {
+                      articleName: "我是如何爱上JS1的",
+                      articleId: "1"
+                    },
+                    [
+                      {
+                        title: "教程2个【】",
+                        smallItems: [
+                          {
+                            articleName: "我是如何爱上JS1的",
+                            articleId: "1"
+                          },
+                          {
+                            articleName: "我是如何爱上JS1的",
+                            articleId: "1"
+                          }
+                        ]
+                      }
+                    ],
+                    [
+                      {
+                        title: "教程2个【】",
+                        smallItems: [
+                          {
+                            articleName: "我是如何爱上JS1的",
+                            articleId: "1"
+                          },
+                          {
+                            articleName: "我是如何爱上JS1的",
+                            articleId: "1"
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
             ]
           },
           {
-            title: "开发指南2",
+            title: "生活区",
             smallItems: [
-              "目录1",
-              "目录2",
-              [{ title: "教程", smallItems: ["1111", "22222"] }]
+              {
+                articleName: "我是如何爱上JS1的",
+                articleId: "1"
+              },
+              {
+                articleName: "我是如何爱上JS1的",
+                articleId: "1"
+              },
+              [
+                {
+                  title: "教程",
+                  smallItems: [
+                    {
+                      articleName: "我是如何爱上JS1的",
+                      articleId: "1"
+                    },
+                    {
+                      articleName: "我是如何爱上JS1的",
+                      articleId: "1"
+                    }
+                  ]
+                }
+              ]
             ]
           },
+          {
+            title: "目录名",
+            smallItems: [
+              {
+                articleName: "我是如何爱上JS1的",
+                articleId: "1"
+              },
+              {
+                articleName: "我是如何爱上JS1的",
+                articleId: "1"
+              },
+              // 这里必须是一个数组 目录名列表单 ，如果没有目录名列表单 则为空数组 不能为空！
+              [
+                {
+                  title: "教程",
+                  smallItems: [
+                    {
+                      articleName: "我是如何爱上JS1的",
+                      articleId: "1"
+                    },
+                    {
+                      articleName: "我是如何爱上JS1的",
+                      articleId: "1"
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
         ];
       }
     }
   },
   data() {
     return {
-      isShow:false
+      isShow: false
     };
   },
   mounted() {
@@ -73,60 +195,62 @@ export default {
      * 点击后显示/关闭目录
      */
     showMsg(index, event) {
-
       var HpNavItemBody = event.target.nextElementSibling; // event.target为目标元素,获取紧接着的兄弟元素
 
-      var flage = HpNavItemBody.attributes[0].nodeValue;    // 获取自定义属性结点的值
+      var flage = HpNavItemBody.attributes[0].nodeValue; // 获取自定义属性结点的值
       // 判断根据自定义属性结点的值判断是显示还是关闭
-      if(flage == "false"){
+      if (flage == "false") {
         HpNavItemBody.style["height"] = "auto";
-        HpNavItemBody.attributes[0].nodeValue = "true";   // 设置自定义属性结点的值
-      }
-      else {
-        HpNavItemBody.style["height"] = "0"; 
+        HpNavItemBody.attributes[0].nodeValue = "true"; // 设置自定义属性结点的值
+      } else {
+        HpNavItemBody.style["height"] = "0";
         HpNavItemBody.attributes[0].nodeValue = "false"; // 设置自定义属性结点的值
       }
     },
-   
+
     /**
      * 右击弹出菜单
      */
     showMenu(event) {
-      event.preventDefault();  // 阻止默认行为
+      event.preventDefault(); // 阻止默认行为
       // 创建菜单容器
-      var menu = document.createElement("ul");  
-      menu.setAttribute("id","HpNavItem_menu");
-      menu.style["left"] = event.pageX- 10 + "px";
-      menu.style["top"] = event.pageY- 10 + "px";
+      var menu = document.createElement("ul");
+      menu.setAttribute("id", "HpNavItem_menu");
+      menu.style["left"] = event.pageX - 10 + "px";
+      menu.style["top"] = event.pageY - 10 + "px";
       // 设置离开菜单的时候菜单消失
-      menu.addEventListener("mouseleave",function(event){
-         menu.parentNode.removeChild(menu);
-      })
+      menu.addEventListener("mouseleave", function(event) {
+        menu.parentNode.removeChild(menu);
+      });
 
       var item_director = document.createElement("li"); // 创建目录
-      item_director.addEventListener('click',()=>{
-        this.$router.push("/Article");
-      },false);
-      item_director.setAttribute("class"," g-navHref")
-      item_director.innerText="创建目录";
+      item_director.addEventListener(
+        "click",
+        () => {
+          this.$router.push("/Article");
+        },
+        false
+      );
+      item_director.setAttribute("class", " g-navHref");
+      item_director.innerText = "创建目录";
 
       var item_artical = document.createElement("li"); // 创建文章
-      item_artical.setAttribute("class"," g-navHref")
+      item_artical.setAttribute("class", " g-navHref");
       item_artical.innerText = "创建文章";
 
       var item_manager = document.createElement("li"); // 编辑
-      item_manager.setAttribute("class"," g-navHref")
-      item_manager.innerText="编辑";
+      item_manager.setAttribute("class", " g-navHref");
+      item_manager.innerText = "编辑";
 
       var item_delete = document.createElement("li"); // 删除
-      item_delete.setAttribute("class"," g-navHref")
-      item_delete.innerText="删除";      
+      item_delete.setAttribute("class", " g-navHref");
+      item_delete.innerText = "删除";
 
       menu.appendChild(item_delete);
       menu.appendChild(item_manager);
       menu.appendChild(item_director);
       menu.appendChild(item_artical);
-      document.body.appendChild(menu)
+      document.body.appendChild(menu);
     },
     /**
      * 移动到此处时，给这个元素的className添加class
@@ -134,7 +258,7 @@ export default {
     addClass(e) {
       var obj = e.target;
       var str = obj.className;
-      if(!str.match(/g-navHref/)) {
+      if (!str.match(/g-navHref/)) {
         obj.className = str + " g-navHref";
       }
       console.log(obj.className);
@@ -144,14 +268,12 @@ export default {
      */
     removeClass(e) {
       var obj = e.target;
-      obj.className.replace(/g-navHref/g,"") ;
-      console.log(obj.className);
+      obj.className.replace(/g-navHref/g, "");
     }
   }
 };
 </script>
 <style >
-
 #HpNavItem {
   position: relative;
   width: 100%;
@@ -175,7 +297,7 @@ export default {
   height: auto;
 }
 .HpNavItem-item {
- /* text-indent: 20px;文字向右缩进20PX*/
+  /* text-indent: 20px;文字向右缩进20PX*/
   line-height: 50px;
   background: white;
 }
@@ -195,26 +317,25 @@ export default {
 /**定义右击菜单的样式 */
 #HpNavItem_menu {
   background: white;
-  position: absolute;;
+  position: absolute;
   width: 200px;
   left: 0;
   top: 0;
   box-shadow: 2px 2px 5px 5px rgba(0, 0, 0, 0.2);
 }
-#HpNavItem_menu  li {
+#HpNavItem_menu li {
   padding: 0;
   text-indent: 0;
   height: 40px;
   line-height: 40px;
-  border-bottom:1px solid #2196f3 ;
+  border-bottom: 1px solid #2196f3;
   text-align: center;
 }
-#HpNavItem_menu  li:last-child{
-  border-bottom:0px;
+#HpNavItem_menu li:last-child {
+  border-bottom: 0px;
 }
-#HpNavItem_menu  li:hover {
-  
+#HpNavItem_menu li:hover {
   cursor: pointer;
-  border:1px solid #2196f3 ;
+  border: 1px solid #2196f3;
 }
 </style>

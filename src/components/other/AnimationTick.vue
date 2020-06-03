@@ -1,6 +1,6 @@
 <!--
 这是打勾动漫，根据loading来判断什么时候完成打勾，size可以改变圆圈的大小
-参数 loading(为true的时候)出现 loading(为false的时候)消失
+参数 loadingObj({isLoading:true,isSuccess:true})出现 loading(为false的时候)消失
   size(大小) 控制图标的大小
 -->
 <template>
@@ -52,8 +52,13 @@
 export default {
   props: {
     loading:{
-      type:Boolean,
-      default:true,
+      type:Object,
+      default:function(){
+        return {
+          isLoading:true,     // 判断是否启动组件
+          isSuccess:true      // 判断是打勾动画还是打叉动画
+          }
+      },
     },
     size:{
       type:String,
@@ -66,7 +71,9 @@ export default {
     };
   },
   methods: {
-    /*启动圈圈动画 */
+    /**
+     * 启动圈圈动画
+     */
     circleBegin() {
       const circle = document.getElementsByClassName("AnimationTick_circle")[0];  // 获取元素
       circle.style["animation"] = "AnimationTick_circle-kf 1s ease-in-out";       // 根据动画规则启动动画
@@ -78,21 +85,22 @@ export default {
         // 1.2设置定时器
         setTimeout(() => {
           // 判断是否需要重新启动动画
-          if(this.loading){
+          if(this.loading.isLoading){
             circle.style["animation"] = "AnimationTick_circle-kf 1s ease-in-out";   // 重新启动动画
           } else {
             circle.style["animation-fill-mode"] = "forwards";             // 将动画定格在最后一帧
-            this.tickBegin();                    // 调用打勾动画
-            this.errorBegin();
+            this.loading.isSuccess ? this.tickBegin() : this.errorBegin();
           }
         }, 10);
       });
     },
-    /*启动打勾动画 */
+    /**
+     * 启动打勾动画
+     */
     tickBegin() {
       
       const tick = document.getElementsByClassName("AnimationTick_tick")[0];
-      tick.style["animation"] = "AnimationTick_tick-kf 1s ease-in-out";  // 根据动画规则启动动画
+      tick.style["animation"] = "AnimationTick_tick-kf 0.4s ease-in-out";  // 根据动画规则启动动画
       tick.style["animation-fill-mode"] = "forwards";     // 将动画定格在最后一帧
       // 设置当动画完成时，设置这个组件消失
       tick.addEventListener('animationend',()=>{
@@ -100,7 +108,9 @@ export default {
         AnimationTick.style['display'] = "none";          // 隐藏打勾动画这个组件
       })
     },
-    /**启动打×动画 */
+    /**
+     * 启动打×动画 
+     */
     errorBegin(){
       const errorLeft = document.getElementsByClassName("AnimationTick_errorLeft")[0];
       const errorRight = document.getElementsByClassName("AnimationTick_errorRihgt")[0];
@@ -116,7 +126,6 @@ export default {
         const AnimationTick = document.getElementById("AnimationTick");
         AnimationTick.style['display'] = "none";          // 隐藏打勾动画这个组件
       })
-
 
     },
     /**
@@ -148,18 +157,19 @@ export default {
   },
   mounted() {
     this.setSize();
-   // this.tickBegin();
     const AnimationTick = document.getElementById("AnimationTick");
     AnimationTick.style['display'] = "none";          // 隐藏打勾动画这个组件
   },
   watch:{
     /**当loading重新变为true的时候 显示打勾动画组件 */
-    loading(){
-      if(this.loading){
-        console.log("动画重新开始了为");
-        this.init();
-        this.circleBegin();
-      }
+    loading:{
+      handler:function(){
+        if(this.loading.isLoading){
+          this.init();
+          this.circleBegin();
+        }
+      },
+      deep: true
     }
   }
 };
@@ -198,12 +208,12 @@ body{
 #AnimationTick .AnimationTick_errorLeft {
   stroke-dasharray: 400 400;
 	stroke-dashoffset:420;	
-	transition: all 0.8s ease-in-out;
+	transition: all 0.4s ease-in-out;
 }
 #AnimationTick .AnimationTick_errorRihgt {
   stroke-dasharray: 400 400;
 	stroke-dashoffset:420;	
-	transition: all 0.8s ease-in-out;
+	transition: all 0.4s ease-in-out;
 }
 /*定义AnimationTick_circle-kf的动画规则*/
 @keyframes AnimationTick_circle-kf {

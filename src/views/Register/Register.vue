@@ -79,6 +79,7 @@ export default {
                 this.tip = msg;
                 return;
             }
+            this.tip = "";
 
             obj = {
                 username:that.username,
@@ -89,14 +90,16 @@ export default {
             this.$store.commit('changeLoading');
 
             doRegister('/user/add',obj).then((response)=>{
-                this.$router.push('/Login');
-                    
+                this.$store.commit('setLoadingSuccessOk');
                 this.$store.commit('changeLoading');
             }).catch((err)=>{
                 console.log(err);
+                this.$store.commit('setLoadingSuccessFail');
                 this.$store.commit('changeLoading');
             })
         }
+    },
+    mounted(){
     }
 }
 </script>

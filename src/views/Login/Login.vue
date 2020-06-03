@@ -1,6 +1,6 @@
 <template>
     <div id="login">
-        <div class="form-warpper">
+        <form class="form-warpper">
             <div class="tip-wrapper">
                 <span style="color:red">{{tip}}</span>
             </div>
@@ -9,12 +9,12 @@
             </div>
             <div class="input-wrapper">
                 <div class="border-wrapper">
-                    <input type="text"  name="username" placeholder="username" class="border-item">
+                    <input type="text"  name="username" placeholder="username" class="border-item" v-model="username">
                 </div>
             </div>
             <div class="input-wrapper">
                 <div class="border-wrapper">
-                    <input type="password"  name="password" placeholder="password" class="border-item">
+                    <input type="password"  name="password" placeholder="password" class="border-item" v-model="password">
                 </div>
             </div>
             <div class="action">
@@ -27,11 +27,16 @@
             <div class="tip-wrapper">
                 没有账号？赶快<router-link to="/register">注册</router-link>吧
             </div>
-        </div>
+        </form>
     </div>
 </template>
 <script>
 const hpValidateForm = require('hp-validate-form');
+import jwt from 'jsonwebtoken';
+
+import {doLogin,setHeaderCookie} from '@/network/Login.js';
+
+
 export default {
     props:{},
     name:'login',
@@ -61,7 +66,36 @@ export default {
                 return;
             }
 
+            var that = this;
             this.tip = '';
+            this.$store.commit('changeLoading');
+            var obj = {
+                username:that.username,
+                password:that.password
+            };
+
+            doLogin('/user/query',obj).then((Response)=>{
+                let token = Response.data.token ;   // 获取到token
+                let user  = Response.data.user;     // 获取到用户信息
+
+                this.createCookie(token);
+                this.$store.commit('setUser',user);
+                this.$store.commit('setLoadingSuccessOk');
+                this.$store.commit('changeLoading');
+                this.$router.push("/");
+            }).catch((err)=>{
+                console.log(err);
+                this.tip = '不存在此用户';
+                this.$store.commit('setLoadingSuccessFail');
+                this.$store.commit('changeLoading');
+            });
+        },
+        /**
+         * 创建cookie，并将cookie设置在axios实例中
+         */
+        createCookie(token){
+            document.cookie =`username=${this.username}; expires=Thu, 18 Dec 2043 12:00:00 GMT; path=/`;
+            setHeaderCookie(setHeaderCookie);
         }
     }
 }

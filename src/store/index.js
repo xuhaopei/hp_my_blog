@@ -5,14 +5,27 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    loading:false
+    loading:{
+      isLoading:false,
+      isSuccess:false
+    },
+    user:null
   },
   getters:{
   },
   mutations: {
     changeLoading(state){
-      state.loading = !state.loading;
-      console.log(state.loading ,1111111)
+      state.loading.isLoading = !state.loading.isLoading;
+    },
+    setLoadingSuccessOk(state){
+      state.loading.isSuccess = true;
+    },
+    setLoadingSuccessFail(state){
+      state.loading.isSuccess = false;
+    },
+    setUser(state,user){
+      console.log(user);
+      state.user = user;
     }
   },
   actions: {

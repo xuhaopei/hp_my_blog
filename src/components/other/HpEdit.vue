@@ -1,8 +1,5 @@
 <template>
     <div id="HpEdit">
-        
-        <input class="input_Wrapper" type="text" placeholder="请输入您的标题">
-        
         <div class="btn_wrapper">
             <button class="iconfont icon-qianjin g-navHref g_btn" name="edit-action" title="前进" edit-action="redo"></button>
             <button class="iconfont icon-houtui g-navHref g_btn" name="edit-action" title="后退" edit-action="undo"></button>
@@ -20,20 +17,26 @@
             <div class="iconfont icon-a  g-navHref g_btn" style="position:relative"><input class="input_type_color g-navHref" name="edit-action" title="背景颜色" edit-action="backColor" type="color"/> </div>
             <div class="iconfont icon-tupian g-navHref g_btn" style="position:relative"><input class="input_type_color g-navHref" name="edit-action" title="插入图片" edit-action="insertImage" type="file"/> </div>
         </div>
-        <div class="HpEdit_editContent" contenteditable="true">
-        </div>
-        <div class="HpEdit_footerWrapper">
-            <button class="g_btn g_btn_larger g_btn_success" v-on:click="commitArticle">上传</button>
+        <div class="HpEdit_editContent" contenteditable="true" id="HpEdit_editContent" v-on:mouseout='putEditContent'>
         </div>
     </div>
 </template>
 <script>
 export default {
-    props:[],
+    props:{
+        content:{
+            type:String
+        }
+    },
     name:'HpEdit',
     data(){
         return{
-
+            newContent:this.content
+        }
+    },
+    watch:{
+        content(newContent) {
+            this.newContent = newContent;
         }
     },
     mounted(){
@@ -118,12 +121,11 @@ export default {
             body.appendChild(objDiv);
         },
         /**
-         * 上传文章
+         * 更改数据内容的时候，数据传给父组件
          */
-        commitArticle(e){
-            var innerHTML = document.getElementsByClassName('HpEdit_editContent')[0].innerHTML;
-            e.stopPropagation();
-            window.history.back();
+        putEditContent(){
+            let articleContent = document.getElementById('HpEdit_editContent').innerHTML;
+            this.$emit('input', articleContent);                    // input 实现v-model 的监听
         }
     }
 }
@@ -148,12 +150,6 @@ export default {
     align-items: stretch;
     height: 100%; 
 }
-#HpEdit .input_Wrapper {
-    height: 40px;
-    text-indent: 10px;
-    outline: none;
-    border: 0;
-}
 
 #HpEdit .HpEdit_editContent {
     overflow: auto;
@@ -173,11 +169,4 @@ export default {
     outline: none;
     padding: 10px;
 }
-#HpEdit .HpEdit_footerWrapper {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    align-items: center;
- }
 </style>

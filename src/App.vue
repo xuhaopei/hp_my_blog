@@ -2,7 +2,7 @@
   <div id="app">
     <TopNav></TopNav>
     <LeftNav></LeftNav>
-    <Animation :loading="$store.state.loading" size=3></Animation>
+    <Animation :loading="$store.state.loading" size="3"></Animation>
     <router-view/>
   </div>
 </template>

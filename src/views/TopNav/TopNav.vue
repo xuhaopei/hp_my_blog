@@ -8,7 +8,8 @@
             </div>
             <a href="https://www.cnblogs.com/xuhaopei/" target="_blank">博客</a>
             <a href="https://github.com/xuhaopei/hp_my_blog" target="_blank">github</a>
-            <router-link to="/Login">登录</router-link>
+            <router-link v-if="$store.state.user" to="/Login">{{$store.state.user.userName}}</router-link>
+            <router-link v-else to="/Login">登录</router-link>
         </div>
     </div>
 </template>

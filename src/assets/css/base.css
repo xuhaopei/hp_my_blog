@@ -81,3 +81,18 @@ li{
 .g_btn_success:hover{
   background-color: rgb(49, 97, 255);
 }
+
+.g_btn_cancle{
+  background-color: rgb(49, 236, 158);
+  color:white;
+}
+.g_btn_cancle:hover{
+  background-color: rgb(49, 236, 200);
+}
+
+.g_input {
+  height: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 16px;
+}
