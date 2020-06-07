@@ -2,7 +2,7 @@
   <div id="LeftNav">
     <LeftNavTop></LeftNavTop>
     <div class="LeftNavBody">
-      <HpNavItem ></HpNavItem>
+      <HpNavItem :item='allItems'></HpNavItem>
     </div>
   </div>
 </template>
@@ -10,20 +10,45 @@
 import LeftNavTop from "@/views/LeftNav/ChildrenCom/LeftNavTop.vue";
 import HpNavItem from "@/components/other/HpNavItem.vue"
 
+
+import { getDirectory } from "@/network/LeftNav.js";
+
+
 export default {
   name: "",
   data() {
     return {
-      allItems: [
-        ["1", "2", "3", "4"],
-        ["22", "22", "22", "333"],
-        ["123", "123"]
-      ]
+      allItems:[]
     };
   },
   components: {
     LeftNavTop,
     HpNavItem
+  },
+  created() {
+      this.getAllDirectory();
+  },
+  methods:{
+    async getAllDirectory(){
+        this.$animation.createLoading();
+        await getDirectory("/Directory/getAllDirectory")
+          .then(Response => {
+            this.allItems = Array.from(Response.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        this.$animation.cancelLoading();
+    }
+  },
+  watch:{
+    $route(to, from) {
+       //this.getAllDirectory();
+       let name = to.name;
+       if(name === 'Home') {
+         this.getAllDirectory();
+       }
+    }
   }
 };
 </script>

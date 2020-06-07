@@ -16,6 +16,17 @@ li{
   padding-left:10px ;
 }
 
+a{
+  text-decoration: none;
+  color:#333; 
+}
+a:hover{
+  color: #2196f3;
+  text-decoration: underline #2196f3 dotted;
+  cursor: pointer;
+  text-underline-position:under;
+}
+
 /*全局样式*/
 /*鼠标移动到导航时出现下划线已经字体变蓝*/
 .g-navHref:hover{

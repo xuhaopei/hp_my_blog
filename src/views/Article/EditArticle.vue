@@ -9,7 +9,7 @@
             <option index="-1" >请选择</option>
             <option
               :value="JSON.stringify(value.smallItems)"
-              v-for="(value, index) in item"
+              v-for="(value, index) in directorys"
               :key="index" 
               :index="index" 
               >{{ value.title }}</option
@@ -32,189 +32,70 @@
 <script>
 import HpEdit from "@/components/other/HpEdit";
 
+import {getDirectory,updateDirectory,putArticle} from '@/network/Article.js';
+
+
+
 export default {
   components: {
     HpEdit
-  },
-  props: {
-    item: {
-      type: Array,
-      default: function() {
-       return [
-          {
-            title: "学业区",
-            smallItems: [
-              {
-                articleName: "我是如何爱上JS1的11",
-                articleId: "1"
-              },
-              {
-                articleName: "我是如何爱上JS2的11",
-                articleId: "1"
-              },
-              {
-                articleName: "我是如何爱上JS3的11",
-                articleId: "1"
-              },
-              [
-                {
-                  title: "教程",
-                  smallItems: [
-                    {
-                      articleName: "我是如何爱上JS1的22",
-                      articleId: "1"
-                    },
-                    [
-                      {
-                        title: "教程3333333333",
-                        smallItems: [
-                          {
-                            articleName: "我是如何爱上JS1的33",
-                            articleId: "1"
-                          },
-                          {
-                            articleName: "我是如何爱上JS1的33",
-                            articleId: "1"
-                          },
-                          []
-                        ]
-                      }
-                    ]
-                  ]
-                },
-                {
-                  title: "教程2",
-                  smallItems: [
-                    {
-                      articleName: "我是如何爱上JS1的",
-                      articleId: "1"
-                    },
-                    [
-                      {
-                        title: "教程2个【】",
-                        smallItems: [
-                          {
-                            articleName: "我是如何爱上JS1的",
-                            articleId: "1"
-                          },
-                          {
-                            articleName: "我是如何爱上JS1的",
-                            articleId: "1"
-                          }
-                        ]
-                      }
-                    ],
-                    [
-                      {
-                        title: "教程2个【】",
-                        smallItems: [
-                          {
-                            articleName: "我是如何爱上JS1的",
-                            articleId: "1"
-                          },
-                          {
-                            articleName: "我是如何爱上JS1的",
-                            articleId: "1"
-                          }
-                        ]
-                      }
-                    ]
-                  ]
-                }
-              ]
-            ]
-          },
-          {
-            title: "生活区",
-            smallItems: [
-              {
-                articleName: "我是如何爱上JS1的",
-                articleId: "1"
-              },
-              {
-                articleName: "我是如何爱上JS1的",
-                articleId: "1"
-              },
-              [
-                {
-                  title: "教程",
-                  smallItems: [
-                    {
-                      articleName: "我是如何爱上JS1的",
-                      articleId: "1"
-                    },
-                    {
-                      articleName: "我是如何爱上JS1的",
-                      articleId: "1"
-                    }
-                  ]
-                }
-              ]
-            ]
-          },
-          {
-            title: "目录名",
-            smallItems: [
-              {
-                articleName: "我是如何爱上JS1的",
-                articleId: "1"
-              },
-              {
-                articleName: "我是如何爱上JS1的",
-                articleId: "1"
-              },
-              // 这里必须是一个数组 目录名列表单 ，如果没有目录名列表单 则为空数组 不能为空！
-              [
-                {
-                  title: "教程",
-                  smallItems: [
-                    {
-                      articleName: "我是如何爱上JS1的",
-                      articleId: "1"
-                    },
-                    {
-                      articleName: "我是如何爱上JS1的",
-                      articleId: "1"
-                    }
-                  ]
-                }
-              ]
-            ]
-          }
-        ];
-      }
-    }
   },
   data() {
     return {
         articleName:"",
         articleContent:'',
-        data:this.item
+        directorys:Array
     };
   },
-  mounted() {},
+  async created(){
+        this.$animation.createLoading();
+        await getDirectory('/Directory/getAllDirectory').then((Response)=>{
+          
+          this.directorys = Response.data;
+
+        }).catch((err)=>{
+          console.log(err)
+        })
+        this.$animation.cancelLoading();
+    },
   beforeDestroy() {},
   methods: {
     /**
      * 退出
      */
     cancleEdit() {
-      window.history.back();
+      this.$router.push('/')
     },
     /**
      * 上传文章
      */
-    commitArticle(e) {
-      /**第一步 获取添加文章在目录中的位置*/
-      let data;      
-      let selecttions = document.getElementById("select_hp").childNodes;    // 获取所有选择框元素   
+    async commitArticle(e) {
+
+      /**第一步 创建文章对象*/
+      let articleName = this.articleName;
+      if(articleName.trim() === '') {
+        alert('请输入标题');
+        return;
+      }
+      let articleId = this.createUID();
+      let articleContent = this.articleContent; // 获取文章内容
+      
+
+
+      /**第二步 获取添加文章在目录中的位置*/
+      let title;            // 区域 例如 学习区
+      let data;             // 通过引用来获取要添加文章的目录位置，如果是新目录则添加。
+      let selecttions = document.getElementById("select_hp").childNodes;    // 获取所有选择框元素 
+      let zone;             // 传递给服务器的区 例如 {title:'学习区',smaillitem:[]};  
       // 如果第一个selection没有选择目录 则不允许提交
       if(selecttions[0].selectedIndex === 0) {
         alert('请选择目录');
         return;
       }
       else {
-        data = this.data[selecttions[0].selectedIndex - 1].smallItems;
+        title = selecttions[0].options[selecttions[0].selectedIndex].innerText;
+        data = this.directorys[selecttions[0].selectedIndex - 1].smallItems;
+        zone = this.directorys[selecttions[0].selectedIndex - 1];
       }
       // 判断接下来的selection 然后根据data上传数据
       for (let i = 1; i < selecttions.length; i++) {
@@ -230,7 +111,7 @@ export default {
               title:option.innerText,
               smallItems:[]
             };
-            data = data[data.length - 1];
+            data = data[data.length-1];
             data.push(directory);
             data = directory.smallItems;
         }
@@ -241,20 +122,32 @@ export default {
         }
       }
 
-      /**第二步 创建文章对象*/
-      let articleName = this.articleName;
-      if(articleName.trim() === '') {
-        alert('请输入标题');
-        return;
-      }
-      let articleContent = this.articleContent; // 获取文章内容
-      let articleId = this.createUID();
-      let article = new this.createArticle(articleName,articleId,articleContent);
 
       /**第三步 将文章的部分信息赋值给目录*/
       data.unshift({articleName,articleId});        // 在头部插入 也可以再其它地方插入 但是不能在尾部插入！。
-      e.stopPropagation();
-      //window.history.back();
+
+      /**第四步 目录上传服务器 更新目录 */
+      this.$store.commit('changeLoading');
+      await updateDirectory('/Directory/updateDirectory',title,zone).then((Response)=>{
+        console.log('目录更新成功');
+      }).catch((err)=>{
+        console.log('目录更新失败');
+        this.$store.commit('setLoadingSuccessFail');
+        this.$store.commit('changeLoading');
+        return;
+      })
+
+      /**第五步 文章上传服务器 添加文章 */
+      await putArticle('/Article/add',articleId,articleName,articleContent).then((Response)=>{
+        console.log('文章添加成功');
+        this.$store.commit("setLoadingSuccessOk");
+      }).catch((err)=>{
+        console.log('文章添加失败');
+        this.$store.commit('setLoadingSuccessFail');
+      }) 
+       this.$store.commit('changeLoading');
+      
+
     },
     /**
      * 获取元素
@@ -448,9 +341,6 @@ export default {
       let minutes = date.getMinutes();
       let seconds = date.getSeconds();
       return ""+year+mounth+day+hours+minutes+seconds;
-    },
-    getArticleContent(e){
-      console.log(e);
     }
   }
 };

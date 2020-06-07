@@ -74,7 +74,7 @@ export default {
                 password:that.password
             };
 
-            doLogin('/user/query',obj).then((Response)=>{
+            doLogin('/user/login',obj).then((Response)=>{
                 let token = Response.data.token ;   // 获取到token
                 let user  = Response.data.user;     // 获取到用户信息
 

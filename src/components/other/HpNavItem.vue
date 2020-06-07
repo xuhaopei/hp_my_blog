@@ -2,7 +2,7 @@
 <template>
   <div id="HpNavItem">
     <!--zone代表每个学习区-->
-    <div v-for="(zone, index) in item" :key="index">
+    <div v-for="(zone, index) in data" :key="index">
       <div
         class="HpNavItem-title   g_layout_flex_justify-content_space-between g-navHref"
         v-on:click="showMsg(index, $event)"
@@ -23,7 +23,7 @@
           <hp-nav-item v-if="article.length > 0" :item="article"></hp-nav-item>
           <!--不是数组 则输出文章名-->
           <li v-else class="g-navHref" v-on:click.right="showMenu">
-            <span> {{ article.articleName }}</span>
+            <router-link :to='"/ReadArticle/"+article.articleId'> {{ article.articleName }}</router-link>
           </li>
         </div>
       </div>
@@ -34,161 +34,15 @@
 export default {
   name: "hp-nav-item",
   props: {
-    item: {
-      type: Array,
-      default: function() {
-       return [
-          {
-            title: "学业区",
-            smallItems: [
-              {
-                articleName: "我是如何爱上JS1的11",
-                articleId: "1"
-              },
-              {
-                articleName: "我是如何爱上JS2的11",
-                articleId: "1"
-              },
-              {
-                articleName: "我是如何爱上JS3的11",
-                articleId: "1"
-              },
-              [
-                {
-                  title: "教程",
-                  smallItems: [
-                    {
-                      articleName: "我是如何爱上JS1的22",
-                      articleId: "1"
-                    },
-                    [
-                      {
-                        title: "教程3333333333",
-                        smallItems: [
-                          {
-                            articleName: "我是如何爱上JS1的33",
-                            articleId: "1"
-                          },
-                          {
-                            articleName: "我是如何爱上JS1的33",
-                            articleId: "1"
-                          },
-                          []
-                        ]
-                      }
-                    ]
-                  ]
-                },
-                {
-                  title: "教程2",
-                  smallItems: [
-                    {
-                      articleName: "我是如何爱上JS1的",
-                      articleId: "1"
-                    },
-                    [
-                      {
-                        title: "教程2个【】",
-                        smallItems: [
-                          {
-                            articleName: "我是如何爱上JS1的",
-                            articleId: "1"
-                          },
-                          {
-                            articleName: "我是如何爱上JS1的",
-                            articleId: "1"
-                          }
-                        ]
-                      }
-                    ],
-                    [
-                      {
-                        title: "教程2个【】",
-                        smallItems: [
-                          {
-                            articleName: "我是如何爱上JS1的",
-                            articleId: "1"
-                          },
-                          {
-                            articleName: "我是如何爱上JS1的",
-                            articleId: "1"
-                          }
-                        ]
-                      }
-                    ]
-                  ]
-                }
-              ]
-            ]
-          },
-          {
-            title: "生活区",
-            smallItems: [
-              {
-                articleName: "我是如何爱上JS1的",
-                articleId: "1"
-              },
-              {
-                articleName: "我是如何爱上JS1的",
-                articleId: "1"
-              },
-              [
-                {
-                  title: "教程",
-                  smallItems: [
-                    {
-                      articleName: "我是如何爱上JS1的",
-                      articleId: "1"
-                    },
-                    {
-                      articleName: "我是如何爱上JS1的",
-                      articleId: "1"
-                    }
-                  ]
-                }
-              ]
-            ]
-          },
-          {
-            title: "目录名",
-            smallItems: [
-              {
-                articleName: "我是如何爱上JS1的",
-                articleId: "1"
-              },
-              {
-                articleName: "我是如何爱上JS1的",
-                articleId: "1"
-              },
-              // 这里必须是一个数组 目录名列表单 ，如果没有目录名列表单 则为空数组 不能为空！
-              [
-                {
-                  title: "教程",
-                  smallItems: [
-                    {
-                      articleName: "我是如何爱上JS1的",
-                      articleId: "1"
-                    },
-                    {
-                      articleName: "我是如何爱上JS1的",
-                      articleId: "1"
-                    }
-                  ]
-                }
-              ]
-            ]
-          }
-        ];
-      }
-    }
+    item:Array
   },
   data() {
     return {
-      isShow: false
+      isShow: false,
+      data:this.item
     };
   },
   mounted() {
-    //this.goRight();
   },
   methods: {
     /**
@@ -270,6 +124,14 @@ export default {
       var obj = e.target;
       obj.className.replace(/g-navHref/g, "");
     }
+  },
+  watch:{
+    item:{
+      handler:function(){
+        this.data = this.item;
+      },
+      deep:true
+    }
   }
 };
 </script>
@@ -314,6 +176,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.2);
   cursor: pointer;
 }
+
 /**定义右击菜单的样式 */
 #HpNavItem_menu {
   background: white;

@@ -148,7 +148,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    height: 100%; 
+    height: 600px; 
 }
 
 #HpEdit .HpEdit_editContent {
