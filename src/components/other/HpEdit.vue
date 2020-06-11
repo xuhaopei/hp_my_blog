@@ -17,12 +17,21 @@
             <div class="iconfont icon-a  g-navHref g_btn" style="position:relative"><input class="input_type_color g-navHref" name="edit-action" title="背景颜色" edit-action="backColor" type="color"/> </div>
             <div class="iconfont icon-tupian g-navHref g_btn" style="position:relative"><input class="input_type_color g-navHref" name="edit-action" title="插入图片" edit-action="insertImage" type="file"/> </div>
         </div>
-        <div class="HpEdit_editContent" contenteditable="true" id="HpEdit_editContent" v-on:mouseout='putEditContent'>
+        <div 
+            class="HpEdit_editContent" 
+            contenteditable="true" 
+            id="HpEdit_editContent" 
+            v-on:mouseout="putEditContent"
+            >
         </div>
     </div>
 </template>
 <script>
 export default {
+    model: {
+        prop: 'content',
+        event: 'change'
+    },
     props:{
         content:{
             type:String
@@ -35,8 +44,9 @@ export default {
         }
     },
     watch:{
-        content(newContent) {
-            this.newContent = newContent;
+        content:function(val, oldVal) {
+            this.newContent = val;
+            document.getElementById('HpEdit_editContent').innerHTML = val;
         }
     },
     mounted(){
@@ -83,7 +93,8 @@ export default {
                             },false);
                             break;
                         default :
-                           console.log(document.execCommand(this.getAttribute('edit-action'),false,this.getAttribute('edit-action-value')));    
+                            document.execCommand(this.getAttribute('edit-action'),false,this.getAttribute('edit-action-value'));
+                            //console.log(document.execCommand(this.getAttribute('edit-action'),false,this.getAttribute('edit-action-value')));    
                     }
                     
                 }
@@ -121,11 +132,12 @@ export default {
             body.appendChild(objDiv);
         },
         /**
-         * 更改数据内容的时候，数据传给父组件
+         * 将数据传给父组件
          */
         putEditContent(){
+            //console.log('子组件开始传值给父组件');
             let articleContent = document.getElementById('HpEdit_editContent').innerHTML;
-            this.$emit('input', articleContent);                    // input 实现v-model 的监听
+            this.$emit('change', articleContent);                    // 父组件用v-modle来接收 所以事件要用input
         }
     }
 }

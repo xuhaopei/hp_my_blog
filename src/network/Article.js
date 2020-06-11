@@ -25,12 +25,31 @@ export function updateDirectory(url,title,directoryObj) {
  * @param {String} articleId  文章ID
  * @param {String} articleName  文章名
  * @param {String} articleContent 文章内容
+ * @param {String} zone         文章所属区域
  */
-export function putArticle(url,articleId,articleName,articleContent) {
-    let array = [articleId,articleName,articleContent];
+export function putArticle(url,articleId,articleName,articleContent,zone) {
+    let array = [articleId,articleName,articleContent,zone];
     return instance.post(url,array);
 }
 
+/**
+ * 
+ * @param {*} url 
+ * @param {*} articleId 文章ID
+ */
 export function getArticle(url,articleId) {
     return instance.get(url+'?articleId='+articleId);
+}
+
+/**
+ * 
+ * @param {*} url 
+ * @param {String} articleId  文章ID
+ * @param {String} articleName  文章名
+ * @param {String} articleContent 文章内容
+ * @param {String} zone         文章所属区域
+ */
+export function updateArticle(url,articleId,articleName,articleContent,zone) {
+    let array = [articleId,articleName,articleContent,zone];
+    return instance.post(url,array);
 }

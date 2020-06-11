@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home/Home.vue'
-const Animation = () => import('@/components/other/AnimationTick.vue');
 const Login = () => import('@/views/Login/Login.vue');
-const Article = () => import('@/views/Article/EditArticle.vue');
+const CreateArticle = () => import('@/views/Article/CreateArticle.vue');
+const EditArticle = () => import('@/views/Article/EditArticle.vue');
 const ReadArticle = ()=> import('@/views/Article/ReadArticle.vue');
+const AllArticle = ()=> import('@/views/Article/AllArticle.vue');
 const Register = () => import('@/views/Register/Register.vue');
 
 Vue.use(VueRouter);
@@ -12,8 +13,8 @@ Vue.use(VueRouter);
   const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'AllArticle',
+    component: AllArticle
   },
   {
     path:'/Login',
@@ -21,9 +22,14 @@ Vue.use(VueRouter);
     component:Login
   },
   {
-    path:'/Article',
-    name: 'Article',
-    component:Article
+    path:'/CreateArticle',
+    name: 'CreateArticle',
+    component:CreateArticle
+  },
+  {
+    path:'/EditArticle/:Id',
+    name: 'EditArticle',
+    component:EditArticle
   },
   {
     path:'/Register',

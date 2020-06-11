@@ -1,9 +1,28 @@
 <template>
   <div id="Article" v-on:click.self="cancleEdit">
     <div class="Article-wrapper">
-      <input class="input_wrapper" type="text" placeholder="请输入您的标题"  v-model="articleName"/>
-
-      <HpEdit v-model='articleContent'></HpEdit>
+      <input
+        class="input_wrapper"
+        type="text"
+        placeholder="请输入您的标题"
+        v-model="articleName"
+      />
+      <div class="articleLocation_wrapper">
+        <span>文章所属目录：</span>
+        <div class="select_wrapper " id="select_hp">
+          <select name="" id="" @change="getElement">
+            <option index="-1">请选择</option>
+            <option
+              :value="JSON.stringify(value.smallItems)"
+              v-for="(value, index) in directorys"
+              :key="index"
+              :index="index"
+              >{{ value.title }}</option
+            >
+          </select>
+        </div>
+      </div>
+      <HpEdit v-model="articleContent"></HpEdit>
       <div class="btn_wrapper">
         <button
           class="g_btn g_btn_larger g_btn_success"
@@ -18,9 +37,11 @@
 <script>
 import HpEdit from "@/components/other/HpEdit";
 
-import {getDirectory,updateDirectory,putArticle,getArticle,updateArticle} from '@/network/Article.js';
-
-
+import {
+  getDirectory,
+  updateDirectory,
+  putArticle
+} from "@/network/Article.js";
 
 export default {
   components: {
@@ -28,16 +49,13 @@ export default {
   },
   data() {
     return {
-        articleName:String,        
-        articleContent:'',
-        articleId:String,
-        zone:String,        // 文章所属区域 比如学习区
-        directorys:Array,        
+      articleName: "",
+      articleContent: "",
+      directorys: Array
     };
   },
-  created(){
-      this.getArticle(this.$route.params.Id);
-      this.getDirectory();
+  created() {
+    this.getDirectory();
   },
   beforeDestroy() {},
   methods: {
@@ -45,59 +63,91 @@ export default {
      * 退出
      */
     cancleEdit() {
-      this.$router.push('/')
+      this.$router.push("/");
     },
     /**
      * 上传文章
      */
     async commitArticle(e) {
-
       /**第一步 创建文章对象*/
       let articleName = this.articleName;
-      if(articleName.trim() === '') {
-        alert('请输入标题');
+      if (articleName.trim() === "") {
+        alert("请输入标题");
         return;
       }
-      let articleId = this.articleId;
+      let articleId = this.createUID();
       let articleContent = this.articleContent; // 获取文章内容
-      
-
 
       /**第二步 获取添加文章在目录中的位置*/
-      let title = this.zone;            // 区域 例如 学习区
-      let zone;             // 传递给服务器的区 例如 {title:'学习区',smaillitem:[]};  
-
-      /**第三步 将文章的标题信息赋值给目录*/
-     for (const iterator of this.directorys) {
-        if(iterator.title === this.zone) {
-          zone = iterator;
-          // 这里把zone的目录传递进去。
-          for (const iterator of zone.smallItems) {
-              if(Array.isArray(iterator)) {
-                this.findPlace(iterator,this.articleId,this.articleName);
-              }
-          }
+      let title; // 区域 例如 学习区
+      let data; // 通过引用来获取要添加文章的目录位置，如果是新目录则添加。
+      let selecttions = document.getElementById("select_hp").childNodes; // 获取所有选择框元素
+      let zone; // 传递给服务器的区 例如 {title:'学习区',smaillitem:[]};
+      // 如果第一个selection没有选择目录 则不允许提交
+      if (selecttions[0].selectedIndex === 0) {
+        alert("请选择目录");
+        return;
+      } else {
+        title = selecttions[0].options[selecttions[0].selectedIndex].innerText;
+        data = this.directorys[selecttions[0].selectedIndex - 1].smallItems;
+        zone = this.directorys[selecttions[0].selectedIndex - 1];
+      }
+      // 判断接下来的selection 然后根据data上传数据
+      for (let i = 1; i < selecttions.length; i++) {
+        let option = selecttions[i].options[selecttions[i].selectedIndex]; // 获取选择的option
+        let index = option.getAttribute("index");
+        // 如果index == -1 说明option为“请选择”
+        if (index === "-1") {
+          continue;
         }
-     } 
+        // 如果index == -2 说明option为新创建的目录
+        else if (index === "-2") {
+          let _this = this;
+          let directory = {
+            title: option.innerText,
+            titleId:_this.createUID(),
+            smallItems: [
+              []                            // 这里必须初始化一个[] 不然后面添加目录会报错，数据结构是这样设计的。
+            ]
+          };
+          data = data[data.length - 1];
+          data.push(directory);
+          data = directory.smallItems;
+        }
+        // 如果不等于上面那两个，说明option为已存在的目录
+        else {
+          index = parseInt(index);
+          data = data[data.length - 1][index].smallItems;
+        }
+      }
+
+      /**第三步 将文章的部分信息赋值给目录*/
+      data.unshift({ articleName, articleId }); // 在头部插入 也可以再其它地方插入 但是不能在尾部插入！。
 
       /**第四步 目录上传服务器 更新目录 */
-     this.$animation.createLoading();
-      await updateDirectory('/Directory/updateDirectory',title,zone).then((Response)=>{
-        console.log('目录更新成功');
-      }).catch((err)=>{
-        console.log('目录更新失败');
-        return;
-      })
-     this.$animation.cancelLoading();
-      /**第五步 文章上传服务器 更新文章 */
-      this.$animation.createLoading();
-      await updateArticle('/Article/update',articleId,articleName,articleContent,title).then((Response)=>{
-        console.log('文章更新成功');
-      }).catch((err)=>{
-        console.log('文章更新失败',err);
-      }) 
-      this.$animation.cancelLoading();
+      this.$store.commit("changeLoading");
+      await updateDirectory("/Directory/updateDirectory", title, zone)
+        .then(Response => {
+          console.log("目录更新成功");
+        })
+        .catch(err => {
+          console.log("目录更新失败");
+          this.$store.commit("setLoadingSuccessFail");
+          this.$store.commit("changeLoading");
+          return;
+        });
 
+      /**第五步 文章上传服务器 添加文章 */
+      await putArticle("/Article/add", articleId, articleName, articleContent,title)
+        .then(Response => {
+          console.log("文章添加成功");
+          this.$store.commit("setLoadingSuccessOk");
+        })
+        .catch(err => {
+          console.log("文章添加失败");
+          this.$store.commit("setLoadingSuccessFail");
+        });
+      this.$store.commit("changeLoading");
     },
     /**
      * 获取元素
@@ -130,7 +180,7 @@ export default {
       // 创建“请选择”的option
       let option = document.createElement("option");
       option.innerHTML = "请选择";
-      option.setAttribute('index','-1');
+      option.setAttribute("index", "-1");
       selectObj.appendChild(option);
 
       // 如果msg无法转换成对象，说明它没有子目录了。
@@ -142,8 +192,11 @@ export default {
           if (obj.length > 0) {
             for (let index in obj) {
               const option = document.createElement("option");
-              option.setAttribute("value", JSON.stringify(obj[index].smallItems));
-              option.setAttribute("index", index);              // index 代表目录下面的目录索引值
+              option.setAttribute(
+                "value",
+                JSON.stringify(obj[index].smallItems)
+              );
+              option.setAttribute("index", index); // index 代表目录下面的目录索引值
               option.innerHTML = obj[index].title;
               selectObj.appendChild(option);
             }
@@ -242,7 +295,7 @@ export default {
           //将对话框输入的文字插入到option容器里面的option中，并且创建新的selection方便再这个目录下面再次创建新的目录
           const newOption = document.createElement("option");
           newOption.setAttribute("value", input.value);
-          newOption.setAttribute("index", '-2');
+          newOption.setAttribute("index", "-2");
           newOption.innerText = input.value;
           optionWrapper.insertBefore(newOption, option);
           optionWrapper.selectedIndex--; // -1是为了让option的容器对准输入的文字
@@ -271,40 +324,15 @@ export default {
       document.body.appendChild(divObj);
     },
     /**
-     * 获取文章
+     * 创建文章
      */
-    async getArticle(articleId) {
-      this.$animation.createLoading();
-      await getArticle("/Article/find", articleId)
-        .then(Response => {
-          this.articleName = Response.data.articleName;
-          this.articleContent = Response.data.articleContent;
-          this.articleId = Response.data.articleId;
-          this.zone = Response.data.zone;
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      this.$animation.cancelLoading();
-    },
-    /**
-     * 获取目录
-     */
-    async getDirectory(){
-        this.$animation.createLoading();
-        await getDirectory('/Directory/getAllDirectory').then((Response)=>{
-          
-          this.directorys = Response.data;
+    createArticle(name, id, content) {
 
-        }).catch((err)=>{
-          console.log(err)
-        })
-        this.$animation.cancelLoading();
     },
     /**
      * 根据时间生成唯一ID
      */
-    createUID(){
+    createUID() {
       let date = new Date();
       let year = date.getFullYear();
       let mounth = date.getMonth() + 1;
@@ -312,27 +340,23 @@ export default {
       let hours = date.getHours();
       let minutes = date.getMinutes();
       let seconds = date.getSeconds();
-      return ""+year+mounth+day+hours+minutes+seconds;
+      return "" + year + mounth + day + hours + minutes + seconds;
     },
     /**
-     * 根据articleId修改目录中文章对应的articleName
+     * 获取目录
      */
-    findPlace(directorys,articleId,articleName) {
-      for (const iterator of directorys) {
-         let zone = iterator.smallItems;
-          for (const iterator1 of zone) {
-             if(Array.isArray(iterator1)) {
-                this.findPlace(iterator1,articleId,articleName);
-             }
-             else {
-                if(iterator1.articleId === articleId) {
-                  iterator1.articleName = articleName;
-                }
-             }
-          }
-      }
-    }
-  },
+    async getDirectory(){
+      this.$animation.createLoading();
+      await getDirectory("/Directory/getAllDirectory")
+        .then(Response => {
+          this.directorys = Response.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      this.$animation.cancelLoading();
+    },
+  }
 };
 </script>
 <style lang="less" scoped>

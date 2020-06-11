@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    loading:{
+    loading:{                       // 设置加载状态控制
       isLoading:false,
       isSuccess:false
     },
@@ -15,13 +15,13 @@ export default new Vuex.Store({
   },
   mutations: {
     changeLoading(state){
-      state.loading.isLoading = !state.loading.isLoading;
+      state.loading.isLoading = !state.loading.isLoading;   // 控制加载显示与消失
     },
     setLoadingSuccessOk(state){
-      state.loading.isSuccess = true;
+      state.loading.isSuccess = true;                     //  控制加载转向成功加载图标
     },
     setLoadingSuccessFail(state){
-      state.loading.isSuccess = false;
+      state.loading.isSuccess = false;                  //  控制加载转向失败加载图标
     },
     setUser(state,user){
       console.log(user);
