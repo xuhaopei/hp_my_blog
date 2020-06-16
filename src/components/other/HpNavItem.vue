@@ -121,7 +121,6 @@ export default {
       if (!str.match(/g-navHref/)) {
         obj.className = str + " g-navHref";
       }
-      console.log(obj.className);
     },
     /**
      * 离开到此处时，删除添加的元素

@@ -44,10 +44,15 @@ export default {
   watch:{
     $route(to, from) {
        //this.getAllDirectory();
-       let name = to.name;
-       if(name === 'Home') {
+       let toName = to.name;
+       if(toName === 'Home') {
          this.getAllDirectory();
        }
+       let fromName = from.name;
+       if(fromName === 'EditArticle') {
+          this.getAllDirectory();
+       }
+
     }
   }
 };

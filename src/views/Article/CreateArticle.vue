@@ -63,7 +63,8 @@ export default {
      * 退出
      */
     cancleEdit() {
-      this.$router.push("/");
+      //this.$router.push("/");
+      window.history.back();
     },
     /**
      * 上传文章
@@ -83,6 +84,7 @@ export default {
       let data; // 通过引用来获取要添加文章的目录位置，如果是新目录则添加。
       let selecttions = document.getElementById("select_hp").childNodes; // 获取所有选择框元素
       let zone; // 传递给服务器的区 例如 {title:'学习区',smaillitem:[]};
+      let articleAuthor = localStorage.getItem('userName'); 
       // 如果第一个selection没有选择目录 则不允许提交
       if (selecttions[0].selectedIndex === 0) {
         alert("请选择目录");
@@ -138,7 +140,7 @@ export default {
         });
 
       /**第五步 文章上传服务器 添加文章 */
-      await putArticle("/Article/add", articleId, articleName, articleContent,title)
+      await putArticle("/Article/add", articleId, articleName, articleContent,title,articleAuthor)
         .then(Response => {
           console.log("文章添加成功");
           this.$store.commit("setLoadingSuccessOk");

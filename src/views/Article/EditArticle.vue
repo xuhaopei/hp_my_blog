@@ -45,7 +45,8 @@ export default {
      * 退出
      */
     cancleEdit() {
-      this.$router.push('/')
+      //this.$router.push('/')
+      window.history.back();
     },
     /**
      * 上传文章
@@ -65,7 +66,8 @@ export default {
 
       /**第二步 获取添加文章在目录中的位置*/
       let title = this.zone;            // 区域 例如 学习区
-      let zone;             // 传递给服务器的区 例如 {title:'学习区',smaillitem:[]};  
+      let zone;                         // 传递给服务器的区 例如 {title:'学习区',smaillitem:[]}; 
+      let articleAuthor = localStorage.getItem('userName'); 
 
       /**第三步 将文章的标题信息赋值给目录*/
      for (const iterator of this.directorys) {
@@ -91,8 +93,9 @@ export default {
      this.$animation.cancelLoading();
       /**第五步 文章上传服务器 更新文章 */
       this.$animation.createLoading();
-      await updateArticle('/Article/update',articleId,articleName,articleContent,title).then((Response)=>{
+      await updateArticle('/Article/update',articleId,articleName,articleContent,title,articleAuthor).then((Response)=>{
         console.log('文章更新成功');
+        window.history.back();
       }).catch((err)=>{
         console.log('文章更新失败',err);
       }) 
