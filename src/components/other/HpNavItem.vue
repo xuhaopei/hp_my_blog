@@ -4,26 +4,31 @@
     <!--zone代表每个学习区-->
     <div v-for="(zone, index) in data" :key="index">
       <div
-        class="HpNavItem-title   g_layout_flex_justify-content_space-between g-navHref"
+        class="HpNavItem-name   g_layout_flex_justify-content_space-between g-navHref"
         v-on:click="showMsg(index, $event)"
         v-on:click.right="showMenu"
+        :pid="zone.pid"
+        :id="zone.id"
+        :path="zone.path"
         style="text-indent:10px"
       >
-        {{ zone.title }}
+        {{ zone.name }}
         <i class="iconfont icon-sanjiaoxing"></i>
       </div>
       <div class="HpNavItem-body" flage="false">
         <!--article代表文章信息，如果article的长度大于0说明是区，则递归调用此组件-->
         <div
           class="HpNavItem-item "
-          v-for="(article, index) in zone.smallItems"
+          v-for="(article, index) in zone.childrens"
           :key="index"
         >
           <!--如果是数组 则递归调用这个组建-->
           <hp-nav-item v-if="article.length > 0" :item="article"></hp-nav-item>
           <!--不是数组 则输出文章名-->
-          <li v-else class="g-navHref" v-on:click.right="showMenu">
-            <router-link :to='"/ReadArticle/"+article.articleId'> {{ article.articleName }}</router-link>
+          <li v-else class="g-navHref">
+            <router-link :to="'/ReadArticle/' + article.id">
+              {{ article.name }}</router-link
+            >
           </li>
         </div>
       </div>
@@ -31,19 +36,20 @@
   </div>
 </template>
 <script>
+import { createDirector, updateDirectory, deleteDirector } from "@/network/LeftNav.js";
+
 export default {
   name: "hp-nav-item",
   props: {
-    item:Array
+    item: Array
   },
   data() {
     return {
       isShow: false,
-      data:this.item
+      data: this.item
     };
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     /**
      * 点击后显示/关闭目录
@@ -77,39 +83,49 @@ export default {
         menu.parentNode.removeChild(menu);
       });
 
-      var item_director = document.createElement("li"); // 创建文章
-      item_director.addEventListener(
+      // 创建子目录
+      var item_directorSon = document.createElement("li");
+      item_directorSon.addEventListener(
         "click",
         () => {
-          this.$router.push("/CreateArticle");
+          this.createDilog(event);
         },
         false
       );
-      item_director.setAttribute("class", " g-navHref");
-      item_director.innerText = "创建文章";
-
+      item_directorSon.setAttribute("class", " g-navHref");
+      item_directorSon.innerText = "创建子目录";
 
       var item_manager = document.createElement("li"); // 编辑
       item_manager.addEventListener(
         "click",
         () => {
-          //console.log(event.target.childNodes[0].baseURI);
-          let array = event.target.childNodes[0].baseURI.split('/');
-          let articleId = array.pop();
-          this.$router.push("/EditArticle/"+articleId);
+          this.createDilog(event,event.target.innerText);
         },
         false
       );
       item_manager.setAttribute("class", " g-navHref");
-      item_manager.innerText = "编辑文章";
+      item_manager.innerText = "编辑目录";
 
       var item_delete = document.createElement("li"); // 删除
+      item_delete.addEventListener(
+        "click",
+        () => {
+          console.log('删除');
+          deleteDirector('/Directory/deleteDirectory',event.target.getAttribute('id')).then((Response)=>{
+            console.log('删除完毕');
+          }).catch((err)=>{
+            console.log(err);
+          });
+          this.$router.push('/');
+        },
+        false
+      );
       item_delete.setAttribute("class", " g-navHref");
-      item_delete.innerText = "删除";
+      item_delete.innerText = "删除目录";
 
       menu.appendChild(item_delete);
       menu.appendChild(item_manager);
-      menu.appendChild(item_director);
+      menu.appendChild(item_directorSon);
       document.body.appendChild(menu);
     },
     /**
@@ -128,14 +144,121 @@ export default {
     removeClass(e) {
       var obj = e.target;
       obj.className.replace(/g-navHref/g, "");
+    },
+    /**
+     * 创建输入对话框
+     */
+    createDilog(event, value = "") {
+      // 去除已经存在的对话框 避免重复创建对话框
+      var hpDialog = document.getElementById("hpDialog");
+      hpDialog && document.body.removeChild(hpDialog);
+
+      // 定义对话框的容器
+      const divObj = document.createElement("div");
+      divObj.setAttribute(
+        "style",
+        `
+        position: fixed;
+        background: white;
+        box-shadow: 0px 0px 10px 10px rgba(146, 146, 146);
+        top:calc(50% - 100px);
+        left:calc(50% - 200px);
+        width:400px;
+        height:200px;
+        display: flex;
+        padding: 15px;
+        flex-direction: column;
+        justify-content: space-around;
+        z-index:999999;
+      `
+      );
+      divObj.setAttribute("id", "hpDialog");
+
+      //定义输入框
+      const input = document.createElement("input");
+      input.setAttribute("placeholder", "请输入目录名称");
+      input.setAttribute("class", "g_input");
+      input.value = value;
+      divObj.appendChild(input);
+
+      //定义按钮容器
+      const btnGroup = document.createElement("div");
+      btnGroup.setAttribute(
+        "style",
+        `
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        `
+      );
+
+      //定义确认按钮
+      const buttonDo = document.createElement("button");
+      buttonDo.setAttribute("class", "g_btn g_btn_larger g_btn_success");
+      buttonDo.innerText = "确认";
+      buttonDo.addEventListener(
+        "click",
+        () => {
+          if (input.value.trim() === "") {
+            alert("请输入文字!");
+            return;
+          }
+          document.body.removeChild(divObj); // 关闭对话框
+
+          let directorItem = event.target;
+          if (value != "") {
+            let id = parseInt(directorItem.getAttribute("id"));
+            let path = directorItem.getAttribute("path");
+            let name = input.value.trim();
+              createDirector("/Directory/updateDirectory", id, path, name)
+              .then(Response => {
+                console.log("修改成功嗷");
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          } else {
+            let pid = parseInt(directorItem.getAttribute("id"));
+            let path = directorItem.getAttribute("path");
+            let name = input.value.trim();
+            createDirector("/Directory/createDirectory", pid, path, name)
+              .then(Response => {
+                console.log("创建成功嗷");
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          }
+        },
+        false
+      );
+
+      //定义取消按钮
+      const buttonCancle = document.createElement("button");
+      buttonCancle.setAttribute("class", "g_btn g_btn_larger g_btn_cancle");
+      buttonCancle.innerText = "取消";
+      buttonCancle.addEventListener(
+        "click",
+        () => {
+          document.body.removeChild(divObj);
+          event.target.selectedIndex = 0;
+        },
+        false
+      );
+      btnGroup.appendChild(buttonDo);
+      btnGroup.appendChild(buttonCancle);
+
+      divObj.appendChild(btnGroup);
+
+      document.body.appendChild(divObj);
     }
   },
-  watch:{
-    item:{
-      handler:function(){
+  watch: {
+    item: {
+      handler: function() {
         this.data = this.item;
       },
-      deep:true
+      deep: true
     }
   }
 };
@@ -145,7 +268,7 @@ export default {
   position: relative;
   width: 100%;
 }
-.HpNavItem-title {
+.HpNavItem-name {
   position: relative;
   height: 50px;
   line-height: 50px;

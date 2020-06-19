@@ -9,13 +9,14 @@ export function getDirectory(url) {
     return instance.get(url);
 }
 /**
- * 根据title更新目录
- * @param {*} url 
- * @param {*} title 目录的名字 比如学习区
- * @param {*} directoryObj 一整个目录 比如{title:'学习区',smaillitems:[]}
+ * 更新目录
+ * @param {String} url 
+ * @param {Number} id     目录ID
+ * @param {String} path   目录路径
+ * @param {String} name   目录名称
  */
-export function updateDirectory(url,title,directoryObj) {
-    return instance.post(url,title,directoryObj);
+export function updateDirectory(url,id,path,name) {
+    return instance.post(url,id,path,name);
 }
 
 /**
@@ -27,4 +28,26 @@ export function updateDirectory(url,title,directoryObj) {
  */
 export function putArticle(url,articleId,articleName,articleContent) {
     return instance.post(url,articleId,articleName,articleContent);
+}
+
+/**
+ * 创建目录
+ * @param {String} url 
+ * @param {Number} pid  上级目录ID
+ * @param {String} path 目录路径
+ * @param {String} name 目录名称
+ */
+export function createDirector(url,pid,path,name,articleId = 0) {
+    let array = [pid,path,name,articleId]
+    return instance.post(url,array);
+}
+
+/**
+ * 删除目录
+ * @param {String} url 
+ * @param {Number} id   目录ID
+ */
+export function deleteDirector(url,id) {
+    let array = [id]
+    return instance.post(url,array);
 }

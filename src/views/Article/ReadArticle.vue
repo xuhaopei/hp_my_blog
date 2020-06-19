@@ -24,11 +24,11 @@ export default {
     methods:{
         async readArticle(articleId){
             this.$animation.createLoading();
-            getArticle('/Article/find',articleId).then((Response)=>{
-                this.article = Response.data;
-            }).catch((err)=>{
-                console.log(err);
-            })
+            await getArticle('/Article/find',articleId).then((Response)=>{
+                        this.article = Response.data;
+                    }).catch((err)=>{
+                        console.log(err);
+                    })
             this.$animation.cancelLoading();
         },
         /**
