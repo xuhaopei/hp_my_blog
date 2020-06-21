@@ -9,7 +9,8 @@ export default new Vuex.Store({
       isLoading:false,
       isSuccess:false
     },
-    user:null
+    user:null,
+    isChangeDirctor:0                 // 监听状态更改
   },
   getters:{
   },
@@ -26,6 +27,9 @@ export default new Vuex.Store({
     setUser(state,user){
       console.log(user);
       state.user = user;
+    },
+    changeDirctor(state){
+      state.isChangeDirctor++;
     }
   },
   actions: {

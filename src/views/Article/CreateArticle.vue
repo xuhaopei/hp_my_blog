@@ -4,8 +4,14 @@
       <input
         class="input_wrapper"
         type="text"
-        placeholder="请输入您的标题"
+        placeholder="请输入您的标题~"
         v-model="articleName"
+      />
+      <input
+      class="input_wrapper"
+      type="text"
+      placeholder="请输入标签，注意每个标签用英文逗号隔开~"
+      v-model="articleTags"
       />
       <div class="articleLocation_wrapper">
         <span>文章所属目录：</span>
@@ -13,11 +19,13 @@
           <select name="" id="" @change="getElement">
             <option index="-1">请选择</option>
             <option
-              :value="JSON.stringify(value.smallItems)"
+              :value="JSON.stringify(value.childrens)"
               v-for="(value, index) in directorys"
               :key="index"
               :index="index"
-              >{{ value.title }}</option
+              :path ='value.path'
+              :id ='value.id'
+              >{{ value.name }}</option
             >
           </select>
         </div>
@@ -43,6 +51,8 @@ import {
   putArticle
 } from "@/network/Article.js";
 
+import { createDirector } from "@/network/LeftNav.js";
+
 export default {
   components: {
     HpEdit
@@ -51,7 +61,8 @@ export default {
     return {
       articleName: "",
       articleContent: "",
-      directorys: Array
+      directorys: Array,
+      articleTags:''
     };
   },
   created() {
@@ -76,80 +87,43 @@ export default {
         alert("请输入标题");
         return;
       }
-      let articleId = this.createUID();
       let articleContent = this.articleContent; // 获取文章内容
 
-      /**第二步 获取添加文章在目录中的位置*/
-      let title; // 区域 例如 学习区
-      let data; // 通过引用来获取要添加文章的目录位置，如果是新目录则添加。
+      /**第二步 获取目录的信息*/
       let selecttions = document.getElementById("select_hp").childNodes; // 获取所有选择框元素
-      let zone; // 传递给服务器的区 例如 {title:'学习区',smaillitem:[]};
-      let articleAuthor = localStorage.getItem('userName'); 
-      // 如果第一个selection没有选择目录 则不允许提交
-      if (selecttions[0].selectedIndex === 0) {
-        alert("请选择目录");
+      let arrays = [];
+      for(let i = 0; i < selecttions.length; i++) {
+        arrays.push([i,selecttions[i].selectedIndex]);
+      }
+      let temp = arrays.pop();
+      try {
+        while(temp[1]==0){
+          temp = arrays.pop();
+        }
+      } catch (error) {
+        alert('请选择目录');
         return;
-      } else {
-        title = selecttions[0].options[selecttions[0].selectedIndex].innerText;
-        data = this.directorys[selecttions[0].selectedIndex - 1].smallItems;
-        zone = this.directorys[selecttions[0].selectedIndex - 1];
       }
-      // 判断接下来的selection 然后根据data上传数据
-      for (let i = 1; i < selecttions.length; i++) {
-        let option = selecttions[i].options[selecttions[i].selectedIndex]; // 获取选择的option
-        let index = option.getAttribute("index");
-        // 如果index == -1 说明option为“请选择”
-        if (index === "-1") {
-          continue;
-        }
-        // 如果index == -2 说明option为新创建的目录
-        else if (index === "-2") {
-          let _this = this;
-          let directory = {
-            title: option.innerText,
-            titleId:_this.createUID(),
-            smallItems: [
-              []                            // 这里必须初始化一个[] 不然后面添加目录会报错，数据结构是这样设计的。
-            ]
-          };
-          data = data[data.length - 1];
-          data.push(directory);
-          data = directory.smallItems;
-        }
-        // 如果不等于上面那两个，说明option为已存在的目录
-        else {
-          index = parseInt(index);
-          data = data[data.length - 1][index].smallItems;
-        }
-      }
+      let option = selecttions[temp[0]][temp[1]];     // 这是最终选择的option 从里面获取目录信息
 
-      /**第三步 将文章的部分信息赋值给目录*/
-      data.unshift({ articleName, articleId }); // 在头部插入 也可以再其它地方插入 但是不能在尾部插入！。
+      let pid = option.getAttribute('id');
+      let path = option.getAttribute('path');
+      let author = localStorage.getItem('userName'); 
+      let tags = this.articleTags;
 
-      /**第四步 目录上传服务器 更新目录 */
-      this.$store.commit("changeLoading");
-      await updateDirectory("/Directory/updateDirectory", title, zone)
-        .then(Response => {
-          console.log("目录更新成功");
-        })
-        .catch(err => {
-          console.log("目录更新失败");
-          this.$store.commit("setLoadingSuccessFail");
-          this.$store.commit("changeLoading");
-          return;
-        });
-
-      /**第五步 文章上传服务器 添加文章 */
-      await putArticle("/Article/add", articleId, articleName, articleContent,title,articleAuthor)
+      /**第三步 文章上传服务器 添加文章 */
+      await putArticle("/Article/add", pid,articleName,articleContent,'author',tags)
         .then(Response => {
           console.log("文章添加成功");
-          this.$store.commit("setLoadingSuccessOk");
+          let articleId = Response.data.insertId;
+          return createDirector('/Directory/createDirectory',pid,path,articleName,articleId);
+        })
+        .then((Response)=>{
+          console.log("文章添加到目录成功~");
         })
         .catch(err => {
           console.log("文章添加失败");
-          this.$store.commit("setLoadingSuccessFail");
         });
-      this.$store.commit("changeLoading");
     },
     /**
      * 获取元素
@@ -171,9 +145,14 @@ export default {
     /**
      * msg 根据smg的数据来创建selection里面的option
      * documentObj 获取点击的document元素
-     * 待选择第一个后，创建后面的selsection选项。
+     * 待选择第一个后，如果有子目录(msg[msg.length-1].length>0)，则创建后面的selection选项。
      */
     createSelection(msg, documentObj) {
+
+      // 如果有子目录则创建 否则返回
+      msg = JSON.parse(msg);
+      if(msg[msg.length-1].length === 0) return;
+
       const parent = documentObj.parentNode.parentNode; // 获取创建的selection的容器
       const selectObj = document.createElement("select");
       const _this = this;
@@ -185,9 +164,8 @@ export default {
       option.setAttribute("index", "-1");
       selectObj.appendChild(option);
 
-      // 如果msg无法转换成对象，说明它没有子目录了。
       try {
-        msg = JSON.parse(msg);
+        
         // 选择性创建"子目录"的otion
         for (let obj of msg) {
           // 如果obj长度大于0说明是目录数组，则创建目录名单。
@@ -196,10 +174,12 @@ export default {
               const option = document.createElement("option");
               option.setAttribute(
                 "value",
-                JSON.stringify(obj[index].smallItems)
+                JSON.stringify(obj[index].childrens)
               );
               option.setAttribute("index", index); // index 代表目录下面的目录索引值
-              option.innerHTML = obj[index].title;
+              option.setAttribute("path", obj[index].path); 
+              option.setAttribute("id", obj[index].id); 
+              option.innerHTML = obj[index].name;
               selectObj.appendChild(option);
             }
           }
@@ -210,7 +190,7 @@ export default {
       option = document.createElement("option");
       option.setAttribute("value", "create");
       option.innerText = "新建";
-      selectObj.appendChild(option);
+      //selectObj.appendChild(option); //暂时关闭新建这个功能
 
       // 将seleciton添加到容器里面
       parent.appendChild(selectObj);
@@ -392,6 +372,9 @@ export default {
       display: flex;
       flex-direction: row;
       justify-content: start;
+    }
+    .article_tags{
+      width: 100%;
     }
     .btn_wrapper {
       width: 100%;

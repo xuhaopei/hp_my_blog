@@ -26,7 +26,7 @@
           <hp-nav-item v-if="article.length > 0" :item="article"></hp-nav-item>
           <!--不是数组 则输出文章名-->
           <li v-else class="g-navHref">
-            <router-link :to="'/ReadArticle/' + article.id">
+            <router-link :to="'/ReadArticle/' + article.articleId">
               {{ article.name }}</router-link
             >
           </li>
@@ -36,7 +36,7 @@
   </div>
 </template>
 <script>
-import { createDirector, updateDirectory, deleteDirector } from "@/network/LeftNav.js";
+import { createDirector, updateDirectory, deleteDirector,getDirectory } from "@/network/LeftNav.js";
 
 export default {
   name: "hp-nav-item",
@@ -116,7 +116,7 @@ export default {
           }).catch((err)=>{
             console.log(err);
           });
-          this.$router.push('/');
+          this.$store.commit('changeDirctor'); 
         },
         false
       );
@@ -229,6 +229,7 @@ export default {
                 console.log(err);
               });
           }
+          this.$store.commit('changeDirctor');      // 因为是递归组件 所以更新目录只能通过vuex来通知顶级父组件
         },
         false
       );
@@ -251,7 +252,7 @@ export default {
       divObj.appendChild(btnGroup);
 
       document.body.appendChild(divObj);
-    }
+    },
   },
   watch: {
     item: {

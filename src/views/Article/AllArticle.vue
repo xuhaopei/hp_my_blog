@@ -8,8 +8,13 @@
       :data-articleId='item.articleId'
     >
       <div class="Article_warpper_top">
-        <span class="Article_date">{{ item.creatDate | dataInit }}</span>
-        <span class="Article_title"> {{ item.articleName }} </span>
+        <div class='left'>
+          <span class="Article_date">{{ item.alertDate | dateInit }}</span>
+          <span class="Article_title"> {{ item.articleName }} </span>
+        </div>
+        <div class="Article_tags">
+              <span v-for="(tag,index) of tagsInit(item.tags)" :key='index'>{{tag}}</span>
+        </div>
       </div>
       <div class="Article_warpper_body">
         摘要：
@@ -17,7 +22,7 @@
             {{item.articleContent}}
         </div>
         <router-link
-          :to="'/ReadArticle/' + item.articleId"
+          :to="'/ReadArticle/' + item.id"
           class="Article_forward"
         >
           阅读全文
@@ -25,7 +30,7 @@
       </div>
       <div class="Article_warpper_bottom">
         <span class="Article_author">
-          {{ item.articleAuthor }}
+          {{ item.author }}
         </span>
         <span class="Article_readTime"> 阅读数({{ item.read }}) </span>
       </div>
@@ -94,7 +99,7 @@ export default {
     async getAllArticle() {
       this.$animation.createLoading();
       getAllArticle('/Article/findAll').then((Response)=>{
-          this.allAricle = Response.data
+          this.allAricle = Response.data;
       }).catch((err)=>{
           console.log(err);
       })
@@ -147,14 +152,22 @@ export default {
     //   menu.appendChild(item_manager);
       menu.appendChild(item_director);
       document.body.appendChild(menu);
+    },
+    tagsInit:function(value) {
+        if(!value) return '';
+        value = value.toString();
+        return value.split(',');
     }
   },
   filters:{
-      dataInit:function(value) {
+      dateInit:function(value) {
         if (!value) return '';
         value = value.toString();
         return value.slice(0,value.indexOf('T'));
-      }
+      },
+  },
+  computed:{
+
   }
 };
 </script>
@@ -180,15 +193,24 @@ export default {
       display: flex;
       flex-direction: row;
       margin-bottom: 10px;
+      justify-content: space-between;
+      align-items: baseline;
       .Article_date {
         background: rgb(87, 191, 240);
         padding: 5px;
         color: white;
-        line-height: 30px;
         margin-right: 20px;
       }
       .Article_title {
         font-size: 30px;
+      }
+      .Article_tags {
+        span{
+          padding: 5px;
+          margin-right: 20px;
+          color: white;
+          background: rgba(104, 37, 37, 0.4);
+        }
       }
     }
     .Article_warpper_body {

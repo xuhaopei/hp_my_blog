@@ -36,6 +36,7 @@ export function putArticle(url,articleId,articleName,articleContent) {
  * @param {Number} pid  上级目录ID
  * @param {String} path 目录路径
  * @param {String} name 目录名称
+ * @param {Number} articleId 0为目录，其它为文章id;
  */
 export function createDirector(url,pid,path,name,articleId = 0) {
     let array = [pid,path,name,articleId]

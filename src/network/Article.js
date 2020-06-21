@@ -28,24 +28,23 @@ export function updateDirectory(url,title,directoryObj) {
  * @param {String} zone         文章所属区域
  * @param {String} articleAuthor         文章作者
  */
-export function putArticle(url,articleId,articleName,articleContent,zone,articleAuthor) {
-    let array = [articleId,articleName,articleContent,zone,articleAuthor];
+export function putArticle(url,pid,articleName,articleContent,author,tags) {
+    let array = [pid,articleName,articleContent,author,tags];
     return instance.post(url,array);
 }
 
 /**
  * 根据文章ID查询一篇文章
- * @param {*} url 
- * @param {*} articleId 文章ID
+ * @param {String} url 
+ * @param {Number} id 文章ID
  */
-export function getArticle(url,articleId) {
-    return instance.get(url+'?articleId='+articleId);
+export function getArticle(url,id) {
+    return instance.get(url+'?id='+id);
 }
 
 /**
  * 查询所有文章
  * @param {*} url 
- * @param {*} articleId 文章ID
  */
 export function getAllArticle(url) {
     return instance.get(url);

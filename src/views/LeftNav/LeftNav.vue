@@ -2,7 +2,7 @@
   <div id="LeftNav">
     <LeftNavTop></LeftNavTop>
     <div class="LeftNavBody">
-      <HpNavItem :item='allItems'></HpNavItem>
+      <HpNavItem :item='allItems' v-on:changeDirectoty='getAllDirectory'></HpNavItem>
     </div>
   </div>
 </template>
@@ -42,17 +42,22 @@ export default {
     }
   },
   watch:{
+    /**监听路由 */
     $route(to, from) {
-       //this.getAllDirectory();
        let toName = to.name;
-       if(toName === 'Home') {
+       // 当跳转到'/'时
+       if(toName === 'AllArticle') {
          this.getAllDirectory();
        }
        let fromName = from.name;
+       // 当从'/EditArticle'跳转时
        if(fromName === 'EditArticle') {
           this.getAllDirectory();
        }
-
+    },
+    /**监听是否需要更新目录状态 */
+    '$store.state.isChangeDirctor':function(){
+      this.getAllDirectory();
     }
   }
 };
