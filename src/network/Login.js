@@ -9,12 +9,3 @@ export function doLogin(url,paramaObj = {username:'xhp',password:'123456'}) {
     return instance.post(url,paramaObj);
 }
 
-/**
- * 给axios设置token 方便服务器验证
- * @param {*} cookie  
- */
-export function setHeaderCookie(cookie){
-    instance.headers = {
-        'cookie':cookie
-    }
-}

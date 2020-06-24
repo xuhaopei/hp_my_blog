@@ -9,7 +9,7 @@ export default new Vuex.Store({
       isLoading:false,
       isSuccess:false
     },
-    user:null,
+    userName:null,
     isChangeDirctor:0                 // 监听状态更改
   },
   getters:{
@@ -24,9 +24,8 @@ export default new Vuex.Store({
     setLoadingSuccessFail(state){
       state.loading.isSuccess = false;                  //  控制加载转向失败加载图标
     },
-    setUser(state,user){
-      console.log(user);
-      state.user = user;
+    setUserName(state,userName){
+      state.userName = userName;
     },
     changeDirctor(state){
       state.isChangeDirctor++;

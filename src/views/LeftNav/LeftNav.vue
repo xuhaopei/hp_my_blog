@@ -57,6 +57,7 @@ export default {
     },
     /**监听是否需要更新目录状态 */
     '$store.state.isChangeDirctor':function(){
+      //document.location.reload();//重新加载当前页面 
       this.getAllDirectory();
     }
   }

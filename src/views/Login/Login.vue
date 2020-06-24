@@ -35,6 +35,7 @@ const hpValidateForm = require('hp-validate-form');
 import jwt from 'jsonwebtoken';
 
 import {doLogin,setHeaderCookie} from '@/network/Login.js';
+import {setToken} from '@/network/Token.js';
 
 
 export default {
@@ -68,36 +69,40 @@ export default {
 
             var that = this;
             this.tip = '';
-            this.$store.commit('changeLoading');
+            //this.$store.commit('changeLoading');
             var obj = {
                 username:that.username,
                 password:that.password
             };
 
+            this.$animation.createLoading();
             doLogin('/user/login',obj).then((Response)=>{
                 let token = Response.data.token ;   // 获取到token
                 let user  = Response.data.user;     // 获取到用户信息
                 localStorage.setItem('userName',user.userName); 
                 localStorage.setItem('token',token);
-                this.createCookie(token);
-                this.$store.commit('setUser',user);
-                this.$store.commit('setLoadingSuccessOk');
-                this.$store.commit('changeLoading');
+                setToken();
+                //this.$store.commit('setUser',user);
+                // this.$store.commit('setLoadingSuccessOk');
+                // this.$store.commit('changeLoading');
+                
                 this.$router.push("/");
             }).catch((err)=>{
                 console.log(err);
                 this.tip = '不存在此用户';
-                this.$store.commit('setLoadingSuccessFail');
-                this.$store.commit('changeLoading');
+                // this.$store.commit('setLoadingSuccessFail');
+                // this.$store.commit('changeLoading');
             });
+            this.$animation.cancelLoading();
         },
         /**
          * 创建cookie，并将cookie设置在axios实例中
          */
         createCookie(token){
-            document.cookie =`username=${this.username}; expires=Thu, 18 Dec 2043 12:00:00 GMT; path=/`;
-            setHeaderCookie(setHeaderCookie);
-        }
+            //document.cookie = "username=Steve Jobs;expires=Sun, 31 Dec 2022 12:00:00 UTC;";
+            console.log(document.cookie )
+        },
+        
     }
 }
 </script>

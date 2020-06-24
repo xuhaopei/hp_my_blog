@@ -75,6 +75,10 @@ export default {
       document.body.appendChild(menu);
     },
   },
+  mounted(){
+    //document.cookie = "blogCookie=blog;path=/;domain=http://localhost:8080/";
+  }
+
 };
 </script>
 

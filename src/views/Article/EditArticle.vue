@@ -2,7 +2,12 @@
   <div id="Article" v-on:click.self="cancleEdit">
     <div class="Article-wrapper">
       <input class="input_wrapper" type="text" placeholder="请输入您的标题"  v-model="articleName"/>
-
+            <input
+      class="input_wrapper"
+      type="text"
+      placeholder="请输入标签，注意每个标签用英文逗号隔开~"
+      v-model="articleTags"
+      />
       <HpEdit v-model='articleContent'></HpEdit>
       <div class="btn_wrapper">
         <button
@@ -30,8 +35,8 @@ export default {
     return {
         articleName:String,        
         articleContent:'',
-        articleId:String,
-        zone:String,        // 文章所属区域 比如学习区
+        id:String,
+        articleTags:String,        // 文章所属区域 比如学习区
         directorys:Array,        
     };
   },
@@ -59,41 +64,41 @@ export default {
         alert('请输入标题');
         return;
       }
-      let articleId = this.articleId;
+      let id = this.id;
       let articleContent = this.articleContent; // 获取文章内容
-      
+      let tags = this.articleTags;
 
 
-      /**第二步 获取添加文章在目录中的位置*/
-      let title = this.zone;            // 区域 例如 学习区
-      let zone;                         // 传递给服务器的区 例如 {title:'学习区',smaillitem:[]}; 
-      let articleAuthor = localStorage.getItem('userName'); 
+    //   /**第二步 获取添加文章在目录中的位置*/
+    //   let title = this.zone;            // 区域 例如 学习区
+    //   let zone;                         // 传递给服务器的区 例如 {title:'学习区',smaillitem:[]}; 
+    //   let articleAuthor = localStorage.getItem('userName'); 
 
-      /**第三步 将文章的标题信息赋值给目录*/
-     for (const iterator of this.directorys) {
-        if(iterator.title === this.zone) {
-          zone = iterator;
-          // 这里把zone的目录传递进去。
-          for (const iterator of zone.smallItems) {
-              if(Array.isArray(iterator)) {
-                this.findPlace(iterator,this.articleId,this.articleName);
-              }
-          }
-        }
-     } 
+    //   /**第三步 将文章的标题信息赋值给目录*/
+    //  for (const iterator of this.directorys) {
+    //     if(iterator.title === this.zone) {
+    //       zone = iterator;
+    //       // 这里把zone的目录传递进去。
+    //       for (const iterator of zone.smallItems) {
+    //           if(Array.isArray(iterator)) {
+    //             this.findPlace(iterator,this.id,this.articleName);
+    //           }
+    //       }
+    //     }
+    //  } 
 
-      /**第四步 目录上传服务器 更新目录 */
-     this.$animation.createLoading();
-      await updateDirectory('/Directory/updateDirectory',title,zone).then((Response)=>{
-        console.log('目录更新成功');
-      }).catch((err)=>{
-        console.log('目录更新失败');
-        return;
-      })
-     this.$animation.cancelLoading();
+    //   /**第四步 目录上传服务器 更新目录 */
+    //  this.$animation.createLoading();
+    //   await updateDirectory('/Directory/updateDirectory',title,zone).then((Response)=>{
+    //     console.log('目录更新成功');
+    //   }).catch((err)=>{
+    //     console.log('目录更新失败');
+    //     return;
+    //   })
+    //  this.$animation.cancelLoading();
       /**第五步 文章上传服务器 更新文章 */
       this.$animation.createLoading();
-      await updateArticle('/Article/update',articleId,articleName,articleContent,title,articleAuthor).then((Response)=>{
+      await updateArticle('/Article/update',id,articleName,articleContent,tags).then((Response)=>{
         console.log('文章更新成功');
         window.history.back();
       }).catch((err)=>{
@@ -276,14 +281,14 @@ export default {
     /**
      * 获取文章
      */
-    async getArticle(articleId) {
+    async getArticle(id) {
       this.$animation.createLoading();
-      await getArticle("/Article/find", articleId)
+      await getArticle("/Article/find", id)
         .then(Response => {
           this.articleName = Response.data.articleName;
           this.articleContent = Response.data.articleContent;
-          this.articleId = Response.data.articleId;
-          this.zone = Response.data.zone;
+          this.id = Response.data.id;
+          this.articleTags = Response.data.tags;
         })
         .catch(err => {
           console.log(err);
@@ -318,17 +323,17 @@ export default {
       return ""+year+mounth+day+hours+minutes+seconds;
     },
     /**
-     * 根据articleId修改目录中文章对应的articleName
+     * 根据id修改目录中文章对应的articleName
      */
-    findPlace(directorys,articleId,articleName) {
+    findPlace(directorys,id,articleName) {
       for (const iterator of directorys) {
          let zone = iterator.smallItems;
           for (const iterator1 of zone) {
              if(Array.isArray(iterator1)) {
-                this.findPlace(iterator1,articleId,articleName);
+                this.findPlace(iterator1,id,articleName);
              }
              else {
-                if(iterator1.articleId === articleId) {
+                if(iterator1.id === id) {
                   iterator1.articleName = articleName;
                 }
              }

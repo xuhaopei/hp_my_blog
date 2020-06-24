@@ -61,13 +61,12 @@ export function deleteArticle(url,articleId) {
 /**
  * 
  * @param {*} url 
- * @param {String} articleId  文章ID
- * @param {String} articleName  文章名
- * @param {String} articleContent 文章内容
- * @param {String} zone         文章所属区域
- * @param {String} articleAuthor         文章作者
+ * @param {String} articleId        文章ID
+ * @param {String} articleName      文章名
+ * @param {String} articleContent   文章内容
+ * @param {String} tags             文章标签
  */
-export function updateArticle(url,articleId,articleName,articleContent,zone,articleAuthor) {
-    let array = [articleId,articleName,articleContent,zone,articleAuthor];
+export function updateArticle(url,id,articleName,articleContent,tags) {
+    let array = [id,articleName,articleContent,tags];
     return instance.post(url,array);
 }
