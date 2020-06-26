@@ -13,6 +13,8 @@ import LeftNav from "@/views/LeftNav/LeftNav.vue";
 import TopNav from "@/views/TopNav/TopNav.vue";
 import Animation from "@/components/other/AnimationTick.vue";
 
+import {setToken} from '@/network/Token.js';
+
 
 export default {
   data() {
@@ -76,7 +78,7 @@ export default {
     },
   },
   mounted(){
-    //document.cookie = "blogCookie=blog;path=/;domain=http://localhost:8080/";
+    setToken();
   }
 
 };

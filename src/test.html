@@ -1,22 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        html,body{
+        html,
+        body {
             width: 100%;
             height: 100%;
         }
-
+        div{
+            color: red;
+        }
+        .divWrapper {
+            box-shadow: 0 0 3px 3px rgba(90, 247, 111, 0.8);
+            box-sizing: border-box;
+            margin: 5px;
+            width: 240px;
+            height: 120px;
+            position: fixed;
+            right: 0px;
+            top: 0;
+            transition:right 1s ease-in-out 1s;
+            border-radius: 5px;
+        }
+        div:first-child{
+            border-bottom: 1px solid rgba(247, 90, 90, 0.8);
+            padding: 5px;
+        }
     </style>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 </body>
 <script type="text/javascript">
+    function Tip(status) {
+        let msg;
+        let color;
+        switch (status) {
+            case 200:
+            msg = '数据获取成功，且被缓存';
+                color = 'rgba(90, 247, 111, 0.8)';
+                break;
+                case 201:
+                msg = '数据已经被成功处理，且创建了新的资源';
+                color = 'rgba(90, 247, 111, 0.8)' 
+                break;
+                case 202:
+                msg = '服务器已收到该请求，但是还没有处理';
+                color = 'rgba(90, 247, 111, 0.8)' 
+                break;
+                case 204:
+                msg = '该请求已经成功了，但是客户端客户不需要离开当前页面';
+                color = 'rgba(90, 247, 111, 0.8)' 
+                break;
+            case 400:
+                msg = '您的语法错误，服务器无法理解此请求';
+                color = 'rgba(247, 90, 90, 0.8)'
+                break;
+            case 401:
+                msg = '您的身份登记已无效，请您登录。';
+                color = 'rgba(247, 90, 90, 0.8)'
+                break;
+            case 403:
+                msg = '服务器拒绝了您这次请求';
+                color = 'rgba(247, 90, 90, 0.8)'
+                break;
+            case 404:
+                msg = '服务器找不到您所要的资源';
+                color = 'rgba(247, 90, 90, 0.8)'
+                break;
+            case 500:
+                msg = '服务器内部出现bug了，不好意思';
+                color = 'rgba(247, 90, 90, 0.8)'
+                break;
+            case 501:
+                msg = '您的请求方法服务器不支持哦，因此没有处理';
+                color = 'rgba(247, 90, 90, 0.8)'
+                break;
+            case 502:
+                msg = '网关问题';
+                color = 'rgba(247, 90, 90, 0.8)'
+                break;
+            default:
+                msg = '';
+        }
 
-    
+        let tipWrapper = document.createElement('div');
+        tipWrapper.setAttribute('style',`
+            box-shadow: 0 0 3px 3px rgba(247, 90, 90, 0.8);
+            margin: 5px;
+            width: 240px;
+            height: 120px;
+            position: fixed;
+            right: -250px;
+            top: 0;
+            transition:right 1s ease-in-out;        
+        `);
+        tipWrapper.style['box-shadow'] = '0 0 3px 3px ' + color;
+        tipWrapper.style['color']  = color;
+        setTimeout(()=>{
+            tipWrapper.style['right']  = '0px';
+        },0)
+        tipWrapper.addEventListener('transitionend',()=>{
+            setTimeout(()=>{
+            document.body.remove(tipWrapper)
+            },1500)
+        })     
+        let tipTitle = document.createElement('div');
+        tipTitle.setAttribute('style',`
+            border-bottom: 1px solid rgba(247, 90, 90, 0.8);
+            padding: 5px;
+        `);
+        tipTitle.style['border-bottom'] = '1px solid ' + color;
+        tipTitle.innerText = '温习提示';
+
+        let tipContent = document.createElement('div');
+        tipContent.setAttribute('style',`
+            padding: 5px;
+            font-size:13px;
+        `);
+        tipContent.innerText = msg;
+
+        tipWrapper.appendChild(tipTitle);
+        tipWrapper.appendChild(tipContent);
+        document.body.appendChild(tipWrapper);
+        
+    }
+    errTip(401);
 </script>
+
 </html>

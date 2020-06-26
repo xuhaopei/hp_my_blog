@@ -1,6 +1,8 @@
 
 import axios from "axios";
 
+import {Tip} from '@/assets/js/tipMsg.js';
+
 //完成基本配置
 const instance = axios.create({
     baseURL: 'http://127.0.0.1:3000',
@@ -28,6 +30,7 @@ instance.interceptors.response.use(function (response) {
     return response;
   }, function (error) {
     // 对响应错误做点什么
+    Tip(error.response.status);
     return Promise.reject(error);
   });
   
