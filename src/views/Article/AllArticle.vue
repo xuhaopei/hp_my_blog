@@ -10,7 +10,12 @@
       <div class="Article_warpper_top">
         <div class='left'>
           <span class="Article_date">{{ item.alertDate | dateInit }}</span>
-          <span class="Article_title"> {{ item.articleName }} </span>
+          <router-link
+            :to="'/ReadArticle/' + item.id"
+            class="Article_title"
+          >
+            {{ item.articleName }} 
+          </router-link>
         </div>
         <div class="Article_tags">
               <span v-for="(tag,index) of tagsInit(item.tags)" :key='index'>{{tag}}</span>
@@ -35,16 +40,18 @@
         <span class="Article_readTime"> 阅读数({{ item.read }}) </span>
       </div>
     </div>
+    <!--
     <div class="btn_group">
       <button>上一页</button>
       <button>上一页</button>
       <button>下一页</button>
     </div>
+    -->
   </div>
 </template>
 <script>
 
-import {getAllArticle} from '@/network/Article.js';
+import {getAllArticle, searchArticle} from '@/network/Article.js';
 
 export default {
   props: {
@@ -130,28 +137,44 @@ export default {
       item_director.setAttribute("class", " g-navHref");
       item_director.innerText = "创建文章";
 
-    //   var item_manager = document.createElement("li"); // 编辑
-    //   item_manager.addEventListener(
-    //     "click",
-    //     () => {
-    //       console.log(event.target)
-    //       let articleId = event.target.getAttribute('data-articleId');
-    //       console.log(articleId)
-    //       this.$router.push("/EditArticle/" + articleId);
-    //     },
-    //     false
-    //   );
-    //   item_manager.setAttribute("class", " g-navHref");
-    //   item_manager.innerText = "编辑文章";
 
-    //   var item_delete = document.createElement("li"); // 删除
-    //   item_delete.setAttribute("class", " g-navHref");
-    //   item_delete.innerText = "删除";
+    /*
+      var item_manager = document.createElement("li"); // 编辑
+      item_manager.addEventListener(
+        "click",
+        () => {
+          console.log(event.target)
+          let articleId = event.target.getAttribute('data-articleId');
+          console.log(articleId)
+          this.$router.push("/EditArticle/" + articleId);
+        },
+        false
+      );
+      item_manager.setAttribute("class", " g-navHref");
+      item_manager.innerText = "编辑文章";
 
-    //   menu.appendChild(item_delete);
-    //   menu.appendChild(item_manager);
+      var item_delete = document.createElement("li"); // 删除
+      item_delete.setAttribute("class", " g-navHref");
+      item_delete.innerText = "删除";
+
+      menu.appendChild(item_delete);
+      menu.appendChild(item_manager);
+    */
       menu.appendChild(item_director);
       document.body.appendChild(menu);
+    },
+
+    /**
+     * 文字查询的内容
+     */
+    async searchArticle(content){
+      this.$animation.createLoading();
+      await searchArticle('/Article/query',content).then((Response)=>{
+        this.allAricle = Response.data;
+      }).catch((error)=>{
+        console.log(error);
+      })
+      this.$animation.cancelLoading();
     },
     tagsInit:function(value) {
         if(!value) return '';
@@ -167,7 +190,11 @@ export default {
       },
   },
   computed:{
-
+  },
+  watch:{
+    ['$store.state.searchArticleContent']:function(){
+      this.searchArticle(this.$store.state.searchArticleContent);
+    }
   }
 };
 </script>

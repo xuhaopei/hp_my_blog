@@ -6,7 +6,7 @@
       <div
         class="HpNavItem-name   g_layout_flex_justify-content_space-between g-navHref"
         v-on:click="showMsg(index, $event)"
-        v-on:click.right="showMenu"
+        v-on:click.right.stop="showMenu"
         :pid="zone.pid"
         :id="zone.id"
         :path="zone.path"
@@ -113,10 +113,10 @@ export default {
           console.log('删除');
           deleteDirector('/Directory/deleteDirectory',event.target.getAttribute('id')).then((Response)=>{
             console.log('删除完毕');
+             this.$store.commit('changeDirctor');   //注意 这是连续异步操作，要等到那边子目录添加进目录之后再获取目录。 
           }).catch((err)=>{
             console.log(err);
           });
-          this.$store.commit('changeDirctor'); 
         },
         false
       );
@@ -213,6 +213,7 @@ export default {
               createDirector("/Directory/updateDirectory", id, path, name)
               .then(Response => {
                 console.log("修改成功嗷");
+                this.$store.commit('changeDirctor');      // 因为是递归组件 所以更新目录只能通过vuex来通知顶级父组件 注意 这是连续异步操作，要等到那边子目录添加进目录之后再获取目录。
               })
               .catch(err => {
                 console.log(err);
@@ -224,12 +225,13 @@ export default {
             createDirector("/Directory/createDirectory", pid, path, name)
               .then(Response => {
                 console.log("创建成功嗷");
+                this.$store.commit('changeDirctor');      // 因为是递归组件 所以更新目录只能通过vuex来通知顶级父组件 注意 这是连续异步操作，要等到那边子目录添加进目录之后再获取目录。
               })
               .catch(err => {
                 console.log(err);
               });
           }
-          this.$store.commit('changeDirctor');      // 因为是递归组件 所以更新目录只能通过vuex来通知顶级父组件
+          
         },
         false
       );

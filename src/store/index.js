@@ -10,7 +10,8 @@ export default new Vuex.Store({
       isSuccess:false
     },
     userName:null,
-    isChangeDirctor:0                 // 监听状态更改
+    isChangeDirctor:0,                 // 监听目录状态更改
+    searchArticleContent:''                // 查询内容
   },
   getters:{
   },
@@ -29,6 +30,9 @@ export default new Vuex.Store({
     },
     changeDirctor(state){
       state.isChangeDirctor++;
+    },
+    setSearchArticle(state,content) {
+      state.searchArticleContent = content;
     }
   },
   actions: {

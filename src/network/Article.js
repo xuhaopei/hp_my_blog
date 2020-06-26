@@ -18,7 +18,14 @@ export function updateDirectory(url,title,directoryObj) {
     let array = [title,directoryObj];
     return instance.post(url,array);
 }
-
+/**
+ * 模糊查询文章的标题，标签，文章内容。
+ * @param {*} url 
+ * @param {*} content 
+ */
+export function searchArticle(url,content) {
+    return instance.get(url+'?content='+content);
+}
 /**
  * 提交一篇文章
  * @param {String} url 

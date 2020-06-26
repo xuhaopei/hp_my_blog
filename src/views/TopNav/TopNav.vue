@@ -4,7 +4,7 @@
         <div class="TopNav_msg">
             <div class="g-navHref TopNav_msg-search">
                 <svg class="icon-search" t="1588147908928"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2445" width="200" height="200"><path d="M881.3 773.7L768.6 661.4c36.3-56.2 57.4-123 57.4-194.9 0-198.6-160.8-359.4-359.4-359.4s-359.4 161-359.4 359.4c0 198.6 160.8 359.4 359.4 359.4 72 0 139.1-21.2 195.3-57.6l112.5 112.1c32 31.9 81.9 33.9 111.4 4.5 29.4-29.4 27.4-79.3-4.5-111.2z m-414.9-67.4c-132.2 0-239.6-107.2-239.6-239.6 0-132.2 107.2-239.6 239.6-239.6S706 334.3 706 466.7c-0.2 132.4-107.4 239.6-239.6 239.6z" p-id="2446" fill="#ffffff"></path></svg>
-                <input type="text" class="input-serach" placeholder="搜索">
+                <input type="text" class="input-serach" placeholder="搜索" v-model="searchContent" @keyup.enter="search">
             </div>
             <a href="https://www.cnblogs.com/xuhaopei/" target="_blank">博客</a>
             <a href="https://github.com/xuhaopei/hp_my_blog" target="_blank">github</a>
@@ -26,7 +26,8 @@ export default {
     },
     data(){
         return {
-            userName:Object
+            userName:Object,
+            searchContent:''
         }
     },
     mounted(){
@@ -89,6 +90,13 @@ export default {
             menu.appendChild(item_signOut);
             document.body.appendChild(menu);
         },
+        /**
+         * 查询文章内容
+         */
+        search(){
+            this.$router.push('/');
+            this.$store.commit('setSearchArticle',this.searchContent);
+        }
     }
     
 }
