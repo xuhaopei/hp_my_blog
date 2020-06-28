@@ -1,14 +1,15 @@
 <template>
   <div id="Article" v-on:click.self="cancleEdit">
     <div class="Article-wrapper">
-      <input class="input_wrapper" type="text" placeholder="请输入您的标题"  v-model="articleName"/>
-            <input
+      <input class="input_wrapper" type="text" placeholder="请输入您的标题"   v-model="articleName"/>
+      <input
       class="input_wrapper"
       type="text"
       placeholder="请输入标签，注意每个标签用英文逗号隔开~"
       v-model="articleTags"
       />
-      <HpEdit v-model='articleContent'></HpEdit>
+      <WangeEdit v-model='articleContent'></WangeEdit>
+
       <div class="btn_wrapper">
         <button
           class="g_btn g_btn_larger g_btn_success"
@@ -21,7 +22,9 @@
   </div>
 </template>
 <script>
-import HpEdit from "@/components/other/HpEdit";
+
+
+import WangeEdit from "@/components/other/WangEditor";
 
 import {getDirectory,updateDirectory,putArticle,getArticle,updateArticle} from '@/network/Article.js';
 
@@ -29,7 +32,7 @@ import {getDirectory,updateDirectory,putArticle,getArticle,updateArticle} from '
 
 export default {
   components: {
-    HpEdit
+    WangeEdit
   },
   data() {
     return {
@@ -43,6 +46,9 @@ export default {
   created(){
       this.getArticle(this.$route.params.Id);
       this.getDirectory();
+  },
+  mounted(){
+    
   },
   beforeDestroy() {},
   methods: {
@@ -363,13 +369,14 @@ export default {
     display: flex;
     flex-direction: column;
     .input_wrapper {
-      height: 40px;
-      text-indent: 10px;
+      display: block;
+      padding: 10px;
       outline: none;
       border: 0;
-      border-bottom: 1px solid black;
+       border-bottom:1px solid rgba(146,146,146,0.8);
     }
     .articleLocation_wrapper {
+      display: block;
       padding: 0 10px;
       display: flex;
       flex-direction: row;

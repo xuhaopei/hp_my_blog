@@ -5,8 +5,9 @@ import {Tip} from '@/assets/js/tipMsg.js';
 
 //完成基本配置
 const instance = axios.create({
-    baseURL: 'http://127.0.0.1:3000',
-    timeout: 1000,
+   baseURL: 'http://116.85.46.202:3000',	        // 请求服务器的地址
+   //baseURL: 'http://localhost:3000',
+   timeout: 1000,
     //withCredentials: true, 
     /**
      *  表示跨域请求时是否需要使用凭证  请求为跨域类型时是否在请求中协带cookie true为是，如果设置了这个为true时，后台的Access-Control-Allow-Origin不能为* 只能为这个客户端服务器的域名 

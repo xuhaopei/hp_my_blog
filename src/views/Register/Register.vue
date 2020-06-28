@@ -89,6 +89,7 @@ export default {
             
             this.$store.commit('changeLoading');
 
+
             doRegister('/user/register',obj).then((response)=>{
                 this.$store.commit('setLoadingSuccessOk');
                 this.$store.commit('changeLoading');

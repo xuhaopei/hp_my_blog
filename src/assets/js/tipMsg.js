@@ -32,7 +32,7 @@ export function Tip(status) {
             color = 'rgba(247, 90, 90, 0.8)'
             break;
         case 403:
-            msg = '服务器拒绝了您这次请求';
+            msg = '服务器拒绝了您这次请求,不好意思，暂时不支持此项操作。';
             color = 'rgba(247, 90, 90, 0.8)'
             break;
         case 404:

@@ -30,7 +30,7 @@
           </select>
         </div>
       </div>
-      <HpEdit v-model="articleContent"></HpEdit>
+      <WangeEdit v-model="articleContent"></WangeEdit>
       <div class="btn_wrapper">
         <button
           class="g_btn g_btn_larger g_btn_success"
@@ -44,6 +44,7 @@
 </template>
 <script>
 import HpEdit from "@/components/other/HpEdit";
+import WangeEdit from "@/components/other/WangEditor";
 
 import {
   getDirectory,
@@ -55,7 +56,7 @@ import { createDirector } from "@/network/LeftNav.js";
 
 export default {
   components: {
-    HpEdit
+    WangeEdit
   },
   data() {
     return {
@@ -344,7 +345,7 @@ export default {
   }
 };
 </script>
-<style lang="less" scoped>
+<style lang="less" >
 .editer-modle {
   background: white;
 }
@@ -364,17 +365,20 @@ export default {
     display: flex;
     flex-direction: column;
     .input_wrapper {
-      height: 40px;
-      text-indent: 10px;
+      display: block;
+      padding: 10px;
       outline: none;
       border: 0;
-      border-bottom: 1px solid black;
+       border-bottom:1px solid rgba(146,146,146,0.8);
     }
     .articleLocation_wrapper {
+      height: 40px;
+      line-height: 40px;
       padding: 0 10px;
       display: flex;
       flex-direction: row;
       justify-content: start;
+       border-bottom:1px solid rgba(146,146,146,0.8);
     }
     .article_tags{
       width: 100%;

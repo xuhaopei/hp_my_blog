@@ -93,8 +93,8 @@ export default {
                             },false);
                             break;
                         default :
-                            document.execCommand(this.getAttribute('edit-action'),false,this.getAttribute('edit-action-value'));
-                            //console.log(document.execCommand(this.getAttribute('edit-action'),false,this.getAttribute('edit-action-value')));    
+                            console.log(this.getAttribute('edit-action'),);
+                            console.log(document.execCommand(this.getAttribute('edit-action'),false,this.getAttribute('edit-action-value')));
                     }
                     
                 }
