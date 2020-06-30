@@ -26,7 +26,7 @@
           <hp-nav-item v-if="article.length > 0" :item="article"></hp-nav-item>
           <!--不是数组 则输出文章名-->
           <li v-else class="g-navHref">
-            <router-link :to="'/ReadArticle/' + article.articleId">
+            <router-link :to="'/ReadArticle/' + article.articleId" style="">
               {{ article.name }}</router-link
             >
           </li>
@@ -324,6 +324,7 @@ export default {
   line-height: 40px;
   border-bottom: 1px solid #2196f3;
   text-align: center;
+  
 }
 #HpNavItem_menu li:last-child {
   border-bottom: 0px;

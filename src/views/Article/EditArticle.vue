@@ -365,7 +365,7 @@ export default {
   .Article-wrapper {
     background: white;
     width: 80%;
-    height: 700px;
+    height: 660px;
     display: flex;
     flex-direction: column;
     .input_wrapper {

@@ -26,7 +26,10 @@ a:hover{
   cursor: pointer;
   text-underline-position:under;
 }
-
+/*去除点击后的边框*/
+a:focus {
+  outline-style:none; 
+}
 /*全局样式*/
 /*鼠标移动到导航时出现下划线已经字体变蓝*/
 .g-navHref:hover{
@@ -34,6 +37,7 @@ a:hover{
   text-decoration: underline #2196f3 dotted;
   cursor: pointer;
   text-underline-position:under;
+  
 }
 /*鼠标移动到导航时背景变为透明灰色+鼠标*/
 .g-mouseMoveOnNav:hover{

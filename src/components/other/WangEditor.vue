@@ -3,7 +3,6 @@
         <div id="wangeEditToolBar" class="toolbar">
         </div>
         <div id="wangeEditWrapper" v-on:mouseout="putEditContent" style="">
-            <p>欢迎使用 wangEditor 富文本编辑器</p>
         </div>
 
     </div>
@@ -97,12 +96,12 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    height: 600px;
+    height: 545px;
     .toolbar{
          border-bottom:1px solid rgba(146,146,146,0.8);
     }
     #wangeEditWrapper {
-        height: 95%;
+        height: 94%;
         border-bottom:1px solid rgba(146,146,146,0.8);
     }
 }
