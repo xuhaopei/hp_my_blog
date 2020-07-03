@@ -186,7 +186,7 @@ svg class="icon-search"
 
 给读的文章添加了删除修改已经添加文章。
 
-存在bug是文章删除，目录并没有更新。
+添加文章导航功能
 
 #### AllArticle.vue
 

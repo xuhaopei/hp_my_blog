@@ -1,6 +1,6 @@
 <template>
     <div id="LeftNavTop">
-        <h3 class="LeftNavTop-title g-navHref">{{name}}</h3>
+        <strong class="LeftNavTop-title g-navHref">{{name}}</strong>
         <p class="LeftNavTop-smallTitle g-navHref">{{version}}</p>
     </div>
 </template>
@@ -9,7 +9,7 @@ export default {
     data(){
         return{
             name:"正义de键盘侠",
-            version:"v1.0.0"
+            version:"v1.1.0"
         }
     }
 }

@@ -15,7 +15,10 @@ li{
   list-style: none;
   padding-left:10px ;
 }
-
+h1,h2,h3,h4,h5{
+  margin-top:22px ;
+  margin-bottom:22px ;
+}
 a{
   text-decoration: none;
   color:#333; 

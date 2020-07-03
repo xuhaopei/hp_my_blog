@@ -1,5 +1,6 @@
 <template>
-    <div id="ReadArticle" v-html="article.articleContent" v-on:click.stop.prevent.right="showMenu">
+    <div id="ReadArticle"  v-html="article.articleContent" v-on:click.stop.prevent.right="showMenu">
+
     </div>
 </template>
 <script>
@@ -19,16 +20,89 @@ export default {
         }
     },
     created(){
+        //this.readArticle(this.$route.params.Id);
+    },
+    mounted(){
         this.readArticle(this.$route.params.Id);
+        
     },
     methods:{
+        /**
+         * 根据ele元素里面的h标签创建ele元素的导航
+         */
+        createArticleTitleNav(ele){
+            /**判断容器是否存在，存在则移除 */
+            let navWrapper = document.getElementById('ArticleTitleNav');
+            if(navWrapper){
+                document.body.removeChild(navWrapper);
+            }
+
+            /**设置导航容器 */
+            navWrapper = document.createElement('nav');
+            navWrapper.setAttribute('id','ArticleTitleNav');
+            navWrapper.setAttribute('style',`
+                position: fixed;
+                margin: 10px;
+                top:  68px;
+                right: 0;
+                width: 220px;
+                box-shadow: 0px 0px 5px 5px rgb(146,146,144);
+            `);
+
+            /**获取ele元素里面的h标签 */
+            let sons = ele.getElementsByTagName('*');
+            let hsArray = [];
+            sons.forEach(element => {
+                let tagName = element.nodeName;
+                if(tagName[0] === 'H') {
+                    hsArray.push(element);
+                }
+            });
+
+            /**根据hs标签数组设置ID并为导航容器navWrapper添加a元素标签*/
+            let num = 0;
+            hsArray.forEach(element => {
+                let li = document.createElement('li');
+                li.setAttribute('style',`
+                    margin:10px 0;
+                `)
+                let a = document.createElement('a');
+                element.setAttribute('id','title_go'+num);
+                a.setAttribute('href','#title_go'+num);
+                a.innerText = element.innerText;
+                li.appendChild(a);
+                navWrapper.appendChild(li);
+                num++;
+            });
+            /**设置监听，如果大于100px则改变导航容器navWrapper的top属性 */
+            let articleH = parseInt(navWrapper.style['top']);
+            window.addEventListener('scroll',()=>{
+                const top =
+                    window.pageYOffset ||
+                    document.documentElement.scrollTop ||
+                    document.body.scrollTop; //兼容不同的浏览器
+
+                if (top > articleH) {
+                    
+                    navWrapper.style['top'] = 0;
+                }
+                else {
+                    let hight = articleH - top;
+                    navWrapper.style['top'] = hight+'px';
+                }
+            })
+
+            document.body.appendChild(navWrapper);
+        },
         async readArticle(articleId){
             this.$animation.createLoading();
             await getArticle('/Article/find',articleId).then((Response)=>{
                         this.article = Response.data;
+                        
                     }).catch((err)=>{
                         console.log(err);
                     })
+            this.createArticleTitleNav(document.getElementById('ReadArticle'));        
             this.$animation.cancelLoading();
         },
         /**
@@ -99,8 +173,7 @@ export default {
         /**
          * 根据文章ID删除文章
          */
-        async deleteArticle1(articleId) {
-               
+        async deleteArticle1(articleId) {  
             this.$animation.createLoading();
             await deleteArticle("/Article/delete",articleId).then((Response)=>{
                 this.$router.push('/');
@@ -110,10 +183,10 @@ export default {
             })
             this.$animation.cancelLoading();
         }, 
+
     watch:{
         $route(to, from) {
             this.readArticle(this.$route.params.Id);
-            
         }
     } 
 }
@@ -128,5 +201,17 @@ export default {
     box-shadow: 0px 0px 5px 5px rgb(146,146,144);
     border-radius:10px;
     line-height: 30px;
+    width: 75%;
+
 }
+    #test {
+    position: fixed;
+    margin: 10px;
+    top:10%;
+    right: 0;
+    width: 220px;
+    box-shadow: 0px 0px 5px 5px rgb(146,146,144);
+    height: 100px;
+}
+
 </style>
