@@ -13,7 +13,7 @@
         style="text-indent:10px"
       >
         {{ zone.name }}
-        <i class="iconfont icon-sanjiaoxing"></i>
+        <i class="iconfont icon-wenjianjia" ></i>
       </div>
       <div class="HpNavItem-body" flage="false">
         <!--article代表文章信息，如果article的长度大于0说明是区，则递归调用此组件-->
@@ -55,17 +55,24 @@ export default {
      * 点击后显示/关闭目录
      */
     showMsg(index, event) {
-      var HpNavItemBody = event.target.nextElementSibling; // event.target为目标元素,获取紧接着的兄弟元素
+      var HpNavItemBody = event.target.nextElementSibling; // event.target为目标元素,获取紧接着的兄弟元素 即是子文件
 
       var flage = HpNavItemBody.attributes[0].nodeValue; // 获取自定义属性结点的值
-      // 判断根据自定义属性结点的值判断是显示还是关闭
+      var i = event.target.getElementsByTagName('i')[0]; // 获取文件夹图标
+      // 判断根据自定义属性结点的值判断子文件是显示还是关闭
       if (flage == "false") {
         HpNavItemBody.style["height"] = "auto";
         HpNavItemBody.attributes[0].nodeValue = "true"; // 设置自定义属性结点的值
+        i.className = 'iconfont icon-folder';
+
       } else {
         HpNavItemBody.style["height"] = "0";
         HpNavItemBody.attributes[0].nodeValue = "false"; // 设置自定义属性结点的值
+        i.className = 'iconfont icon-wenjianjia';
       }
+
+      
+
     },
 
     /**
@@ -284,6 +291,7 @@ export default {
   overflow: auto;
   transition: height 0.5s; /*设置当height出现变化时，出现移动效果 */
   padding-left: 10px;
+  
 }
 
 .HpNavItem-body-show {
@@ -299,6 +307,7 @@ export default {
 .navHref:hover {
   color: #2196f3;
   text-decoration: underline #2196f3 dotted;
+  text-decoration: rgb(236, 240,9);
   cursor: pointer;
   text-underline-position: under;
 }
