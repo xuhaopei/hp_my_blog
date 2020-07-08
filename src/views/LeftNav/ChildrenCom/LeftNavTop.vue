@@ -9,7 +9,7 @@ export default {
     data(){
         return{
             name:"正义de键盘侠",
-            version:"v1.1.0"
+            version:"v1.2.0"
         }
     }
 }

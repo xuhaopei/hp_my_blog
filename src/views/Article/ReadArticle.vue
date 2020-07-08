@@ -30,6 +30,9 @@ export default {
   beforeDestroy() {
     this.deleteArticleNav();
     window.removeEventListener('scroll',this.changeTitleNavTop);
+    setTimeout(() => {
+      
+    }, 100);
   },
   methods: {
     deleteArticleNav() {

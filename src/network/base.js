@@ -5,8 +5,8 @@ import {Tip} from '@/assets/js/tipMsg.js';
 
 //完成基本配置
 const instance = axios.create({
-   baseURL: 'http://116.85.46.202:3000',	        // 请求服务器的地址
-   //baseURL: 'http://localhost:3000',
+   //baseURL: 'http://116.85.46.202:3000',	        // 请求服务器的地址
+   baseURL: 'http://localhost:3000',
    timeout: 1000,
     //withCredentials: true, 
     /**
