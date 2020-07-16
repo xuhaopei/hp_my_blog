@@ -23,8 +23,7 @@
       </div>
       <div class="Article_warpper_body">
         摘要：
-        <div class="Article_content" >
-            {{item.articleContent}}
+        <div class="Article_content" v-text="item.articleContentText">
         </div>
         <router-link
           :to="'/ReadArticle/' + item.id"

@@ -27,16 +27,17 @@ export function searchArticle(url,content) {
     return instance.get(url+'?content='+content);
 }
 /**
- * 提交一篇文章
+ * 
  * @param {String} url 
- * @param {String} articleId  文章ID
- * @param {String} articleName  文章名
- * @param {String} articleContent 文章内容
- * @param {String} zone         文章所属区域
- * @param {String} articleAuthor         文章作者
+ * @param {Number} pid 
+ * @param {String} articleName 
+ * @param {String} articleContent 
+ * @param {String} author 
+ * @param {String} tags 
+ * @param {String} articleContentText   文章text内容
  */
-export function putArticle(url,pid,articleName,articleContent,author,tags) {
-    let array = [pid,articleName,articleContent,author,tags];
+export function putArticle(url,pid,articleName,articleContent,author,tags,articleContentText) {
+    let array = [pid,articleName,articleContent,author,tags,articleContentText];
     return instance.post(url,array);
 }
 
@@ -68,12 +69,13 @@ export function deleteArticle(url,articleId) {
 /**
  * 
  * @param {*} url 
- * @param {String} articleId        文章ID
- * @param {String} articleName      文章名
- * @param {String} articleContent   文章内容
- * @param {String} tags             文章标签
+ * @param {String} articleId            文章ID
+ * @param {String} articleName          文章名
+ * @param {String} articleContent       文章HTML内容
+ * @param {String} tags                 文章标签
+ * @param {String} articleContentText   文章text内容
  */
-export function updateArticle(url,id,articleName,articleContent,tags) {
-    let array = [id,articleName,articleContent,tags];
+export function updateArticle(url,id,articleName,articleContent,tags,articleContentText) {
+    let array = [id,articleName,articleContent,tags,articleContentText];
     return instance.post(url,array);
 }

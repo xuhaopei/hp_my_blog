@@ -30,7 +30,7 @@
           </select>
         </div>
       </div>
-      <WangeEdit v-model="articleContent"></WangeEdit>
+      <WangeEdit v-model="articleContent" v-on:getArticle='getMsgFromSon'></WangeEdit>
       <div class="btn_wrapper">
         <button
           class="g_btn g_btn_larger g_btn_success"
@@ -61,7 +61,8 @@ export default {
   data() {
     return {
       articleName: "",
-      articleContent: "",
+      articleContent: '',
+      articleContentText:'',
       directorys: Array,
       articleTags:''
     };
@@ -88,7 +89,8 @@ export default {
         alert("请输入标题");
         return;
       }
-      let articleContent = this.articleContent; // 获取文章内容
+      let articleContent = this.articleContent; // 获取文章HTML内容
+      let articleContentText = this.articleContentText;
 
       /**第二步 获取目录的信息*/
       let selecttions = document.getElementById("select_hp").childNodes; // 获取所有选择框元素
@@ -113,7 +115,7 @@ export default {
       let tags = this.articleTags;
       let articleId;
       /**第三步 文章上传服务器 添加文章 */
-      await putArticle("/Article/add", pid,articleName,articleContent,'author',tags)
+      await putArticle("/Article/add", pid,articleName,articleContent,'author',tags,articleContentText)
         .then(Response => {
           console.log("文章添加成功");
           articleId = Response.data.insertId;
@@ -342,6 +344,13 @@ export default {
         });
       this.$animation.cancelLoading();
     },
+    /**
+     * 获取子组件传递过来的信息
+     */
+    getMsgFromSon(msg){
+        this.articleContent = msg.articleContent;
+        this.articleContentText = msg.articleContentText;
+    }
   }
 };
 </script>

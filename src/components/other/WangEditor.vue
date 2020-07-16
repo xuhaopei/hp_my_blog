@@ -62,12 +62,15 @@ export default {
             this.editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
             this.editor.customConfig.pasteFilterStyle = false;
             this.editor.customConfig.uploadImgServer = '/uploadImage'  // 上传图片到服务器
-
+            this.editor.customConfig.linkImgCallback = function (url) {
+                console.log(url) // url 即插入图片的地址
+            }
             this.editor.customConfig.uploadImgHooks = {
                 before: function (xhr, editor, files) {
                     // 图片上传之前触发
                     // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，files 是选择的图片文件
-                    console.log(files,'图片')
+                    //xhr.open('POST', 'http://localhost:3000/uploadImage', true);
+                    //console.log(files,'图片')
                     // 如果返回的结果是 {prevent: true, msg: 'xxxx'} 则表示用户放弃上传
                     // return {
                     //     prevent: true,
@@ -77,6 +80,7 @@ export default {
                 success: function (xhr, editor, result) {
                     // 图片上传并返回结果，图片插入成功之后触发
                     // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
+                    xhr.open('GET', result.data[0], true);
                     //alert('上传成功！');
                 },
                 fail: function (xhr, editor, result) {
@@ -102,9 +106,10 @@ export default {
                     // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
 
                     // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
-                    var url = result.url
-                    insertImg(url)
-
+                    //let url = result.data[0].substring(result.data[0].indexOf('/'));
+                    let url = result.data[0];
+                   // console.log(url);
+                    insertImg(url);
                     // result 必须是一个 JSON 格式字符串！！！否则报错
                 }*/
     
@@ -124,8 +129,10 @@ export default {
          * 将数据传给父组件
          */
         putEditContent(){
-            let articleContent = this.getEditHTMLContent();
+            let articleContent     = this.getEditHTMLContent();
+            let articleContentText = this.getEditTXTContent();
             this.$emit('change', articleContent);                    // 父组件用v-modle来接收 所以事件要用input
+            this.$emit('getArticle',{articleContent,articleContentText});
         }
     }
 }

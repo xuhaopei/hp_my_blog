@@ -8,7 +8,7 @@
       placeholder="请输入标签，注意每个标签用英文逗号隔开~"
       v-model="articleTags"
       />
-      <WangeEdit v-model='articleContent'></WangeEdit>
+      <WangeEdit v-model='articleContent' v-on:getArticle='getMsgFromSon'></WangeEdit>
 
       <div class="btn_wrapper">
         <button
@@ -38,6 +38,7 @@ export default {
     return {
         articleName:String,        
         articleContent:'',
+        articleContentText:'',
         id:String,
         articleTags:String,        // 文章所属区域 比如学习区
         directorys:Array,        
@@ -73,38 +74,11 @@ export default {
       let id = this.id;
       let articleContent = this.articleContent; // 获取文章内容
       let tags = this.articleTags;
+      let articleContentText = this.articleContentText;
 
-
-    //   /**第二步 获取添加文章在目录中的位置*/
-    //   let title = this.zone;            // 区域 例如 学习区
-    //   let zone;                         // 传递给服务器的区 例如 {title:'学习区',smaillitem:[]}; 
-    //   let articleAuthor = localStorage.getItem('userName'); 
-
-    //   /**第三步 将文章的标题信息赋值给目录*/
-    //  for (const iterator of this.directorys) {
-    //     if(iterator.title === this.zone) {
-    //       zone = iterator;
-    //       // 这里把zone的目录传递进去。
-    //       for (const iterator of zone.smallItems) {
-    //           if(Array.isArray(iterator)) {
-    //             this.findPlace(iterator,this.id,this.articleName);
-    //           }
-    //       }
-    //     }
-    //  } 
-
-    //   /**第四步 目录上传服务器 更新目录 */
-    //  this.$animation.createLoading();
-    //   await updateDirectory('/Directory/updateDirectory',title,zone).then((Response)=>{
-    //     console.log('目录更新成功');
-    //   }).catch((err)=>{
-    //     console.log('目录更新失败');
-    //     return;
-    //   })
-    //  this.$animation.cancelLoading();
       /**第五步 文章上传服务器 更新文章 */
       this.$animation.createLoading();
-      await updateArticle('/Article/update',id,articleName,articleContent,tags).then((Response)=>{
+      await updateArticle('/Article/update',id,articleName,articleContent,tags,articleContentText).then((Response)=>{
         console.log('文章更新成功');
         window.history.back();
       }).catch((err)=>{
@@ -345,6 +319,13 @@ export default {
              }
           }
       }
+    },
+    /**
+     * 获取子组件传递过来的信息
+     */
+    getMsgFromSon(msg){
+        this.articleContent = msg.articleContent;
+        this.articleContentText = msg.articleContentText;
     }
   },
 };
