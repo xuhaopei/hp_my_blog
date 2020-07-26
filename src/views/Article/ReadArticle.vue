@@ -141,7 +141,6 @@ export default {
       document.body.appendChild(navWrapper);
     },
     async readArticle(articleId) {
-      this.$animation.createLoading();
       await getArticle("/Article/find", articleId)
         .then(Response => {
           this.article = Response.data;
@@ -150,7 +149,6 @@ export default {
           console.log(err);
         });
       this.createArticleTitleNav(document.getElementById("ReadArticle"));
-      this.$animation.cancelLoading();
     },
     /**
      * 右击弹出菜单
@@ -194,16 +192,9 @@ export default {
         "click",
         () => {
           let articleId = this.$route.params.Id;
-          this.$animation.createLoading();
           deleteArticle("/Article/delete", articleId)
             .then(Response => {
               this.$router.push("/");
-              this.$animation.cancelLoading();
-            })
-            .catch(err => {
-              this.$animation.cancelLoading();
-              console.log(err);
-              alert("删除失败");
             });
         },
         false
@@ -221,16 +212,10 @@ export default {
    * 根据文章ID删除文章
    */
   async deleteArticle1(articleId) {
-    this.$animation.createLoading();
     await deleteArticle("/Article/delete", articleId)
       .then(Response => {
         this.$router.push("/");
-      })
-      .catch(err => {
-        console.log(err);
-        alert("删除失败");
       });
-    this.$animation.cancelLoading();
   },
 
   watch: {

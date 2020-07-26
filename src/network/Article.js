@@ -51,6 +51,16 @@ export function getArticle(url,id) {
 }
 
 /**
+ * 根据页码查询一些文章
+ * @param {String} url 
+ * @param {Number} pageId   页码
+ * @param {Number} pageSize 一页的数量
+ */
+export function getSomeArticle(url,pageId=1,pageSize=7) {
+    return instance.get(`${url}?pageId=${pageId}&pageSize=${pageSize}`);
+}
+
+/**
  * 查询所有文章
  * @param {*} url 
  */
@@ -58,6 +68,13 @@ export function getAllArticle(url) {
     return instance.get(url);
 }
 
+/**
+ * 查询文章的总数量
+ * @param {*} url 
+ */
+export function getAllArticleNumber(url) {
+    return instance.get(url);
+}
 /**
  * 根据文章ID删除一篇文章
  * @param {*} url 

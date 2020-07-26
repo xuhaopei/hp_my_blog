@@ -31,7 +31,6 @@ export default {
   },
   methods: {
     async getAllDirectory(content) {
-      this.$animation.createLoading();
       await getDirectory("/Directory/getAllDirectory")
         .then(Response => {
           this.allItems = Array.from(Response.data);
@@ -39,7 +38,6 @@ export default {
         .catch(err => {
           console.log(err);
         });
-      this.$animation.cancelLoading();
     },
     /**
      * 右击弹出菜单

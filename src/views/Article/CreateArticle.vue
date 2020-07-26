@@ -334,7 +334,6 @@ export default {
      * 获取目录
      */
     async getDirectory(){
-      this.$animation.createLoading();
       await getDirectory("/Directory/getAllDirectory")
         .then(Response => {
           this.directorys = Response.data;
@@ -342,7 +341,6 @@ export default {
         .catch(err => {
           console.log(err);
         });
-      this.$animation.cancelLoading();
     },
     /**
      * 获取子组件传递过来的信息

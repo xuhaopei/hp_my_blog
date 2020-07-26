@@ -39,18 +39,23 @@
         <span class="Article_readTime"> 阅读数({{ item.read }}) </span>
       </div>
     </div>
-    <!--
-    <div class="btn_group">
-      <button>上一页</button>
-      <button>上一页</button>
-      <button>下一页</button>
+    
+    <div class="pageControl_wrapper">
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        v-on:current-change='getSomeArticle'
+        :page-size="page.size"
+        :pager-Count="page.count"
+        :total="page.total">
+      </el-pagination>
     </div>
-    -->
+    
   </div>
 </template>
 <script>
 
-import {getAllArticle, searchArticle} from '@/network/Article.js';
+import {getAllArticle, searchArticle, getSomeArticle, getAllArticleNumber} from '@/network/Article.js';
 
 export default {
   props: {
@@ -90,11 +95,17 @@ export default {
   },
   data() {
     return {
-        allAricle : this.allAricleTemp
+        allAricle : this.allAricleTemp,
+        page:{        
+            total:100,            // 数据总共的条数
+            size:7,              // 当前页显示的数量
+            count:5              // 可选择的分页按钮数量
+        }
     };
   },
   created(){
-      this.getAllArticle();
+      //this.getAllArticle();
+      this.initPage();
   },
   mounted(){
   },
@@ -103,13 +114,11 @@ export default {
      * 获取文章
      */
     async getAllArticle() {
-      this.$animation.createLoading();
       getAllArticle('/Article/findAll').then((Response)=>{
           this.allAricle = Response.data;
       }).catch((err)=>{
           console.log(err);
       })
-      this.$animation.cancelLoading();
     },
     /**
      * 右击弹出菜单
@@ -136,29 +145,28 @@ export default {
       item_director.setAttribute("class", " g-navHref");
       item_director.innerText = "创建文章";
 
+      /*
+        var item_manager = document.createElement("li"); // 编辑
+        item_manager.addEventListener(
+          "click",
+          () => {
+            console.log(event.target)
+            let articleId = event.target.getAttribute('data-articleId');
+            console.log(articleId)
+            this.$router.push("/EditArticle/" + articleId);
+          },
+          false
+        );
+        item_manager.setAttribute("class", " g-navHref");
+        item_manager.innerText = "编辑文章";
 
-    /*
-      var item_manager = document.createElement("li"); // 编辑
-      item_manager.addEventListener(
-        "click",
-        () => {
-          console.log(event.target)
-          let articleId = event.target.getAttribute('data-articleId');
-          console.log(articleId)
-          this.$router.push("/EditArticle/" + articleId);
-        },
-        false
-      );
-      item_manager.setAttribute("class", " g-navHref");
-      item_manager.innerText = "编辑文章";
+        var item_delete = document.createElement("li"); // 删除
+        item_delete.setAttribute("class", " g-navHref");
+        item_delete.innerText = "删除";
 
-      var item_delete = document.createElement("li"); // 删除
-      item_delete.setAttribute("class", " g-navHref");
-      item_delete.innerText = "删除";
-
-      menu.appendChild(item_delete);
-      menu.appendChild(item_manager);
-    */
+        menu.appendChild(item_delete);
+        menu.appendChild(item_manager);
+      */
       menu.appendChild(item_director);
       document.body.appendChild(menu);
     },
@@ -167,19 +175,42 @@ export default {
      * 文字查询的内容
      */
     async searchArticle(content){
-      this.$animation.createLoading();
       await searchArticle('/Article/query',content).then((Response)=>{
         this.allAricle = Response.data;
       }).catch((error)=>{
         console.log(error);
       })
-      this.$animation.cancelLoading();
     },
+    /**
+     * 初始标签
+     */
     tagsInit:function(value) {
         if(!value) return '';
         value = value.toString();
         return value.split(',');
+    },
+    /**
+     * 根据页码请求数据
+     */
+    async getSomeArticle(pageId){
+      await getSomeArticle('/Article/findSome',pageId).then((Response)=>{
+         this.allAricle = Response.data;
+      })
+    },
+    /**
+     * 初始化数据
+     */
+    async initPage(){
+       await getAllArticleNumber('/Article/findArticleSum').then((Response)=>{
+         this.page.total = Response.data[0]['COUNT(*)'];
+         this.page.size  = 7;
+         this.page.count = 10;
+       });
+       await getSomeArticle('/Article/findSome').then((Response)=>{
+         this.allAricle = Response.data;
+       })
     }
+
   },
   filters:{
       dateInit:function(value) {
@@ -267,15 +298,15 @@ export default {
     }
   }
   .Article_warpper:hover {
-    margin-bottom: 5px;
     box-shadow: 0px 0px 5px 5px rgb(33, 165, 226);
   }
-  .btn_group {
+  .pageControl_wrapper {
     display: flex;
     width: 100%;
     box-sizing: border-box;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
+    margin: 10px;
   }
 }
 </style>

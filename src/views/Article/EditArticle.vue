@@ -77,14 +77,12 @@ export default {
       let articleContentText = this.articleContentText;
 
       /**第五步 文章上传服务器 更新文章 */
-      this.$animation.createLoading();
       await updateArticle('/Article/update',id,articleName,articleContent,tags,articleContentText).then((Response)=>{
         console.log('文章更新成功');
         window.history.back();
       }).catch((err)=>{
         console.log('文章更新失败',err);
       }) 
-      this.$animation.cancelLoading();
 
     },
     /**
@@ -262,7 +260,6 @@ export default {
      * 获取文章
      */
     async getArticle(id) {
-      this.$animation.createLoading();
       await getArticle("/Article/find", id)
         .then(Response => {
           this.articleName = Response.data.articleName;
@@ -273,13 +270,11 @@ export default {
         .catch(err => {
           console.log(err);
         });
-      this.$animation.cancelLoading();
     },
     /**
      * 获取目录
      */
     async getDirectory(){
-        this.$animation.createLoading();
         await getDirectory('/Directory/getAllDirectory').then((Response)=>{
           
           this.directorys = Response.data;
@@ -287,7 +282,6 @@ export default {
         }).catch((err)=>{
           console.log(err)
         })
-        this.$animation.cancelLoading();
     },
     /**
      * 根据时间生成唯一ID
