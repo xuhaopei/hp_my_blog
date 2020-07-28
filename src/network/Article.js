@@ -19,15 +19,17 @@ export function updateDirectory(url,title,directoryObj) {
     return instance.post(url,array);
 }
 /**
- * 模糊查询文章的标题，标签，文章内容。
+ * 模糊查询文章的标题，标签。
  * @param {*} url 
  * @param {*} content 
+ * @param {Number} pageId   页码
+ * @param {Number} pageSize 一页的数量
  */
-export function searchArticle(url,content) {
-    return instance.get(url+'?content='+content);
+export function searchArticle(url,content,pageId=1,pageSize=7) {
+    return instance.get(`${url}?content=${content}&pageId=${pageId}&pageSize=${pageSize}`);
 }
 /**
- * 
+ * 提交一篇文章
  * @param {String} url 
  * @param {Number} pid 
  * @param {String} articleName 

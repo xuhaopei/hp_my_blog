@@ -13,12 +13,12 @@
           <router-link
             :to="'/ReadArticle/' + item.id"
             class="Article_title"
+            v-html="item.articleName "
           >
-            {{ item.articleName }} 
           </router-link>
         </div>
         <div class="Article_tags">
-              <span v-for="(tag,index) of tagsInit(item.tags)" :key='index'>{{tag}}</span>
+              <span v-for="(tag,index) of tagsInit(item.tags)" :key='index' v-html="tag"></span>
         </div>
       </div>
       <div class="Article_warpper_body">
@@ -174,11 +174,11 @@ export default {
     /**
      * 文字查询的内容
      */
-    async searchArticle(content){
-      await searchArticle('/Article/query',content).then((Response)=>{
+    async searchArticle(content,pageId){
+
+      await searchArticle('/Article/query',content,pageId).then((Response)=>{
         this.allAricle = Response.data;
-      }).catch((error)=>{
-        console.log(error);
+        this.derecoterContent(this.allAricle,content);
       })
     },
     /**
@@ -193,9 +193,20 @@ export default {
      * 根据页码请求数据
      */
     async getSomeArticle(pageId){
-      await getSomeArticle('/Article/findSome',pageId).then((Response)=>{
-         this.allAricle = Response.data;
-      })
+      
+      let searchContent = this.$store.state.searchArticleContent;
+      // 如果查询内容为''
+      if(searchContent != ''){
+        await searchArticle('/Article/query',searchContent,pageId).then((Response)=>{
+          this.allAricle = Response.data;
+          this.derecoterContent(this.allAricle,searchContent)
+        })
+      }
+      else {
+        await getSomeArticle('/Article/findSome',pageId).then((Response)=>{
+          this.allAricle = Response.data;
+        })
+      } 
     },
     /**
      * 初始化数据
@@ -209,8 +220,17 @@ export default {
        await getSomeArticle('/Article/findSome').then((Response)=>{
          this.allAricle = Response.data;
        })
+    },
+    /**
+     * 将文章的标题，跟标签添加一些元素
+     */
+    derecoterContent(AllArticle,content){
+        let reg = new RegExp(`${content}+`,`ig`);
+        AllArticle.forEach(v=>{
+            v.tags = v.tags.replace(reg,`<span style="color: red;">${content}</span>`);
+            v.articleName = v.articleName.replace(reg,`<span style="color: red;">${content}</span>`);
+        })
     }
-
   },
   filters:{
       dateInit:function(value) {
@@ -223,7 +243,7 @@ export default {
   },
   watch:{
     ['$store.state.searchArticleContent']:function(){
-      this.searchArticle(this.$store.state.searchArticleContent);
+      this.searchArticle(this.$store.state.searchArticleContent,1);
     }
   }
 };
@@ -261,13 +281,12 @@ export default {
       .Article_title {
         font-size: 30px;
       }
-      .Article_tags {
-        span{
+      .Article_tags > span{
+         border-radius:7px ;
           padding: 5px;
           margin-right: 20px;
           color: white;
           background: rgba(104, 37, 37, 0.4);
-        }
       }
     }
     .Article_warpper_body {
@@ -309,4 +328,5 @@ export default {
     margin: 10px;
   }
 }
+
 </style>

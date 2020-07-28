@@ -27,7 +27,6 @@ instance.interceptors.request.use(function (config) {
     return config;
   }, function (error) {
     /*对请求错误做些什么*/
-
     cancelLoading();
     return Promise.reject(error);
   });
@@ -35,7 +34,6 @@ instance.interceptors.request.use(function (config) {
 // 添加响应拦截器
 instance.interceptors.response.use(function (response) {
     /* 对响应数据做点什么*/
-
     Tip(response,true);
 
     cancelLoading();
