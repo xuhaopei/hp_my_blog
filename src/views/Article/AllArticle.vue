@@ -55,7 +55,10 @@
 </template>
 <script>
 
-import {getAllArticle, searchArticle, getSomeArticle, getAllArticleNumber} from '@/network/Article.js';
+import {
+  searchArticle, 
+  getSearchAllArticleNumber,
+  } from '@/network/Article.js';
 
 export default {
   props: {
@@ -104,22 +107,11 @@ export default {
     };
   },
   created(){
-      //this.getAllArticle();
       this.initPage();
   },
   mounted(){
   },
   methods: {
-    /**
-     * 获取文章
-     */
-    async getAllArticle() {
-      getAllArticle('/Article/findAll').then((Response)=>{
-          this.allAricle = Response.data;
-      }).catch((err)=>{
-          console.log(err);
-      })
-    },
     /**
      * 右击弹出菜单
      */
@@ -172,10 +164,15 @@ export default {
     },
 
     /**
-     * 文字查询的内容
+     * 查询文章
      */
     async searchArticle(content,pageId){
 
+      await getSearchAllArticleNumber('/Article/queryArticleSum',content).then((Response)=>{
+         this.page.total = Response.data[0]['COUNT(*)'];
+         this.page.size  = 7;
+         this.page.count = 10;
+       });
       await searchArticle('/Article/query',content,pageId).then((Response)=>{
         this.allAricle = Response.data;
         this.derecoterContent(this.allAricle,content);
@@ -195,31 +192,17 @@ export default {
     async getSomeArticle(pageId){
       
       let searchContent = this.$store.state.searchArticleContent;
-      // 如果查询内容为''
-      if(searchContent != ''){
-        await searchArticle('/Article/query',searchContent,pageId).then((Response)=>{
+      await searchArticle('/Article/query',searchContent,pageId).then((Response)=>{
           this.allAricle = Response.data;
           this.derecoterContent(this.allAricle,searchContent)
-        })
-      }
-      else {
-        await getSomeArticle('/Article/findSome',pageId).then((Response)=>{
-          this.allAricle = Response.data;
-        })
-      } 
+      })
     },
     /**
      * 初始化数据
      */
     async initPage(){
-       await getAllArticleNumber('/Article/findArticleSum').then((Response)=>{
-         this.page.total = Response.data[0]['COUNT(*)'];
-         this.page.size  = 7;
-         this.page.count = 10;
-       });
-       await getSomeArticle('/Article/findSome').then((Response)=>{
-         this.allAricle = Response.data;
-       })
+       this.$store.commit('setSearchArticle','');   // 重置查询内容为空
+       this.searchArticle('',1);
     },
     /**
      * 将文章的标题，跟标签添加一些元素

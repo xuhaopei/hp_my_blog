@@ -110,6 +110,15 @@ import routerApi from '@/network/baseRouter';
 
 
 export function Tip(Obj, flage = true) {
+
+    
+    if(Obj === undefined) {
+        return Message({
+            showClose: true,
+            message: '服务器未启动，请求不到数据',
+            type: 'error'
+        })
+    }
     let msg;
     let status = Obj.status;                   // 获取响应状态码     
     let url = Obj.config.url;               // 获取请求的路径 
@@ -220,6 +229,20 @@ export function Tip(Obj, flage = true) {
             }
 
             break;
+        case routerApi.articleServilce.findLikeSum:
+            msg = flage ? '文章数量查找成功！' : '文章数量查找失败' + msg;
+
+            type = flage ? 'success' : 'error';
+
+            // 失败就弹出窗口
+            if (!flage) {
+                Message({
+                    showClose: true,
+                    message: msg,
+                    type: type
+                });
+            }
+            break;    
         case routerApi.articleServilce.findSome:
 
             msg = flage ? '文章查找成功！' : '文章查找失败' + msg;

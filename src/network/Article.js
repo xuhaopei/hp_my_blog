@@ -29,6 +29,14 @@ export function searchArticle(url,content,pageId=1,pageSize=7) {
     return instance.get(`${url}?content=${content}&pageId=${pageId}&pageSize=${pageSize}`);
 }
 /**
+ * 模糊查询查询文章的总数量
+ * @param {*} url 
+ * @param {*} content 
+ */
+export function getSearchAllArticleNumber(url,content) {
+    return instance.get(`${url}?content=${content}`);
+}
+/**
  * 提交一篇文章
  * @param {String} url 
  * @param {Number} pid 
