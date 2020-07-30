@@ -42,12 +42,14 @@
     
     <div class="pageControl_wrapper">
       <el-pagination
+        v-if="page.show"
         background
         layout="prev, pager, next"
         v-on:current-change='getSomeArticle'
         :page-size="page.size"
         :pager-Count="page.count"
-        :total="page.total">
+        :total="page.total"
+        :current-page="page.current">
       </el-pagination>
     </div>
     
@@ -101,15 +103,18 @@ export default {
         allAricle : this.allAricleTemp,
         page:{        
             total:100,            // 数据总共的条数
-            size:7,              // 当前页显示的数量
-            count:5              // 可选择的分页按钮数量
+            size:7,               // 当前页显示的数量
+            count:5,              // 可选择的分页按钮数量
+            current:1,            // 当前页码数
+            show:true,            // 显示组件
         }
     };
   },
   created(){
-      this.initPage();
+      
   },
   mounted(){
+    this.initPage();
   },
   methods: {
     /**
@@ -164,19 +169,22 @@ export default {
     },
 
     /**
-     * 查询文章
+     * enter按钮查询文章
      */
     async searchArticle(content,pageId){
-
+         this.page.show = false;             // 先隐藏后显示，为了修复当前页没有跳转到1的bug。
       await getSearchAllArticleNumber('/Article/queryArticleSum',content).then((Response)=>{
          this.page.total = Response.data[0]['COUNT(*)'];
          this.page.size  = 7;
          this.page.count = 10;
+         this.page.current = 1;
+         this.page.show = true;
        });
       await searchArticle('/Article/query',content,pageId).then((Response)=>{
         this.allAricle = Response.data;
         this.derecoterContent(this.allAricle,content);
       })
+      
     },
     /**
      * 初始标签
@@ -201,8 +209,8 @@ export default {
      * 初始化数据
      */
     async initPage(){
-       this.$store.commit('setSearchArticle','');   // 重置查询内容为空
-       this.searchArticle('',1);
+       let content = document.getElementById('hp_searchContent').value; // 获取搜索框的内容
+       this.searchArticle(content,1);
     },
     /**
      * 将文章的标题，跟标签添加一些元素
@@ -226,7 +234,7 @@ export default {
   },
   watch:{
     ['$store.state.searchArticleContent']:function(){
-      this.searchArticle(this.$store.state.searchArticleContent,1);
+         this.searchArticle(this.$store.state.searchArticleContent,1);
     }
   }
 };

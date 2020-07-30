@@ -10,9 +10,9 @@
         :pid="zone.pid"
         :id="zone.id"
         :path="zone.path"
-        style="text-indent:10px"
+        style="text-indent:10px;"
       >
-        {{ zone.name }}
+      {{ zone.name }}
         <i class="iconfont icon-wenjianjia" ></i>
       </div>
       <div class="HpNavItem-body" flage="false">
@@ -25,8 +25,13 @@
           <!--如果是数组 则递归调用这个组建-->
           <hp-nav-item v-if="article.length > 0" :item="article"></hp-nav-item>
           <!--不是数组 则输出文章名-->
-          <li v-else class="g-navHref">
-            <router-link :to="'/ReadArticle/' + article.articleId" style="">
+          <li v-else class="g-navHref" :title='article.name'
+          style="
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;"
+            >
+            <router-link :to="'/ReadArticle/' + article.articleId" >
               {{ article.name }}</router-link
             >
           </li>
@@ -36,6 +41,9 @@
   </div>
 </template>
 <script>
+
+import {MessageBox} from 'element-ui';
+
 import { createDirector, updateDirectory, deleteDirector,getDirectory } from "@/network/LeftNav.js";
 
 export default {
@@ -117,12 +125,16 @@ export default {
       item_delete.addEventListener(
         "click",
         () => {
-          console.log('删除');
-          deleteDirector('/Directory/deleteDirectory',event.target.getAttribute('id')).then((Response)=>{
-            console.log('删除完毕');
-             this.$store.commit('changeDirctor');   //注意 这是连续异步操作，要等到那边子目录添加进目录之后再获取目录。 
-          }).catch((err)=>{
-            console.log(err);
+          MessageBox.confirm('此操作将永久删除该目录, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            deleteDirector('/Directory/deleteDirectory',event.target.getAttribute('id')).then((Response)=>{
+              this.$store.commit('changeDirctor');   //注意 这是连续异步操作，要等到那边子目录添加进目录之后再获取目录。 
+            });
+          }).catch(() => {
+
           });
         },
         false
@@ -283,6 +295,7 @@ export default {
   height: 50px;
   line-height: 50px;
   background: white;
+  font-weight: bolder;
 }
 
 .HpNavItem-body {

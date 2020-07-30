@@ -10,6 +10,7 @@
   </div>
 </template>
 <script>
+
 import LeftNavTop from "@/views/LeftNav/ChildrenCom/LeftNavTop.vue";
 import HpNavItem from "@/components/other/HpNavItem.vue";
 
@@ -201,7 +202,9 @@ export default {
 }
 #LeftNav .LeftNavBody {
   grid-area: LeftNavBody;
-  padding: 8px 0;
+  padding: 8px 0px;
+  width: 250px;
+  box-sizing: border-box;
   .createDirectory {
     height: 70%;
     width: 100%;

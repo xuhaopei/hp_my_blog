@@ -6,6 +6,8 @@
   ></div>
 </template>
 <script>
+import {MessageBox} from 'element-ui';
+
 import { getArticle, deleteArticle } from "@/network/Article.js";
 
 export default {
@@ -191,11 +193,19 @@ export default {
       item_delete.addEventListener(
         "click",
         () => {
-          let articleId = this.$route.params.Id;
-          deleteArticle("/Article/delete", articleId)
-            .then(Response => {
-              this.$router.push("/");
-            });
+          MessageBox.confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+              let articleId = this.$route.params.Id;
+              deleteArticle("/Article/delete", articleId)
+                .then(Response => {   
+                  this.$router.push("/");
+              });
+          }).catch(() => {
+
+          });
         },
         false
       );
