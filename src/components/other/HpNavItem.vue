@@ -124,11 +124,13 @@ export default {
       var item_delete = document.createElement("li"); // 删除
       item_delete.addEventListener(
         "click",
-        () => {
-          MessageBox.confirm('此操作将永久删除该目录, 是否继续?', '提示', {
+        (e) => {
+          
+          MessageBox.confirm(`此操作将永久删 <strong style='color:red;padding:0 10px'>${event.target.innerText} (目录)</strong>, 是否继续?`, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
-            type: 'warning'
+            type: 'warning',
+            dangerouslyUseHTMLString:true
           }).then(() => {
             deleteDirector('/Directory/deleteDirectory',event.target.getAttribute('id')).then((Response)=>{
               this.$store.commit('changeDirctor');   //注意 这是连续异步操作，要等到那边子目录添加进目录之后再获取目录。 
@@ -136,6 +138,7 @@ export default {
           }).catch(() => {
 
           });
+          
         },
         false
       );

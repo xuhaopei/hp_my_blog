@@ -115,7 +115,7 @@ export function Tip(Obj, flage = true) {
     if(Obj === undefined) {
         return Message({
             showClose: true,
-            message: '服务器未启动，请求不到数据',
+            message: '请求超时，请重新请求数据',
             type: 'error'
         })
     }

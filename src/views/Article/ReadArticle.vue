@@ -24,7 +24,6 @@ export default {
     };
   },
   created() {
-    //this.readArticle(this.$route.params.Id);
   },
   mounted() {
     this.readArticle(this.$route.params.Id);
@@ -79,7 +78,7 @@ export default {
                 position: fixed;
                 margin: 10px;
                 top:  ${this.articleH}px;
-                right: 0;
+                right: 0px;
                 width: 220px;
                 box-shadow: 0px 0px 5px 5px rgb(146,146,144);
                 background:white;
@@ -101,7 +100,10 @@ export default {
       hsArray.forEach(element => {
         let li = document.createElement("li");
         li.setAttribute(
-          "style",` margin:10px 0; `
+          "style",` margin:10px;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden; `
         );
         let a = document.createElement("a");
         element.setAttribute("id", "title_go" + num);
@@ -193,9 +195,10 @@ export default {
       item_delete.addEventListener(
         "click",
         () => {
-          MessageBox.confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          MessageBox.confirm(`此操作将永久删除<strong style='color:red;padding:0 10px'>${this.article.articleName} (文件)</strong>, 是否继续?`, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
+            dangerouslyUseHTMLString: true,
             type: 'warning'
           }).then(() => {
               let articleId = this.$route.params.Id;
@@ -246,6 +249,7 @@ export default {
   border-radius: 10px;
   line-height: 30px;
   width: 75%;
+  word-wrap: break-word;
 }
 #test {
   position: fixed;

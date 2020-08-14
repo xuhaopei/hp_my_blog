@@ -12,6 +12,9 @@ export default {
   name: 'Home',
   components: {
     HelloWorld
+  },
+  created(){
+    this.$router.push('/AllArticle/1');
   }
 }
 </script>

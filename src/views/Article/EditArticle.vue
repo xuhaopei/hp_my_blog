@@ -13,6 +13,12 @@
       <div class="btn_wrapper">
         <button
           class="g_btn g_btn_larger g_btn_success"
+          v-on:click="saveArticle"
+        >
+          保存
+        </button>
+        <button
+          class="g_btn g_btn_larger g_btn_success"
           v-on:click="commitArticle"
         >
           上传
@@ -59,6 +65,30 @@ export default {
     cancleEdit() {
       //this.$router.push('/')
       window.history.back();
+    },
+    /**
+     * 保存文章
+     */
+    async saveArticle(e) {
+
+      /**第一步 创建文章对象*/
+      let articleName = this.articleName;
+      if(articleName.trim() === '') {
+        alert('请输入标题');
+        return;
+      }
+      let id = this.id;
+      let articleContent = this.articleContent; // 获取文章内容
+      let tags = this.articleTags;
+      let articleContentText = this.articleContentText;
+
+      /**第五步 文章上传服务器 更新文章 */
+      await updateArticle('/Article/update',id,articleName,articleContent,tags,articleContentText).then((Response)=>{
+        console.log('文章更新成功');
+      }).catch((err)=>{
+        console.log('文章更新失败',err);
+      }) 
+
     },
     /**
      * 上传文章

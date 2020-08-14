@@ -49,7 +49,7 @@
         :page-size="page.size"
         :pager-Count="page.count"
         :total="page.total"
-        :current-page="page.current">
+        :current-page="parseInt(page.current)">
       </el-pagination>
     </div>
     
@@ -200,9 +200,12 @@ export default {
     async getSomeArticle(pageId){
       
       let searchContent = this.$store.state.searchArticleContent;
+      this.$router.push(`/AllArticle/${pageId}`);
       await searchArticle('/Article/query',searchContent,pageId).then((Response)=>{
           this.allAricle = Response.data;
           this.derecoterContent(this.allAricle,searchContent)
+      }).catch(err=>{
+        console.log(err)
       })
     },
     /**
@@ -210,13 +213,15 @@ export default {
      */
     async initPage(){
        let content = document.getElementById('hp_searchContent').value; // 获取搜索框的内容
-       this.searchArticle(content,1);
+       let pageId = this.$route.params.pageId || 1;
+       this.page.current = pageId;
+       this.searchArticle(content,pageId);
     },
     /**
      * 将文章的标题，跟标签添加一些元素
      */
     derecoterContent(AllArticle,content){
-        let reg = new RegExp(`${content}+`,`ig`);
+        let reg = new RegExp(`${content}`,`ig`);
         AllArticle.forEach(v=>{
             v.tags = v.tags.replace(reg,`<span style="color: red;">${content}</span>`);
             v.articleName = v.articleName.replace(reg,`<span style="color: red;">${content}</span>`);
@@ -234,7 +239,8 @@ export default {
   },
   watch:{
     ['$store.state.searchArticleContent']:function(){
-         this.searchArticle(this.$store.state.searchArticleContent,1);
+         let pageId = this.$route.params.pageId || 1;
+         this.searchArticle(this.$store.state.searchArticleContent,pageId);
     }
   }
 };

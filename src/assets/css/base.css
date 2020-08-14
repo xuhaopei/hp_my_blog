@@ -86,6 +86,7 @@ a:focus {
   outline: none;   
   background-color: white;
   border-radius: 6px;
+  margin:8px;
 }
 .g_btn:hover{
   cursor: pointer;
