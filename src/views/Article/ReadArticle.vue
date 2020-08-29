@@ -106,9 +106,10 @@ export default {
                     overflow: hidden; `
         );
         let a = document.createElement("a");
-        element.setAttribute("id", "title_go" + num);
-        a.setAttribute("href", "#title_go" + num);
-
+        element.setAttribute("id", element.innerText);
+        a.setAttribute("href", "#"+element.innerText);
+        a.setAttribute('title',element.innerText);
+        
         // 根据不同的h标签大小 设置区分
         /*let tagName = element.nodeName;
         switch (tagName) {
@@ -144,6 +145,9 @@ export default {
 
       document.body.appendChild(navWrapper);
     },
+    /**
+     * 根据文章id获取文章内容
+     */
     async readArticle(articleId) {
       await getArticle("/Article/find", articleId)
         .then(Response => {
@@ -247,7 +251,7 @@ export default {
   margin: 10px 0px 0px 10px;
   box-shadow: 0px 0px 5px 5px rgb(146, 146, 144);
   border-radius: 10px;
-  line-height: 30px;
+  line-height: 20px;
   width: 75%;
   word-wrap: break-word;
 }

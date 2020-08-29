@@ -41,16 +41,17 @@
     </div>
     
     <div class="pageControl_wrapper">
-      <el-pagination
-        v-if="page.show"
-        background
-        layout="prev, pager, next"
-        v-on:current-change='getSomeArticle'
-        :page-size="page.size"
-        :pager-Count="page.count"
-        :total="page.total"
-        :current-page="parseInt(page.current)">
-      </el-pagination>
+      <keep-alive>
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          v-on:current-change='getSomeArticle'
+          :page-size="page.size"
+          :pager-Count="page.count"
+          :total="page.total"
+          :current-page="parseInt(page.current)">
+        </el-pagination>
+      </keep-alive>
     </div>
     
   </div>
@@ -106,7 +107,6 @@ export default {
             size:7,               // 当前页显示的数量
             count:5,              // 可选择的分页按钮数量
             current:1,            // 当前页码数
-            show:true,            // 显示组件
         }
     };
   },
@@ -172,13 +172,11 @@ export default {
      * enter按钮查询文章
      */
     async searchArticle(content,pageId){
-         this.page.show = false;             // 先隐藏后显示，为了修复当前页没有跳转到1的bug。
       await getSearchAllArticleNumber('/Article/queryArticleSum',content).then((Response)=>{
          this.page.total = Response.data[0]['COUNT(*)'];
          this.page.size  = 7;
          this.page.count = 10;
          this.page.current = 1;
-         this.page.show = true;
        });
       await searchArticle('/Article/query',content,pageId).then((Response)=>{
         this.allAricle = Response.data;
