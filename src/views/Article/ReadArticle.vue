@@ -26,14 +26,19 @@ export default {
   created() {
   },
   mounted() {
-    this.readArticle(this.$route.params.Id);
+    //this.readArticle(this.$route.params.Id);
+     this.$store.dispatch('getArticle',
+     {
+       url:'/Article/find',
+       parmas:{id:this.$route.params.Id}
+     });
   },
   beforeDestroy() {
-    this.deleteArticleNav();
-    window.removeEventListener('scroll',this.changeTitleNavTop);
-    setTimeout(() => {
+    // this.deleteArticleNav();
+    // window.removeEventListener('scroll',this.changeTitleNavTop);
+    // setTimeout(() => {
       
-    }, 100);
+    // }, 100);
   },
   methods: {
     deleteArticleNav() {
@@ -79,7 +84,7 @@ export default {
                 margin: 10px;
                 top:  ${this.articleH}px;
                 right: 0px;
-                width: 220px;
+                width: 300px;
                 box-shadow: 0px 0px 5px 5px rgb(146,146,144);
                 background:white;
             `
@@ -156,7 +161,7 @@ export default {
         .catch(err => {
           console.log(err);
         });
-      this.createArticleTitleNav(document.getElementById("ReadArticle"));
+      //this.createArticleTitleNav(document.getElementById("ReadArticle"));
     },
     /**
      * 右击弹出菜单
@@ -237,7 +242,15 @@ export default {
 
   watch: {
     $route(to, from) {
-      this.readArticle(this.$route.params.Id);
+      //this.readArticle(this.$route.params.Id);
+      this.$store.dispatch('getArticle',
+        {
+          url:'/Article/find',
+          parmas:{id:this.$route.params.Id}
+        });
+    },
+    "$store.state.article.article":function(){
+      this.article = this.$store.getters.getArticle;
     }
   }
 };
@@ -248,11 +261,9 @@ export default {
   position: relative;
   padding: 30px;
   background: white;
-  margin: 10px 0px 0px 10px;
   box-shadow: 0px 0px 5px 5px rgb(146, 146, 144);
   border-radius: 10px;
-  line-height: 20px;
-  width: 75%;
+  line-height: 27px;
   word-wrap: break-word;
 }
 #test {

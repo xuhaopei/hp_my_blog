@@ -44,8 +44,6 @@
 
 import {MessageBox} from 'element-ui';
 
-import { createDirector, updateDirectory, deleteDirector,getDirectory } from "@/network/LeftNav.js";
-
 export default {
   name: "hp-nav-item",
   props: {
@@ -110,7 +108,8 @@ export default {
       item_directorSon.setAttribute("class", " g-navHref");
       item_directorSon.innerText = "创建子目录";
 
-      var item_manager = document.createElement("li"); // 编辑
+      // 编辑目录
+      var item_manager = document.createElement("li"); 
       item_manager.addEventListener(
         "click",
         () => {
@@ -121,19 +120,26 @@ export default {
       item_manager.setAttribute("class", " g-navHref");
       item_manager.innerText = "编辑目录";
 
-      var item_delete = document.createElement("li"); // 删除
+      // 删除目录
+      var item_delete = document.createElement("li"); 
       item_delete.addEventListener(
         "click",
         (e) => {
-          
           MessageBox.confirm(`此操作将永久删 <strong style='color:red;padding:0 10px'>${event.target.innerText} (目录)</strong>, 是否继续?`, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning',
             dangerouslyUseHTMLString:true
           }).then(() => {
-            deleteDirector('/Directory/deleteDirectory',event.target.getAttribute('id')).then((Response)=>{
-              this.$store.commit('changeDirctor');   //注意 这是连续异步操作，要等到那边子目录添加进目录之后再获取目录。 
+            let playload = {
+              url:'/Directory/deleteDirectory',
+              parmas:[event.target.getAttribute('id')]
+            }
+            this.$store.dispatch('deleteDirector',playload).then((msg)=>{
+              let temp_playload = {
+                url:'/Directory/getAllDirectory'
+              }
+              this.$store.dispatch('getDirector',temp_playload);
             });
           }).catch(() => {
 
@@ -228,30 +234,35 @@ export default {
           document.body.removeChild(divObj); // 关闭对话框
 
           let directorItem = event.target;
+          let id = parseInt(directorItem.getAttribute("id"));
+          let path = directorItem.getAttribute("path");
+          let name = input.value.trim();
+
+          // 如果value不为空，说明是编辑目录
           if (value != "") {
-            let id = parseInt(directorItem.getAttribute("id"));
-            let path = directorItem.getAttribute("path");
-            let name = input.value.trim();
-              createDirector("/Directory/updateDirectory", id, path, name)
-              .then(Response => {
-                console.log("修改成功嗷");
-                this.$store.commit('changeDirctor');      // 因为是递归组件 所以更新目录只能通过vuex来通知顶级父组件 注意 这是连续异步操作，要等到那边子目录添加进目录之后再获取目录。
-              })
-              .catch(err => {
-                console.log(err);
-              });
-          } else {
-            let pid = parseInt(directorItem.getAttribute("id"));
-            let path = directorItem.getAttribute("path");
-            let name = input.value.trim();
-            createDirector("/Directory/createDirectory", pid, path, name)
-              .then(Response => {
-                console.log("创建成功嗷");
-                this.$store.commit('changeDirctor');      // 因为是递归组件 所以更新目录只能通过vuex来通知顶级父组件 注意 这是连续异步操作，要等到那边子目录添加进目录之后再获取目录。
-              })
-              .catch(err => {
-                console.log(err);
-              });
+            let playload = {
+              url:'/Directory/updateDirectory',
+              parmas:[id, path, name, 0]
+            }
+            this.$store.dispatch('updateDirector',playload).then((msg)=>{
+              let temp_playload = {
+                url:'/Directory/getAllDirectory'
+              }
+              this.$store.dispatch('getDirector',temp_playload);
+            });
+          } 
+          // 如果value为空，说明是新增目录
+          else {
+            let playload = {
+              url:'/Directory/createDirectory',
+              parmas:[id, path, name, 0]
+            }
+            this.$store.dispatch('addDirector',playload).then((msg)=>{
+               let temp_playload = {
+                url:'/Directory/getAllDirectory'
+              }
+              this.$store.dispatch('getDirector',temp_playload);
+            });
           }
           
         },

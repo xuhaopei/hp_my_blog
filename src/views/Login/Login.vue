@@ -1,5 +1,5 @@
 <template>
-    <div id="login">
+    <div id="login" v-on:click.self='$router.push("/")'>
         <form class="form-warpper">
             <div class="tip-wrapper">
                 <span style="color:red">{{tip}}</span>
@@ -100,6 +100,8 @@ export default {
 </script>
 <style >
 #login {
+    top:0;
+    left:0;
     width: 100%;
     height: 100%;
     position: fixed;
@@ -107,8 +109,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: rgb(225,225,225);
-    
+    background: rgba(170, 162, 162, 0.8);  
 }
 .form-warpper {
     width: 300px;

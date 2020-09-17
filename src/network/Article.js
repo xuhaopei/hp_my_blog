@@ -25,7 +25,7 @@ export function updateDirectory(url,title,directoryObj) {
  * @param {Number} pageId   页码
  * @param {Number} pageSize 一页的数量
  */
-export function searchArticle(url,content,pageId=1,pageSize=7) {
+export function searchArticle(url,content,pageId=1,pageSize=5) {
     return instance.get(`${url}?content=${content}&pageId=${pageId}&pageSize=${pageSize}`);
 }
 /**
@@ -70,6 +70,14 @@ export function getSomeArticle(url,pageId=1,pageSize=7) {
     return instance.get(`${url}?pageId=${pageId}&pageSize=${pageSize}`);
 }
 
+/**
+ * 获取最近创建的文章
+ * @param {String} url 
+ * @param {Number} size 获取文章的数量
+ */
+export function getSomeNearArticle(url,size=5) {
+    return instance.get(`${url}?size=${size}`);
+}
 /**
  * 查询所有文章
  * @param {*} url 

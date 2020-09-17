@@ -1,5 +1,5 @@
 <template>
-  <div id="Article" v-on:click.self="cancleEdit">
+  <div id="editArticle" v-on:click.self="cancleEdit">
     <div class="Article-wrapper">
       <input class="input_wrapper" type="text" placeholder="请输入您的标题"   v-model="articleName"/>
       <input
@@ -8,8 +8,9 @@
       placeholder="请输入标签，注意每个标签用英文逗号隔开~"
       v-model="articleTags"
       />
-      <WangeEdit v-model='articleContent' v-on:getArticle='getMsgFromSon'></WangeEdit>
-
+      <div class='wangeEdit_wrapper'>
+          <WangeEdit v-model='articleContent' v-on:getArticle='getMsgFromSon'></WangeEdit>
+      </div>
       <div class="btn_wrapper">
         <button
           class="g_btn g_btn_larger g_btn_success"
@@ -358,46 +359,46 @@ export default {
 .editer-modle {
   background: white;
 }
-#Article {
-  position: fixed;
+#editArticle {
+  position: absolute;
+  left:0;
+  top:0;
   width: 100%;
-  background: rgba(146, 146, 146, 0.2);
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  background: rgba(146, 146, 146, 0.3);
   .Article-wrapper {
-    background: white;
+    box-sizing: border-box;
+    position: relative;
     width: 80%;
-    height: 660px;
+    height: 100%;
+    margin: 0 auto;
+    box-shadow: 0px 0px 10px 10px rgb(146, 146, 144);
+    background: white;
     display: flex;
     flex-direction: column;
+    border-radius: 10px;
     .input_wrapper {
       display: block;
+      box-sizing: border-box;
+      flex:none;
+      height: 40px;
       padding: 10px;
       outline: none;
       border: 0;
-       border-bottom:1px solid rgba(146,146,146,0.8);
+      border-bottom:1px solid rgba(146,146,146,0.8);
     }
-    .articleLocation_wrapper {
-      display: block;
-      padding: 0 10px;
-      display: flex;
-      flex-direction: row;
-      justify-content: start;
+    .wangeEdit_wrapper {
+      flex:1;
+      min-height: 200px;
     }
     .btn_wrapper {
-      width: 100%;
+      box-sizing: border-box;
+      flex:none;
+      height: 60px;
       display: flex;
       flex-direction: row;
       justify-content: flex-end;
     }
   }
-}
-.test {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
 }
 </style>

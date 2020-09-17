@@ -246,11 +246,6 @@ export default {
 <style lang="less">
 #AllArticle {
   position: relative;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 1080px;
   .Article_warpper {
     position: relative;
     width: 100%;

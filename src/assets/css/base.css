@@ -6,6 +6,13 @@ html{
 body{
   width: 100%;
   height: 100%; 
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC,
+    Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial,
+    sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  font-variant: tabular-nums;
+  line-height: 1.5;
+  font-feature-settings: "tnum";
 }
 *{
   margin: 0;
@@ -27,6 +34,7 @@ code {
   width: 100%;
   white-space: normal;
   font-size: 13px;
+  line-height: 18px;
 }
 a{
   text-decoration: none;
@@ -53,7 +61,7 @@ a:focus {
 }
 /*鼠标移动到导航时背景变为透明灰色+鼠标*/
 .g-mouseMoveOnNav:hover{
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(146, 146, 146, 0.2);
   cursor: pointer;
 }
 /*鼠标移动到导航时背景变为透明白色+鼠标*/
@@ -123,4 +131,33 @@ a:focus {
   padding: 10px;
   border-radius: 10px;
   font-size: 16px;
+}
+
+/*设置文字超过此行宽度的时候变成省略号*/
+.g_text_shengluehao {
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/*设置盒子阴影效果*/
+.g_box-shadow_gray{
+  box-shadow: 0px 0px 10px 10px rgb(146,146,146);
+  border-radius: 5px;
+}
+
+
+/*vue动画效果*/
+/* 可以设置不同的进入和离开动画 */
+/* 设置持续时间和动画函数 */
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for below version 2.1.8 */ {
+  transform: translateX(20px);
+  opacity: 0;
 }

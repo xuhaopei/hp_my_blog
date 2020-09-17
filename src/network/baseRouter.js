@@ -10,6 +10,7 @@ export default {
         findLikeSum:'/Article/queryArticleSum',
         findAll:    '/Article/findAll',
         findSome:   '/Article/findSome',
+        findNear:   '/Article/findNear',
         findSum:    '/Article/findArticleSum',
         update:     '/Article/update',
         updateRead: '/Article/updateRead',

@@ -1,9 +1,8 @@
 <template>
   <div id="LeftNav">
-    <LeftNavTop></LeftNavTop>
     <div class="LeftNavBody" v-on:click.right="showMenu">
       <HpNavItem
-        :item="allItems"
+        :item="this.allItems"
         v-on:changeDirectoty="getAllDirectory"
       ></HpNavItem>
     </div>
@@ -11,10 +10,8 @@
 </template>
 <script>
 
-import LeftNavTop from "@/views/LeftNav/ChildrenCom/LeftNavTop.vue";
+//import LeftNavTop from "@/views/LeftNav/ChildrenCom/LeftNavTop.vue";
 import HpNavItem from "@/components/other/HpNavItem.vue";
-
-import { getDirectory,createDirector } from "@/network/LeftNav.js";
 
 export default {
   name: "",
@@ -24,21 +21,17 @@ export default {
     };
   },
   components: {
-    LeftNavTop,
     HpNavItem
   },
   created() {
     this.getAllDirectory();
   },
   methods: {
-    async getAllDirectory(content) {
-      await getDirectory("/Directory/getAllDirectory")
-        .then(Response => {
-          this.allItems = Array.from(Response.data);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    getAllDirectory(content) {
+        let playload = {
+          url:'/Directory/getAllDirectory'
+        }
+        this.$store.dispatch('getDirector',playload);
     },
     /**
      * 右击弹出菜单
@@ -134,14 +127,13 @@ export default {
           let pid = 0;
           let path = '/0';
           let name = input.value.trim();
-          createDirector("/Directory/createDirectory", pid, path, name)
-            .then(Response => {
-              console.log("创建成功嗷");
-              this.$store.commit("changeDirctor"); // 因为是递归组件 所以更新目录只能通过vuex来通知顶级父组件
-            })
-            .catch(err => {
-              console.log(err);
-            });
+          let playload = {
+            url:'/Directory/createDirectory',
+            parmas:[pid, path, name, 0]
+          }
+          this.$store.dispatch('addDirector',playload).then((msg)=>{
+            this.getAllDirectory();
+          });
           
         },
         false
@@ -185,24 +177,24 @@ export default {
     "$store.state.isChangeDirctor": function() {
       //document.location.reload();//重新加载当前页面
       this.getAllDirectory(content);
+    },
+    /**通过vue-x来管理文章与目录，减少了http请求,如果directors更新，则请求数据 */
+    "$store.state.article.directors":function(){
+       this.allItems = this.$store.getters.getDirector;
     }
   }
 };
 </script>
 <style lang='less'>
 #LeftNav {
-  grid-area: LeftNav;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 64px 1fr;
-  grid-template-areas:
-    "LeftNavTop"
-    "LeftNavBody";
-  gap: 0;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px 5px rgb(144, 146, 146);
+  flex:none;
+  margin:10px 0px 10px 3px;
+
 }
 #LeftNav .LeftNavBody {
-  grid-area: LeftNavBody;
-  padding: 8px 0px;
+  padding: 8px 4px;
   width: 250px;
   box-sizing: border-box;
   .createDirectory {

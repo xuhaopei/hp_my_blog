@@ -1,9 +1,19 @@
 <template>
   <div id="app">
-    <TopNav></TopNav>
-    <LeftNav :itme="directorys"></LeftNav>
-    <Animation :loading="$store.state.loading" size="3"></Animation>
-    <router-view />
+    <header>
+      <TopNav></TopNav>
+    </header>
+    <main>
+      <LeftNav :itme="directorys"></LeftNav>
+      <div id='aritlce'>
+        <transition name="slide-fade">
+          <router-view />
+        </transition>
+      </div>
+      <RightNav></RightNav>
+    </main>
+    <footer>
+    </footer>
   </div>
 </template>
 
@@ -11,7 +21,8 @@
 <script>
 import LeftNav from "@/views/LeftNav/LeftNav.vue";
 import TopNav from "@/views/TopNav/TopNav.vue";
-import Animation from "@/components/other/AnimationTick.vue";
+//import Animation from "@/components/other/AnimationTick.vue";
+import RightNav from "@/views/RightNav/RightNav.vue"
 
 import {setToken} from '@/network/Token.js';
 
@@ -25,7 +36,7 @@ export default {
   components: {
     LeftNav,
     TopNav,
-    Animation
+    RightNav
   },
   methods: {
     /**
@@ -84,18 +95,32 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
 @import url(assets/css/base.css);
 
 #app {
   position: relative;
   height: 100%;
-  display: grid;
-  grid-template-columns: 255px 1fr;
-  grid-template-rows: 64px 1fr;
-  grid-template-areas:
-    "LeftNav TopNav"
-    "LeftNav Home";
-  gap: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#app > header{
+  flex:1;
+}
+#app > main{
+  flex:1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  #aritlce {
+      flex: 1;
+      padding: 10px;
+      min-width: 480px;
+      overflow: hidden;
+  }
+}
+#app > footer{
+  flex:1;
 }
 </style>

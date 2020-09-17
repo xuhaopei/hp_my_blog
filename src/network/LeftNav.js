@@ -11,12 +11,16 @@ export function getDirectory(url) {
 /**
  * 更新目录
  * @param {String} url 
+ * @param {Array} params 存储各个参数，格式如下。
  * @param {Number} id     目录ID
  * @param {String} path   目录路径
  * @param {String} name   目录名称
+ * @param {Number} flag   0代表目录,其它数字代表文章
  */
-export function updateDirectory(url,id,path,name) {
-    return instance.post(url,id,path,name);
+export function updateDirectory(url,params) {
+    let {id,path,name} =  params;
+    //return instance.post(url,id,path,name);
+    instance.post(url,params);
 }
 
 /**
@@ -33,22 +37,22 @@ export function putArticle(url,articleId,articleName,articleContent) {
 /**
  * 创建目录
  * @param {String} url 
+ * @param {Array} params 存储各个参数，格式如下。
  * @param {Number} pid  上级目录ID
  * @param {String} path 目录路径
  * @param {String} name 目录名称
  * @param {Number} articleId 0为目录，其它为文章id;
  */
-export function createDirector(url,pid,path,name,articleId = 0) {
-    let array = [pid,path,name,articleId]
-    return instance.post(url,array);
+export function createDirector(url,params) {
+    return instance.post(url,params);
 }
 
 /**
  * 删除目录
  * @param {String} url 
+ * @param {Array} params 存储各个参数，格式如下。
  * @param {Number} id   目录ID
  */
-export function deleteDirector(url,id) {
-    let array = [id]
-    return instance.post(url,array);
+export function deleteDirector(url,params) {
+    return instance.post(url,params);
 }
