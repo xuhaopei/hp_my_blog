@@ -35,6 +35,9 @@ export default {
     this.createEdit();
     this.dynamicHeight();
   },
+  destroyed() {
+    window.removeEventListener('resize',this.changeHeight);
+  },
   methods: {
     createEdit() {
       this.editor = new E("#wangeEditToolBar", "#wangeEditWrapper");
@@ -138,15 +141,17 @@ export default {
      * 通过监听resize动态修改wangeEditWrapper高度，保证动态响应。CSS搞不了，不知道为什么哦
      */
     dynamicHeight() {
-      
-      function changeHeight(){
-        let parent = document.getElementById("wangeEdit").parentNode;
-        let wangeEditWrapper = document.getElementById("wangeEditWrapper");
-        wangeEditWrapper.style.height = parent.clientHeight - 30 + "px";
-      }
-
-      changeHeight();
-      window.addEventListener("resize", changeHeight);
+      this.changeHeight();
+      window.addEventListener("resize", this.changeHeight);
+    },
+    /**
+     * 
+     */
+    changeHeight(){
+      if(document.getElementById("wangeEdit").parentNode == null) return;
+      let parent = document.getElementById("wangeEdit").parentNode;
+      let wangeEditWrapper = document.getElementById("wangeEditWrapper");
+      wangeEditWrapper.style.height = parent.clientHeight - 30 + "px";
     },
   },
 };

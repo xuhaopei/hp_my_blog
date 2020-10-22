@@ -197,6 +197,7 @@ export default {
   padding: 8px 4px;
   width: 250px;
   box-sizing: border-box;
+  height: 100%;
   .createDirectory {
     height: 70%;
     width: 100%;

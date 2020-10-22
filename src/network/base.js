@@ -7,8 +7,8 @@ import {createLoading,cancelLoading} from '@/assets/js/animationLoading.js';
 
 //完成基本配置
 const instance = axios.create({
-   //baseURL: 'http://116.85.46.202:80',	        // 请求服务器的地址
-   baseURL: 'http://localhost:3000',
+   baseURL: 'http://106.75.167.111:80',	        // 请求服务器的地址
+  // baseURL: 'http://localhost:3000',          // 本地服务器地址
    timeout: 2000,
     //withCredentials: true, 
     /**

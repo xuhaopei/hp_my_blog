@@ -174,7 +174,7 @@ export default {
       menu.style["top"] = event.pageY - 10 + "px";
       // 设置离开菜单的时候菜单消失
       menu.addEventListener("mouseleave", function(event) {
-        menu.parentNode.removeChild(menu);
+        menu.parentNode && menu.parentNode.removeChild(menu);
       });
 
       var item_director = document.createElement("li"); // 创建文章
@@ -182,6 +182,7 @@ export default {
         "click",
         () => {
           this.$router.push("/CreateArticle");
+          window.document.documentElement.scrollTop = 0;    // 滚动条滚回顶部
         },
         false
       );
@@ -194,6 +195,7 @@ export default {
         () => {
           let articleId = this.$route.params.Id;
           this.$router.push("/EditArticle/" + articleId);
+          window.document.documentElement.scrollTop = 0;    // 滚动条滚回顶部
         },
         false
       );
