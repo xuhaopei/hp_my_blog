@@ -70,7 +70,6 @@ export default {
       item_manager.addEventListener(
         "click",
         () => {
-          console.log(event.target.childNodes[0].baseURI);
           this.$router.push("/EditArticle");
         },
         false

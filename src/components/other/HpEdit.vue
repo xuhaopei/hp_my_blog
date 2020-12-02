@@ -93,8 +93,7 @@ export default {
                             },false);
                             break;
                         default :
-                            console.log(this.getAttribute('edit-action'),);
-                            console.log(document.execCommand(this.getAttribute('edit-action'),false,this.getAttribute('edit-action-value')));
+                            document.execCommand(this.getAttribute('edit-action'),false,this.getAttribute('edit-action-value'));
                     }
                     
                 }
@@ -104,7 +103,6 @@ export default {
          * 创建可视化H标签 
          */
         createHs(event){
-           // console.log(event)
             var body = document.body;
             var objDiv = document.createElement("div");
             // 设置离开菜单的时候菜单消失

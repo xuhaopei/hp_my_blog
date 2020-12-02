@@ -1,5 +1,39 @@
 # 博客开发文档说明
 
+```
+├── build                      // 构建相关   无
+├── config                     // 配置相关   无
+├── src                        // 源代码
+│   ├── network                // 所有请求
+│   ├── assets                 // 主题 字体等静态资源
+│   ├── components             // 全局公用组件
+│   ├── directive              // 全局指令    无
+│   ├── filtres                // 全局 filter 无
+│   ├── icons                  // 项目所有 svg icons 无
+│   ├── lang                   // 国际化 language  无
+│   ├── mock                   // 项目mock 模拟数据 
+│   ├── router                 // 路由
+│   ├── store                  // 全局 store管理
+│   ├── styles                 // 全局样式   无
+│   ├── utils                  // 全局公用方法 无
+│   ├── vendor                 // 公用vendor ？无
+│   ├── views                   // view
+│   ├── App.vue                // 入口页面
+│   ├── main.js                // 入口 加载组件 初始化等
+│   └── permission.js          // 权限管理   无
+├── static                     // 第三方不打包资源 无
+│   └── Tinymce                // 富文本
+├── .babelrc                   // babel-loader 配置 无
+├── eslintrc.js                // eslint 配置项  无
+├── .gitignore                 // git 忽略项  有
+├── favicon.ico                // favicon图标 无
+├── index.html                 // html模板  无
+└── package.json               // package.json 有
+
+```
+
+
+
 ## assets
 
 ### js

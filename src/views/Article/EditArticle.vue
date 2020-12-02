@@ -85,9 +85,9 @@ export default {
 
       /**第五步 文章上传服务器 更新文章 */
       await updateArticle('/Article/update',id,articleName,articleContent,tags,articleContentText).then((Response)=>{
-        console.log('文章更新成功');
+        //console.log('文章更新成功');
       }).catch((err)=>{
-        console.log('文章更新失败',err);
+        //console.log('文章更新失败',err);
       }) 
 
     },
@@ -109,10 +109,10 @@ export default {
 
       /**第五步 文章上传服务器 更新文章 */
       await updateArticle('/Article/update',id,articleName,articleContent,tags,articleContentText).then((Response)=>{
-        console.log('文章更新成功');
+        //console.log('文章更新成功');
         window.history.back();
       }).catch((err)=>{
-        console.log('文章更新失败',err);
+        //console.log('文章更新失败',err);
       }) 
 
     },

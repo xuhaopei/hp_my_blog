@@ -67,7 +67,6 @@ export default {
       this.editor.customConfig.pasteFilterStyle = false;
       this.editor.customConfig.uploadImgServer = "/uploadImage"; // 上传图片到服务器
       this.editor.customConfig.linkImgCallback = function (url) {
-        console.log(url); // url 即插入图片的地址
       };
       this.editor.customConfig.uploadImgHooks = {
         before: function (xhr, editor, files) {

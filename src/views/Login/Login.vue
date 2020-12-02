@@ -92,7 +92,7 @@ export default {
          */
         createCookie(token){
             //document.cookie = "username=Steve Jobs;expires=Sun, 31 Dec 2022 12:00:00 UTC;";
-            console.log(document.cookie )
+            //console.log(document.cookie )
         },
         
     }

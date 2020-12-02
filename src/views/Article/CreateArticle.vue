@@ -119,18 +119,18 @@ export default {
       /**第三步 文章上传服务器 添加文章 */
       await putArticle("/Article/add", pid,articleName,articleContent,'author',tags,articleContentText)
         .then(Response => {
-          console.log("文章添加成功");
+          //console.log("文章添加成功");
           articleId = Response.data.insertId;
           return createDirector('/Directory/createDirectory',[pid,path,articleName,articleId]);
         })
         .then((Response)=>{
-          console.log("文章添加到目录成功~");
+          //console.log("文章添加到目录成功~");
           this.$store.commit('changeDirctor'); 
           this.$router.push('/ReadArticle/'+articleId);
           
         })
         .catch(err => {
-          console.log("文章添加失败");
+          //console.log("文章添加失败");
         });
     },
     /**
@@ -341,7 +341,7 @@ export default {
           this.directorys = Response.data;
         })
         .catch(err => {
-          console.log(err);
+          //console.log(err);
         });
     },
     /**
