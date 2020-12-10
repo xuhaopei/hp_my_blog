@@ -30,4 +30,8 @@ export default {
         uploadImage:'/uploadImage',
         uploadFile: '/uploadFile',
     },
+    calenderService:{
+        commit:'/commitCalender',
+        getCalender:'/getCalender'
+    },
 }

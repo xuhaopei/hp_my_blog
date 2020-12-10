@@ -5,7 +5,6 @@ import routerApi from '@/network/baseRouter';
 
 export function Tip(Obj, flage = true) {
 
-    
     if(Obj === undefined) {
         return Message({
             showClose: true,
@@ -301,6 +300,7 @@ export function Tip(Obj, flage = true) {
             }
 
             break;
+        
         /**对文件操作的API */
         case routerApi.files.uploadImage:
             msg = '';
@@ -309,6 +309,24 @@ export function Tip(Obj, flage = true) {
             msg = '';
             break;
 
+        /**对日历计事表的API */
+        case routerApi.calenderService.commit:
+            
+            msg = flage ? '日历计划表编辑成功！' : '日历计划表编辑失败' + msg;
+
+            type = flage ? 'success' : 'error';
+            Message({
+                showClose: true,
+                message: msg,
+                type: type
+            });
+
+            break;
+
+        case routerApi.calenderService.getCalender:
+             msg = '';
+             break;
+            
         default:
             msg = '此操作未被前端记录！' + url;
             type = "error";

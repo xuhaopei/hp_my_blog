@@ -18,7 +18,7 @@ const instance = axios.create({
      * */ 
     
 });
-let httpCount = 0;
+
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
     /*在发送请求之前做些什么*/
@@ -36,13 +36,14 @@ instance.interceptors.response.use(function (response) {
     /* 对响应数据做点什么*/
     Tip(response,true);
     cancelLoading();
-
     return response;
+
   }, function (error) {
     /* 对响应错误做点什么*/
     cancelLoading();
     Tip(error.response,false);
     return Promise.reject(error);
+    
   });
   
 export default instance;
