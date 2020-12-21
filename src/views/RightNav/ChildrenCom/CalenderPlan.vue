@@ -144,15 +144,16 @@ export default {
     'outDialogDate.visible':function(newVal, oldVal){
         // 当关闭计划表的时候，将数据上传到服务器
         if(newVal == false) {
-          if(this.outDialogDate.gridData.length === 0) return;
+          if(this.planItems.length === 0) return;
 
           // 如果所有计划都完成，则标记完成
           this.outDialogDate.allFinish = true;
-          for (const iterator of this.outDialogDate.gridData) {
+          for (const iterator of this.planItems) {
             if(!iterator.hasfinish) {
               this.outDialogDate.allFinish = false;
             }
           }
+          this.outDialogDate.gridData = this.planItems;
           http_post_commitCalenderPlan('/commitCalender',this.outDialogDate).then((data)=>{
           })
         }
