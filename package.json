@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "tree": "./node_modules/.bin/tree -l 3 -d --ignore node_modules/,public/"
   },
   "dependencies": {
     "axios": "^0.19.2",

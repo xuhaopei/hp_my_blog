@@ -1,6 +1,6 @@
 export default {
     state:()=>({
-        version:'2.1.0'
+        version:'2.1.1'
     }),
     getters: {
         getVersion(state){
