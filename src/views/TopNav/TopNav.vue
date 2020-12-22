@@ -103,7 +103,7 @@ export default {
 </script>
 <style >
 #TopNav{
-    background: rgb(155, 64, 240);
+    background: #006699;
     grid-area: TopNav;
     box-shadow:  6px 1px 10px 5px rgba(0, 0, 0, 0.6);
     display: grid;
@@ -154,8 +154,8 @@ export default {
 .input-serach {
     display: inline-block;
     height: 30px;
-    background: rgb(196, 144, 245);
-    border: 0;
+    background:  #006699;
+    border: 3px solid black;
     align-items: center;
     width: 120px;
     transition: width 0.2s ease-in-out;

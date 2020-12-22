@@ -10,19 +10,16 @@
       <div class="Article_warpper_top">
         <div class='left'>
           <span class="Article_date">{{ item.alertDate | dateInit }}</span>
-          <router-link
+          <!-- <router-link
             :to="'/ReadArticle/' + item.id"
             class="Article_title"
             v-html="item.articleName "
           >
-          </router-link>
-        </div>
-        <div class="Article_tags">
-              <span v-for="(tag,index) of tagsInit(item.tags)" :key='index' v-html="tag"></span>
+          </router-link> -->
         </div>
       </div>
       <div class="Article_warpper_body">
-        摘要：
+        <!-- 摘要：
         <div class="Article_content" v-text="item.articleContentText">
         </div>
         <router-link
@@ -30,13 +27,22 @@
           class="Article_forward"
         >
           阅读全文
-        </router-link>
+        </router-link> -->
+          <router-link
+            :to="'/ReadArticle/' + item.id"
+            class="Article_title"
+            v-html="item.articleName "
+          >
+          </router-link>
       </div>
       <div class="Article_warpper_bottom">
-        <span class="Article_author">
+        <!-- <span class="Article_author">
           {{ item.author }}
         </span>
-        <span class="Article_readTime"> 阅读数({{ item.read }}) </span>
+        <span class="Article_readTime"> 阅读数({{ item.read }}) </span> -->
+        <div class="Article_tags">
+              <span v-for="(tag,index) of tagsInit(item.tags)" :key='index' v-html="tag"></span>
+        </div>
       </div>
     </div>
     
@@ -82,7 +88,7 @@ export default {
             articleId: 1,
             articleName: "xhp",
             articleContent:
-              "12zxcasasasasasasasasasasasasasasasasaasdzxcjhbascjhgzxkcgssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssaksasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasas3",
+              "12zxcasassasasasasasasasasas3",
             creatDate: "20134221",
             articleAuthor: "正义的键盘侠",
             read: 100
@@ -188,7 +194,7 @@ export default {
      * 初始标签
      */
     tagsInit:function(value) {
-        if(!value) return '';
+        if(!value) return [];
         value = value.toString();
         return value.split(',');
     },
@@ -259,13 +265,11 @@ export default {
     .Article_warpper_top {
       display: flex;
       flex-direction: row;
-      margin-bottom: 10px;
       justify-content: space-between;
       align-items: baseline;
       .Article_date {
-        background: rgb(87, 191, 240);
         padding: 5px;
-        color: white;
+        color: gray;
         margin-right: 20px;
       }
       .Article_title {
@@ -280,11 +284,9 @@ export default {
       }
     }
     .Article_warpper_body {
-      width: 100%;
       position: relative;
-      margin-bottom: 10px;
-      font-size: 16px;
-      line-height: 25px;
+      margin-top: 10px;
+      margin-bottom: 15px;
       .Article_content {
         text-indent: 32px;
         white-space: nowrap;
@@ -295,19 +297,31 @@ export default {
         display: block;
         color: rgb(93, 243, 93);
       }
+      .Article_title {
+        font-size: 30px;
+        line-height: 30px;
+      }
     }
     .Article_warpper_bottom {
       display: flex;
       flex-direction: row;
       color: rgba(104, 37, 37, 0.4);
       font-size: 12px;
+      flex-wrap: wrap;
       .Article_author {
         margin-right: 10px;
+      }
+      .Article_tags > span{
+          border-radius:5px;
+          padding: 5px;
+          margin-right: 20px;
+          color: white;
+          background: #6699CC;
       }
     }
   }
   .Article_warpper:hover {
-    box-shadow: 0px 0px 5px 5px rgb(33, 165, 226);
+    box-shadow: 0px 0px 5px 5px #006699;
   }
   .pageControl_wrapper {
     display: flex;

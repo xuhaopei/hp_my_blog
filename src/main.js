@@ -15,6 +15,7 @@ import {
   Button,
   Switch,
   Input, 
+  Tag
 } from 'element-ui';
 
 
@@ -31,6 +32,7 @@ Vue.use(TableColumn);
 Vue.use(Button);
 Vue.use(Switch);
 Vue.use(Input);
+Vue.use(Tag);
 
 new Vue({
   router,

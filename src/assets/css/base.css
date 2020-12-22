@@ -42,9 +42,7 @@ a{
 }
 a:hover{
   color: #2196f3;
-  text-decoration: underline #2196f3 dotted;
   cursor: pointer;
-  text-underline-position:under;
 }
 /*去除点击后的边框*/
 a:focus {
