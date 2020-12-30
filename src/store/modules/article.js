@@ -14,7 +14,7 @@ export default {
     state:()=>({
         article:{},
         directors:[],
-        nearArticles:[]
+        nearArticles:[],
     }),
     getters: {
         getArticle(state){
@@ -32,7 +32,7 @@ export default {
             state.article = playload;
         },
         setNearArticle(state,playload) {
-            state.article = playload;
+            state.nearArticles = playload;
         },
         setDirector(state,playload) {
             state.directors = playload;

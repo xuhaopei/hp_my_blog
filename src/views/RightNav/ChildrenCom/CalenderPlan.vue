@@ -77,7 +77,7 @@
           </el-table>
           <div class='CalenderPlan-button-wrapper'>
             <el-button :type="hasInit ? 'warning':'primary'" icon="el-icon-edit" @click="hasInit = !hasInit,SetOrGetInitPlanDataByHasInit(hasInit, initPlanItems)">{{hasInit ? '返回':'初始化'}}</el-button>
-            <el-button type="primary" icon="el-icon-edit" @click="add">编辑</el-button>
+            <el-button type="primary" icon="el-icon-edit" @click="add">添加</el-button>
           </div>
         </el-dialog>
   </div>

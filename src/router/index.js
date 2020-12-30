@@ -4,7 +4,7 @@ import Home from '@/views/Home/Home.vue'
 import Login from '@/views/Login/Login.vue'
 const CreateArticle = () => import('@/views/Article/CreateArticle.vue');
 const EditArticle = () => import('@/views/Article/EditArticle.vue');
-const ReadArticle = ()=> import('@/views/Article/ReadArticle.vue');
+const ReadArticle = ()=> import('@/views/ReadArticle/Base.vue');
 const AllArticle = ()=> import('@/views/Article/AllArticle.vue');
 const Register = () => import('@/views/Register/Register.vue');
 

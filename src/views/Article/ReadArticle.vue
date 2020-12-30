@@ -1,9 +1,29 @@
 <template>
-  <div
-    id="ReadArticle"
-    v-html="article.articleContent"
-    v-on:click.stop.prevent.right="showMenu"
-  ></div>
+  <div>
+    <div class="ReadArticle__top--wrapper g_layout_flex_column g_box-shadow_gray">
+      <div class="ArticleMessage--wrapper g_layout_flex_justify-content_space-between">
+        <div class="UserMessage--wrapper g_layout_flex_row">
+          <div class="UserMessage__profilePhoto g_layout_flex_column_flex_end">
+            <span class="profile">{{article.author}}</span>
+          </div>
+          <div class="g_layout_flex_column_flex_end">
+            <strong style="font-size:20px;">{{article.author}}</strong>
+            <div class="g_layout_flex_row_flex_end">
+              <span style="margin-right:20px">{{article.alertDate | dateInit}}</span>
+              <span class="g_tag" v-for="(tag,index) of $StrToArray(article.tags)" :key='index' v-html="tag"></span>
+            </div>
+          </div>
+        </div>
+        <div class="guanzhu">关注</div>
+      </div>
+      <h1>{{article.articleName}}</h1>
+    </div>
+    <div
+      id="ReadArticle"
+      v-html="article.articleContent"
+      v-on:click.stop.prevent.right="showMenu"
+    ></div>
+  </div>
 </template>
 <script>
 import {MessageBox} from 'element-ui';
@@ -34,11 +54,6 @@ export default {
      });
   },
   beforeDestroy() {
-    // this.deleteArticleNav();
-    // window.removeEventListener('scroll',this.changeTitleNavTop);
-    // setTimeout(() => {
-      
-    // }, 100);
   },
   methods: {
     deleteArticleNav() {
@@ -157,6 +172,7 @@ export default {
       await getArticle("/Article/find", articleId)
         .then(Response => {
           this.article = Response.data;
+          console.log(this.article)
         })
         .catch(err => {
           console.log(err);
@@ -253,6 +269,7 @@ export default {
     },
     "$store.state.article.article":function(){
       this.article = this.$store.getters.getArticle;
+      console.log(this.article)
     }
   }
 };
@@ -268,13 +285,39 @@ export default {
   line-height: 27px;
   word-wrap: break-word;
 }
-#test {
-  position: fixed;
-  margin: 10px;
-  top: 10%;
-  right: 0;
-  width: 220px;
-  box-shadow: 0px 0px 5px 5px rgb(146, 146, 144);
-  height: 100px;
+.UserMessage__profilePhoto {
+
+  .profile{
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 60px;
+    line-height: 60px;
+    text-align: center;
+    background-color: #006699;
+    color: white;
+    margin-bottom: 0px;
+    margin-right: 10px;
+  }
+}
+.ArticleMessage--wrapper {
+  align-items: center;
+  .guanzhu {
+    margin: 20px;
+    padding: 0;
+    width: 55px;
+    height: 26px;
+    font-size: 13px;
+    border: 1px solid #6cbd45;
+    color: #6cbd45;
+    background-color: #fff;
+    line-height: 26px;
+    text-align: center;
+    cursor: pointer;
+  }
+}
+.ReadArticle__top--wrapper{
+  padding: 15px;
+  z-index: 99;
 }
 </style>

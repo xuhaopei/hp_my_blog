@@ -34,6 +34,7 @@ export default {
   min-width: 250px;
   flex-direction: column;
   padding:10px;
+  background: white;
   .title_h1{
       font-weight: 300;
       font-size: 30px;

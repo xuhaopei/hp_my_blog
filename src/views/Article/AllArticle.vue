@@ -41,7 +41,7 @@
         </span>
         <span class="Article_readTime"> 阅读数({{ item.read }}) </span> -->
         <div class="Article_tags">
-              <span v-for="(tag,index) of tagsInit(item.tags)" :key='index' v-html="tag"></span>
+              <span v-for="(tag,index) of TagsToArray(item.tags)" :key='index' v-html="tag"></span>
         </div>
       </div>
     </div>
@@ -68,6 +68,8 @@ import {
   searchArticle, 
   getSearchAllArticleNumber,
   } from '@/network/Article.js';
+
+import {TagsToArray} from '@/utils/StrToArray.js'
 
 export default {
   props: {
@@ -191,14 +193,6 @@ export default {
       
     },
     /**
-     * 初始标签
-     */
-    tagsInit:function(value) {
-        if(!value) return [];
-        value = value.toString();
-        return value.split(',');
-    },
-    /**
      * 根据页码请求数据
      */
     async getSomeArticle(pageId){
@@ -230,14 +224,8 @@ export default {
             v.tags = v.tags.replace(reg,`<span style="color: red;">${content}</span>`);
             v.articleName = v.articleName.replace(reg,`<span style="color: red;">${content}</span>`);
         })
-    }
-  },
-  filters:{
-      dateInit:function(value) {
-        if (!value) return '';
-        value = value.toString();
-        return value.slice(0,value.indexOf('T'));
-      },
+    },
+    TagsToArray:TagsToArray,
   },
   computed:{
   },

@@ -66,18 +66,16 @@ export default {
                 this.tip = msg;
                 return;
             }
-
-            var that = this;
             this.tip = '';
-            var obj = {
-                username:that.username,
-                password:that.password
+            let obj = {
+                username:this.username,
+                password:this.password
             };
 
             doLogin('/user/login',obj).then((Response)=>{
                 let token = Response.data.token ;   // 获取到token
                 let user  = Response.data.user;     // 获取到用户信息
-                localStorage.setItem('userName',user.userName); 
+                localStorage.setItem('userName',this.username); 
                 localStorage.setItem('token',token);
                 setToken();
                 

@@ -4,6 +4,11 @@ import router from './router'
 import store from './store'
 import animation from '@/assets/plugin/animationLoading.js'
 
+// 过滤器
+import './filtres/dateInit.js'
+
+
+// ele组件
 import {
   Pagination,
   Calendar,
@@ -21,6 +26,7 @@ import {
 
 Vue.config.productionTip = false
 
+// ele组件
 Vue.use(animation);
 Vue.use(Pagination);
 Vue.use(Calendar);
@@ -33,6 +39,7 @@ Vue.use(Button);
 Vue.use(Switch);
 Vue.use(Input);
 Vue.use(Tag);
+
 
 new Vue({
   router,

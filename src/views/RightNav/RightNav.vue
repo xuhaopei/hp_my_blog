@@ -6,12 +6,7 @@
         <transition name="slide-fade">
             <NewAriticleList v-if="isShow_NewAriticleList"></NewAriticleList>
         </transition>
-        <!--
-        <ArticleTitleList></ArticleTitleList>
-        -->
-        <transition name="slide-fade">
-            <ArticleTitleList v-show='isShow_ArticleTitleList'></ArticleTitleList>
-        </transition>
+
         
         <transition name="slide-fade">
             <CalenderPlan v-if='isShow_NewAriticleList'> </CalenderPlan>
@@ -21,7 +16,6 @@
 <script>
 import NewAriticleList from     '@/views/RightNav/ChildrenCom/NewArticleList.vue';
 import HpDate from              '@/views/RightNav/ChildrenCom/Date.vue';
-import ArticleTitleList from    '@/views/RightNav/ChildrenCom/ArticleTitleList.vue';
 import CalenderPlan from        '@/views/RightNav/ChildrenCom/CalenderPlan.vue';
 
 export default {
@@ -34,7 +28,6 @@ export default {
     components:{
         NewAriticleList,
         HpDate,
-        ArticleTitleList,
         CalenderPlan
     },
     mounted(){

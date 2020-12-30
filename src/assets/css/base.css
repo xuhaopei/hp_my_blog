@@ -77,12 +77,42 @@ a:focus {
 .g_layout_flex_justify-content_space-between{
   display: flex;
   justify-content: space-between;
-
 }
 /*flex布局,元素在右端*/
 .g_layout_flex_justify-content_end{
   display: flex;
   justify-content: end;
+}
+/*flex布局,纵向布局*/
+.g_layout_flex_column{
+  display: flex;
+  flex-direction: column;
+}
+
+/*flex布局,横向布局*/
+.g_layout_flex_row{
+  display: flex;
+  flex-direction: row;
+}
+/*flex布局,上下左右居中*/
+.g_layout_flex_allCenter{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+/*flex布局,横向布局，元素贴近低边*/
+.g_layout_flex_row_flex_end{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+
+/*flex布局,纵向布局，元素贴近低边*/
+.g_layout_flex_column_flex_end{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 /*取消btn的默认样式*/
@@ -144,6 +174,14 @@ a:focus {
   border-radius: 5px;
 }
 
+/*设置标签*/
+.g_tag{
+  border-radius:5px;
+  padding:  0 5px;
+  margin-right: 20px;
+  color: white;
+  background: #6699CC;
+}
 
 /*vue动画效果*/
 /* 可以设置不同的进入和离开动画 */
