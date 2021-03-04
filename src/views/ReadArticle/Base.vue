@@ -1,10 +1,28 @@
+<!--
+功能：
+显示文章内容，对文章进行创建、编辑、删除
+-->
 <template>
-  <div v-on:click.stop.prevent.right="showMenu">
-    <article-header  :article="$store.getters.getArticle"></article-header>
-    <article-body  :article="$store.getters.getArticle"></article-body>
-    <div class="ReadArticle__nav">
-      <article-title-list :titles="titles"></article-title-list>
-    </div>
+  <div v-on:click.stop.prevent.right="showMenu"  class="ReadArticle">
+    <el-container>
+      <el-row :gutter="20">
+          <!-- 文章的主体 -->
+          <el-col :span="16" :offset="2" >
+            <!-- 文章头部信息 -->
+            <article-header  :article="$store.getters.getArticle"></article-header>
+            <!-- 文章内容 -->
+            <article-body  :article="$store.getters.getArticle"></article-body>
+            <!-- 评论 -->
+            <div class="comment-wrapper">
+              <show-com></show-com>
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <!-- 文章目录 -->
+            <article-title-list :titles="titles"></article-title-list>
+          </el-col>
+      </el-row>
+    </el-container>
   </div>
 </template>
 <script>
@@ -12,13 +30,15 @@
 import ArticleHeader from  '@/views/ReadArticle/components/ArticleHeader.vue';
 import ArticleBody from  '@/views/ReadArticle/components/ArticleBody1.vue';
 import ArticleTitleList from    '@/views/ReadArticle/components/ArticleTitleList.vue';
+import ShowCom from    '@/views/ReadArticle/components/ShowCom.vue';
+
 import {MessageBox} from 'element-ui';
 
 // 请求
 import {getArticle, deleteArticle } from "@/network/Article.js";
 
 // 全局方法
-import {ParseArticleContentToHs} from "@/utils/ArticleParse.js";
+import { ParseArticleContentToHs } from "@/utils/ArticleParse.js";
 
 export default {
   name:'ReadArticle',
@@ -26,6 +46,7 @@ export default {
       'article-header':ArticleHeader,
       'article-body':ArticleBody,
       "article-title-list":ArticleTitleList,
+      'show-com':ShowCom,
   },  
   props: {
   },
@@ -155,7 +176,7 @@ export default {
     '$store.state.article.article':function(){
       this.$nextTick(()=>{
         let article = this.$store.getters.getArticle;
-        this.titles = this.ParseArticleContentToHs(article.articleContent);
+        this.titles = this.ParseArticleContentToHs(this.$el);
       })
     },
   }
@@ -163,5 +184,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.ReadArticle {
+  margin-top:26px;
+  .comment-wrapper{
+    background-color: #FFFFFF;
+    padding:10px 30px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+  }
+}
 </style>

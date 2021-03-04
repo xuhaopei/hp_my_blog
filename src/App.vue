@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header>
+    <!-- <header>
       <TopNav></TopNav>
     </header>
     <main>
@@ -13,7 +13,10 @@
       <RightNav></RightNav>
     </main>
     <footer>
-    </footer>
+    </footer> -->
+      <transition name="slide-fade">
+        <router-view />
+      </transition>
   </div>
 </template>
 
@@ -21,9 +24,8 @@
 <script>
 import LeftNav from "@/views/LeftNav/LeftNav.vue";
 import TopNav from "@/views/TopNav/TopNav.vue";
-//import Animation from "@/components/other/AnimationTick.vue";
 import RightNav from "@/views/RightNav/RightNav.vue"
-
+import Home from "@/views/Home/Home.vue"
 import {setToken} from '@/network/Token.js';
 
 
@@ -36,7 +38,8 @@ export default {
   components: {
     LeftNav,
     TopNav,
-    RightNav
+    RightNav,
+    Home
   },
   methods: {
     /**

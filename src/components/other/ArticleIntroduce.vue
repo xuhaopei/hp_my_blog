@@ -1,5 +1,5 @@
 <template>
-  <div id="AllArticle">
+  <div class="ArticleIntroduce">
     <div
       class="Article_warpper"
       v-for="(item, index) of allAricle"
@@ -10,6 +10,11 @@
       <div class="Article_warpper_top">
         <div class='left'>
           <span class="Article_date">{{ item.alertDate | dateInit }}</span>
+          <el-button-group>
+            <el-button type="default" size="mini" icon="el-icon-thumb">{{item.like}}</el-button>
+            <el-button type="default" size="mini" icon="el-icon-chat-square">{{item.comments}}</el-button>
+            <el-button type="default" size="mini" icon="el-icon-share"></el-button>
+          </el-button-group>
         </div>
       </div>
       <div class="Article_warpper_body">
@@ -22,24 +27,19 @@
       </div>
       <div class="Article_warpper_bottom">
         <div class="Article_tags">
-              <span v-for="(tag,index) of TagsToArray(item.tags)" :key='index' v-html="tag"></span>
+                <el-tag
+                    v-for="(tag,index) of TagsToArray(item.tags)" 
+                    :key='index' 
+                    type="info"
+                    effect="plain"
+                    style="margin-right:10px"
+                    >
+                    {{tag}}
+                </el-tag>
         </div>
       </div>
     </div>
     
-    <div class="pageControl_wrapper">
-      <keep-alive>
-        <el-pagination
-          background
-          layout="prev, pager, next"
-          v-on:current-change='getSomeArticle'
-          :page-size="page.size"
-          :pager-Count="page.count"
-          :total="page.total"
-          :current-page="parseInt(page.current)">
-        </el-pagination>
-      </keep-alive>
-    </div>
     
   </div>
 </template>
@@ -54,56 +54,32 @@ import {TagsToArray} from '@/utils/StrToArray.js'
 
 export default {
   props: {
-    allAricleTemp: {
+    allAricle: {
       type: Array,
       default: function() {
         return [
           {
-            articleId: 1,
-            articleName: "xhp",
-            articleContent: "123",
-            creatDate: "20134221",
-            articleAuthor: "正义的键盘侠",
-            read: 100
+            alertDate: "2021-02-04T01:15:33.000Z",
+            articleName: "存储",
+            id: 150,
+            pid: 97,
+            tags: '浏览器,服务器,必会,cookie',
+            like:'6',
+            comments:'3',
           },
-
-          {
-            articleId: 1,
-            articleName: "xhp",
-            articleContent:
-              "12zxcasassasasasasasasasasas3",
-            creatDate: "20134221",
-            articleAuthor: "正义的键盘侠",
-            read: 100
-          },
-          {
-            articleId: 1,
-            articleName: "xhp",
-            articleContent: "123",
-            creatDate: "20134221",
-            articleAuthor: "正义的键盘侠",
-            read: 100
-          }
         ];
       }
     }
   },
   data() {
     return {
-        allAricle : this.allAricleTemp,
-        page:{        
-            total:100,            // 数据总共的条数
-            size:7,               // 当前页显示的数量
-            count:5,              // 可选择的分页按钮数量
-            current:1,            // 当前页码数
-        }
     };
   },
   created(){
       
   },
   mounted(){
-    this.initPage();
+    // this.initPage();
   },
   methods: {
     /**
@@ -130,29 +106,6 @@ export default {
       );
       item_director.setAttribute("class", " g-navHref");
       item_director.innerText = "创建文章";
-
-      /*
-        var item_manager = document.createElement("li"); // 编辑
-        item_manager.addEventListener(
-          "click",
-          () => {
-            console.log(event.target)
-            let articleId = event.target.getAttribute('data-articleId');
-            console.log(articleId)
-            this.$router.push("/EditArticle/" + articleId);
-          },
-          false
-        );
-        item_manager.setAttribute("class", " g-navHref");
-        item_manager.innerText = "编辑文章";
-
-        var item_delete = document.createElement("li"); // 删除
-        item_delete.setAttribute("class", " g-navHref");
-        item_delete.innerText = "删除";
-
-        menu.appendChild(item_delete);
-        menu.appendChild(item_manager);
-      */
       menu.appendChild(item_director);
       document.body.appendChild(menu);
     },
@@ -169,8 +122,6 @@ export default {
        });
       await searchArticle('/Article/query',content,pageId).then((Response)=>{
         this.allAricle = Response.data;
-        console.log('//////////////////////////////')
-        console.log(this.allAricle)
         this.derecoterContent(this.allAricle,content);
       })
       
@@ -213,22 +164,18 @@ export default {
   computed:{
   },
   watch:{
-    ['$store.state.searchArticleContent']:function(){
-         let pageId = this.$route.params.pageId || 1;
-         this.searchArticle(this.$store.state.searchArticleContent,pageId);
-    }
   }
 };
 </script>
 <style lang="less">
-#AllArticle {
+.ArticleIntroduce {
   position: relative;
+  min-width: 400px;
   .Article_warpper {
     position: relative;
     width: 100%;
     box-sizing: border-box;
     background: white;
-    border-radius: 10px;
     padding: 15px 25px;
     box-shadow: 0px 0px 5px 5px rgb(146, 146, 144);
     display: flex;
@@ -246,20 +193,13 @@ export default {
       .Article_title {
         font-size: 30px;
       }
-      .Article_tags > span{
-         border-radius:7px ;
-          padding: 5px;
-          margin-right: 20px;
-          color: white;
-          background: rgba(104, 37, 37, 0.4);
-      }
     }
     .Article_warpper_body {
       position: relative;
-      margin-top: 10px;
+      margin-top: 5px;
       margin-bottom: 15px;
       .Article_content {
-        text-indent: 32px;
+        text-indent: 20px;
         white-space: nowrap;
         overflow: hidden; 
         text-overflow:ellipsis;
@@ -269,7 +209,8 @@ export default {
         color: rgb(93, 243, 93);
       }
       .Article_title {
-        font-size: 30px;
+        font-weight: 600;
+        font-size: 22px;
         line-height: 30px;
       }
     }
@@ -282,12 +223,12 @@ export default {
       .Article_author {
         margin-right: 10px;
       }
-      .Article_tags > span{
-          border-radius:5px;
-          padding: 5px;
-          margin-right: 20px;
-          color: white;
-          background: #6699CC;
+      .Article_tags {
+          position: relative;
+          display: flex;
+          flex-direction: row;
+          justify-content: start;
+          flex-wrap: wrap;
       }
     }
   }

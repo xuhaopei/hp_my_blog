@@ -1,20 +1,36 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="@/assets/logo.png">
+    <el-container>
+      <!-- 头导航 -->
+      <el-header style="padding:0">
+        <top-nav-by-ele></top-nav-by-ele>
+      </el-header>
+      <!-- 主体内容 -->
+      <router-view />
+    </el-container>
+    
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+
+import TopNavByEle from "@/views/TopNav/TopNavByEle.vue";
 
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    'top-nav-by-ele':TopNavByEle,
+  },
+  data(){
+    return {
+    }
   },
   created(){
-    this.$router.push('/AllArticle/1');
+  },
+  methods:{
+      handleClick(tab, event) {
+        console.log(tab, event);
+      }
   }
 }
 </script>

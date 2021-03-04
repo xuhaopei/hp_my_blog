@@ -106,6 +106,7 @@ a:focus {
   display: flex;
   flex-direction: row;
   align-items: flex-end;
+  flex-wrap: wrap;
 }
 
 /*flex布局,纵向布局，元素贴近低边*/

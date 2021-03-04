@@ -1,5 +1,6 @@
 <template>
   <div id="articleTitleList">
+    <strong>目录</strong>
     <nav>
       <li v-for="(value, index) of titles" :key="index">
         <a :href="'#'+value.content" :title="value.content">{{value.content}}</a>
@@ -50,7 +51,7 @@ export default {
     SetTitleNavTop(el) {
       return function(){
         if(el === undefined || el === null) return;
-        let articleH = 78;
+        let articleH = 84;
         const top =
           window.pageYOffset ||
           document.documentElement.scrollTop ||
@@ -70,21 +71,16 @@ export default {
 <style lang="less">
 #articleTitleList {
     position: fixed;
-    top:78px;
-    width: 283px;
-    right: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    background: white;
-    box-shadow: 0px 0px 5px 5px rgb(146,146,144);
     background:white;
     border-radius: 5px;
-    padding:5px 0;
+    padding:10px ;
     li {
-      line-height: 40px;
-      font-size: 18px;
+      line-height: 30px;
+      font-size: 15px;
     }
 }
 </style>

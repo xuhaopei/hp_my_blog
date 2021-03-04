@@ -1,3 +1,6 @@
+<!--
+显示文章内容
+-->
 <template>
   <div id="ReadArticle" class="ArticleBody">
       <div v-html="article.articleContent"></div>
@@ -55,8 +58,8 @@ export default {
 
 <style lang="less" scoped>
     .ArticleBody {
+        border-top: 1px solid rgba(0,0,0,0.1);
         padding: 10px;
-        margin-top:20px;
         background: white;
     }
 </style>

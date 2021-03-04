@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="ReadArticle__top--wrapper g_layout_flex_column g_box-shadow_gray">
+    <div class="ReadArticle__top--wrapper g_layout_flex_column ">
       <div class="ArticleMessage--wrapper g_layout_flex_justify-content_space-between">
         <div class="UserMessage--wrapper g_layout_flex_row">
           <div class="UserMessage__profilePhoto g_layout_flex_column_flex_end">
@@ -8,9 +8,18 @@
           </div>
           <div class="g_layout_flex_column_flex_end">
             <strong style="font-size:20px;">{{article.author}}</strong>
-            <div class="g_layout_flex_row_flex_end">
+            <div class="">
               <span style="margin-right:20px">{{article.alertDate | dateInit}}</span>
-              <span class="g_tag" v-for="(tag,index) of TagsToArray(article.tags)" :key='index' v-html="tag"></span>
+              <el-tag
+                    v-for="(tag,index) of TagsToArray(article.tags)" 
+                    :key='index' 
+                    type="info"
+                    effect="plain"
+                    style="margin-right:10px"
+                    >
+                    {{tag}}
+                </el-tag>
+              <!-- <span class="g_tag" v-for="(tag,index) of TagsToArray(article.tags)" :key='index' v-html="tag"></span> -->
             </div>
           </div>
         </div>
@@ -84,5 +93,6 @@ export default {
 .ReadArticle__top--wrapper{
   padding: 15px;
   z-index: 99;
+  background-color: #FFFFFF;
 }
 </style>

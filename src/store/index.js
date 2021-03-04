@@ -6,6 +6,7 @@ import actions from './actions.js'
 
 import topNav from './modules/topNav.js';
 import article from './modules/article.js';
+import people from './modules/people.js';
 
 Vue.use(Vuex)
 
@@ -24,6 +25,7 @@ export default new Vuex.Store({
   actions,
   modules:{
     topNav,
-    article
+    article,
+    people,
   }, 
 })

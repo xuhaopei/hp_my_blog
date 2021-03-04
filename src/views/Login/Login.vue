@@ -109,13 +109,13 @@ export default {
     align-items: center;
     background: rgba(170, 162, 162, 0.8);  
 }
-.form-warpper {
+/* .form-warpper {
     width: 300px;
     background: white;
     border-radius:2px ;
     padding: 50px;
     box-shadow: 1px 1px 10px 10px rgba(0,0,0,0.3);
-}
+} */
 .form-warpper .header{
     text-align: center;
     font-size: 35px;

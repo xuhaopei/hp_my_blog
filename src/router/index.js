@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home/Home.vue'
+import Main from '@/views/Home/ChildrenCom/Main.vue'
 import Login from '@/views/Login/Login.vue'
+import LoginByEle from '@/views/Login/LoginByEle.vue'
+import RegisterByEle from '@/views/Register/RegisterByEle.vue'
 const CreateArticle = () => import('@/views/Article/CreateArticle.vue');
 const EditArticle = () => import('@/views/Article/EditArticle.vue');
 const ReadArticle = ()=> import('@/views/ReadArticle/Base.vue');
@@ -14,7 +17,19 @@ Vue.use(VueRouter);
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    children:[
+      {
+        path:'/ReadArticle/:Id',
+        name:'ReadArticle',
+        component:ReadArticle
+      },
+      {
+        path:'/',
+        name:'Main',
+        component:Main
+      },
+    ]
   },
   {
     path: '/AllArticle/:pageId',
@@ -25,6 +40,11 @@ Vue.use(VueRouter);
     path:'/Login',
     name: 'Login',
     component:Login
+  },
+  {
+    path:'/LoginByEle',
+    name: 'LoginByEle',
+    component:LoginByEle
   },
   {
     path:'/CreateArticle',
@@ -40,6 +60,11 @@ Vue.use(VueRouter);
     path:'/Register',
     name: 'Register',
     component:Register
+  },
+  {
+    path:'/RegisterByEle',
+    name: 'RegisterByEle',
+    component:RegisterByEle
   },
   {
     path:'/ReadArticle/:Id',
