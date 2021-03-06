@@ -1,18 +1,29 @@
 <template>
-  <div id="editArticle" v-on:click.self="cancleEdit">
+  <div id="editArticle" >
     <div class="Article-wrapper">
-      <input class="input_wrapper" type="text" placeholder="请输入您的标题"   v-model="articleName"/>
-      <input
+      <!-- 输入标题 -->
+      <!-- <input class="input_wrapper" type="text" placeholder="请输入您的标题"   v-model="articleName"/> -->
+      <el-input placeholder="请输入标题" v-model="articleName">
+        <template slot="prepend">文章标题 </template>
+      </el-input>
+      <!-- 输入标签 -->
+      <!-- <input
       class="input_wrapper"
       type="text"
       placeholder="请输入标签，注意每个标签用英文逗号隔开~"
       v-model="articleTags"
-      />
+      /> -->
+      <el-input placeholder="请输入标签，注意每个标签用英文逗号隔开" v-model="articleTags">
+        <template slot="prepend">文章标签</template>
+      </el-input>
+      <!-- 富文本内容 -->
       <div class='wangeEdit_wrapper'>
-          <WangeEdit v-model='articleContent' v-on:getArticle='getMsgFromSon'></WangeEdit>
+          <!-- <WangeEdit v-model='articleContent' v-on:getArticle='getMsgFromSon'></WangeEdit> --> 
+          <mark-down></mark-down>
       </div>
+      <!-- 退出 保存 上传 -->
       <div class="btn_wrapper">
-        <button
+        <!-- <button
           class="g_btn g_btn_larger g_btn_success"
           v-on:click="saveArticle"
         >
@@ -23,7 +34,12 @@
           v-on:click="commitArticle"
         >
           上传
-        </button>
+        </button> -->
+        <el-button-group>
+          <el-button type="primary" icon="el-icon-circle-close" @click="cancleEdit">退出</el-button>
+          <el-button type="primary" icon="el-icon-circle-check" @click="saveArticle">保存</el-button>
+          <el-button type="primary" icon="el-icon-upload2" @click="commitArticle">上传</el-button>
+        </el-button-group>
       </div>
     </div>
   </div>
@@ -32,6 +48,7 @@
 
 
 import WangeEdit from "@/components/other/WangEditor";
+import MarkDown from "@/components/other/MarkDown"
 
 import {getDirectory,updateDirectory,putArticle,getArticle,updateArticle} from '@/network/Article.js';
 
@@ -39,16 +56,17 @@ import {getDirectory,updateDirectory,putArticle,getArticle,updateArticle} from '
 
 export default {
   components: {
-    WangeEdit
+    WangeEdit,
+    "mark-down":MarkDown
   },
   data() {
     return {
-        articleName:String,        
+        articleName:"",        
         articleContent:'',
         articleContentText:'',
-        id:String,
-        articleTags:String,        // 文章所属区域 比如学习区
-        directorys:Array,        
+        id:"",
+        articleTags:"",        // 文章所属区域 比如学习区
+        directorys:[],        
     };
   },
   created(){
@@ -366,10 +384,10 @@ export default {
   width: 100%;
   height: 100%;
   background: rgba(146, 146, 146, 0.3);
+
   .Article-wrapper {
     box-sizing: border-box;
     position: relative;
-    width: 80%;
     height: 100%;
     margin: 0 auto;
     box-shadow: 0px 0px 10px 10px rgb(146, 146, 144);
@@ -390,6 +408,7 @@ export default {
     .wangeEdit_wrapper {
       flex:1;
       min-height: 200px;
+      overflow: scroll;
     }
     .btn_wrapper {
       box-sizing: border-box;
@@ -397,7 +416,8 @@ export default {
       height: 60px;
       display: flex;
       flex-direction: row;
-      justify-content: flex-end;
+      justify-content: center;
+      align-items: center;
     }
   }
 }

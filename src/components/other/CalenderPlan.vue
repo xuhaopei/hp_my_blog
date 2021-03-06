@@ -270,8 +270,7 @@ export default {
 <style lang="less">
 .CalenderPlan {
   position: relative;
-  margin-top: 10px;
-  border-radius: 10px;
+  margin-top:0px;
   .el-calendar__header {
   padding:12px;
   }

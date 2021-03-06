@@ -14,7 +14,7 @@
             <article-body  :article="$store.getters.getArticle"></article-body>
             <!-- 评论 -->
             <div class="comment-wrapper">
-              <show-com></show-com>
+              <show-com v-for="(comment,index) of comments" :key="index" :comment="comment"></show-com>
             </div>
           </el-col>
           <el-col :span="6">
@@ -53,6 +53,48 @@ export default {
   data() {
     return {
       titles:[],
+      // 模拟评论数据
+      comments:[
+        {
+          content:'1',
+          date:'2020-12-15T13:23:59.000Z',
+          commentId:1,
+          commentPId:0,
+          userId:0,
+          children:[
+            {
+              content:'1-1',
+              date:'2020-12-15T13:23:59.000Z',
+              commentId:3,
+              commentPId:2,
+              children:[
+                {
+                  content:'1-1-1',
+                  date:'2020-12-15T13:23:59.000Z',
+                  commentId:3,
+                  commentPId:2,
+                  children:[]
+                }
+              ]
+            },
+            {
+              content:'1-2',
+              date:'2020-12-15T13:23:59.000Z',
+              commentId:3,
+              commentPId:2,
+              children:[
+                {
+                  content:'1-2-1',
+                  date:'2020-12-15T13:23:59.000Z',
+                  commentId:3,
+                  commentPId:2,
+                  children:[]
+                }
+              ]
+            },            
+          ],
+        },        
+      ]
     };
   },
   beforeCreate(){
@@ -186,6 +228,7 @@ export default {
 <style lang="less" scoped>
 .ReadArticle {
   margin-top:26px;
+  overflow-x: hidden;
   .comment-wrapper{
     background-color: #FFFFFF;
     padding:10px 30px;

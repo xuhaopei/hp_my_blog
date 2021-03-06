@@ -82,7 +82,6 @@ export default {
     computed:{},
     watch:{},
     created(){
-        console.log(this.emojisList,111)
     },
     mounted(){},
     beforeDestory(){},
@@ -97,7 +96,7 @@ export default {
 <style lang="less" scoped>
     .ReplyCom{
         padding:20px;
-        background-color: rgba(0,0,0,0.1);
+        background-color: rgba(0,0,0,0.05);
         .ReplyCom-div_footer{
             display: flex;
             flex-direction: row;

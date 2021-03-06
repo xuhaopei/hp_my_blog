@@ -1,34 +1,29 @@
 <template>
-  <div class="ArticleIntroduce">
-    <div
-      class="Article_warpper"
-      v-for="(item, index) of allAricle"
-      :key="index"
-      v-on:click.stop.prevent.right="showMenu"
-      :data-articleId='item.articleId'
-    >
+  
+<div class="ArticleIntroduce">
+    <div class="Article_warpper">
       <div class="Article_warpper_top">
         <div class='left'>
-          <span class="Article_date">{{ item.alertDate | dateInit }}</span>
+          <span class="Article_date">{{ article.alertDate | dateInit }}</span>
           <el-button-group>
-            <el-button type="default" size="mini" icon="el-icon-thumb">{{item.like}}</el-button>
-            <el-button type="default" size="mini" icon="el-icon-chat-square">{{item.comments}}</el-button>
+            <el-button type="default" size="mini" icon="el-icon-thumb">{{article.like}}</el-button>
+            <el-button type="default" size="mini" icon="el-icon-chat-square">{{article.comments}}</el-button>
             <el-button type="default" size="mini" icon="el-icon-share"></el-button>
           </el-button-group>
         </div>
       </div>
       <div class="Article_warpper_body">
           <router-link
-            :to="'/ReadArticle/' + item.id"
+            :to="'/Home/ReadArticle/' + article.id"
             class="Article_title"
-            v-html="item.articleName "
+            v-html="article.articleName "
           >
           </router-link>
       </div>
       <div class="Article_warpper_bottom">
         <div class="Article_tags">
                 <el-tag
-                    v-for="(tag,index) of TagsToArray(item.tags)" 
+                    v-for="(tag,index) of TagsToArray(article.tags)" 
                     :key='index' 
                     type="info"
                     effect="plain"
@@ -37,10 +32,11 @@
                     {{tag}}
                 </el-tag>
         </div>
+        <div class="Article-btns-control_wrapper">
+          <slot></slot>
+        </div>
       </div>
     </div>
-    
-    
   </div>
 </template>
 <script>
@@ -54,20 +50,18 @@ import {TagsToArray} from '@/utils/StrToArray.js'
 
 export default {
   props: {
-    allAricle: {
-      type: Array,
+    article: {
+      type: Object,
       default: function() {
-        return [
-          {
-            alertDate: "2021-02-04T01:15:33.000Z",
-            articleName: "存储",
-            id: 150,
-            pid: 97,
-            tags: '浏览器,服务器,必会,cookie',
-            like:'6',
-            comments:'3',
-          },
-        ];
+        return     {
+              alertDate: "2021-02-04T01:15:33.000Z",
+              articleName: "存储1",
+              id: 150,
+              pid: 97,
+              tags: '浏览器,服务器,必会,cookie',
+              like:'6',
+              comments:'3',
+        }
       }
     }
   },
@@ -171,13 +165,12 @@ export default {
 .ArticleIntroduce {
   position: relative;
   min-width: 400px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
   .Article_warpper {
     position: relative;
     width: 100%;
     box-sizing: border-box;
-    background: white;
     padding: 15px 25px;
-    box-shadow: 0px 0px 5px 5px rgb(146, 146, 144);
     display: flex;
     flex-direction: column;
     .Article_warpper_top {
@@ -217,6 +210,7 @@ export default {
     .Article_warpper_bottom {
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
       color: rgba(104, 37, 37, 0.4);
       font-size: 12px;
       flex-wrap: wrap;
@@ -230,10 +224,10 @@ export default {
           justify-content: start;
           flex-wrap: wrap;
       }
+      .Article-btns-control_wrapper{
+
+      }
     }
-  }
-  .Article_warpper:hover {
-    box-shadow: 0px 0px 5px 5px #006699;
   }
   .pageControl_wrapper {
     display: flex;

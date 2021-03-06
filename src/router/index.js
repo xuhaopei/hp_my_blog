@@ -10,25 +10,36 @@ const EditArticle = () => import('@/views/Article/EditArticle.vue');
 const ReadArticle = ()=> import('@/views/ReadArticle/Base.vue');
 const AllArticle = ()=> import('@/views/Article/AllArticle.vue');
 const Register = () => import('@/views/Register/Register.vue');
+const UserHome = () => import('@/views/UserHome/Base.vue');
 
 Vue.use(VueRouter);
 
   const routes = [
+  // 主页
   {
     path: '/',
     name: 'Home',
     component: Home,
     children:[
+      // 主页--阅读页
       {
-        path:'/ReadArticle/:Id',
+        path:'/Home/ReadArticle/:Id',
         name:'ReadArticle',
         component:ReadArticle
       },
+      // 主页--默认页
       {
         path:'/',
         name:'Main',
         component:Main
       },
+      // 主页--用户页
+      {
+        path:'/Home/UserHome',
+        name:'UserHome',
+        component:UserHome,
+        children:[],
+      },  
     ]
   },
   {
@@ -36,6 +47,7 @@ Vue.use(VueRouter);
     name: 'AllArticle',
     component: AllArticle
   },
+  // 登录页
   {
     path:'/Login',
     name: 'Login',
@@ -46,16 +58,19 @@ Vue.use(VueRouter);
     name: 'LoginByEle',
     component:LoginByEle
   },
+  // 创建文章页
   {
     path:'/CreateArticle',
     name: 'CreateArticle',
     component:CreateArticle
   },
+  // 编辑文章页
   {
     path:'/EditArticle/:Id',
     name: 'EditArticle',
     component:EditArticle
   },
+  // 注册页
   {
     path:'/Register',
     name: 'Register',

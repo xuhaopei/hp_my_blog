@@ -24,7 +24,7 @@
                     </el-col>
                     <!-- 创建文章 -->
                     <el-col :span="2">
-                        <el-button type="primary">创建文章</el-button>
+                        <el-button type="primary" @click="$router.push('/CreateArticle')">创建文章</el-button>
                     </el-col>
                     <!-- 个人信息 -->
                     <el-col :span="3">
@@ -34,8 +34,8 @@
                                     <template slot="title"><i class="el-icon-user"></i>个人信息</template>
                                     <el-submenu index="1-1">
                                         <template slot="title"><i class="el-icon-edit"></i>文章管理</template>
-                                        <el-menu-item index="/user/:id/article/all">我的文章</el-menu-item>
-                                        <el-menu-item index="/user/article/add">添加文章</el-menu-item>
+                                        <el-menu-item index="/Home/UserHome">我的文章</el-menu-item>
+                                        <el-menu-item index="/CreateArticle">创建文章</el-menu-item>
                                     </el-submenu>
                                     <el-submenu index="1-2">
                                         <template slot="title"><i class="el-icon-bell"></i>消息管理</template>

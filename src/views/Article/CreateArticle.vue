@@ -1,18 +1,22 @@
 <template>
-  <div id="createArticle" v-on:click.self="cancleEdit">
+  <div id="createArticle" >
     <div class="Article-wrapper">
-      <input
-        class="input_wrapper"
-        type="text"
-        placeholder="请输入您的标题~"
-        v-model="articleName"
-      />
-      <input
+      <!-- 输入标题 -->
+      <!-- <input class="input_wrapper" type="text" placeholder="请输入您的标题"   v-model="articleName"/> -->
+      <el-input placeholder="请输入标题" v-model="articleName">
+        <template slot="prepend">文章标题 </template>
+      </el-input>
+      <!-- 输入标签 -->
+      <!-- <input
       class="input_wrapper"
       type="text"
       placeholder="请输入标签，注意每个标签用英文逗号隔开~"
       v-model="articleTags"
-      />
+      /> -->
+      <el-input placeholder="请输入标签，注意每个标签用英文逗号隔开" v-model="articleTags">
+        <template slot="prepend">文章标签</template>
+      </el-input>
+      <!-- 文章所属目录 -->
       <div class="articleLocation_wrapper">
         <span>文章所属目录：</span>
         <div class="select_wrapper " id="select_hp">
@@ -30,23 +34,30 @@
           </select>
         </div>
       </div>
+      <!-- 富文本内容 -->
       <div class='wangeEdit_wrapper'>
-        <WangeEdit v-model="articleContent" v-on:getArticle='getMsgFromSon'></WangeEdit>
+        <!-- <WangeEdit v-model="articleContent" v-on:getArticle='getMsgFromSon'></WangeEdit> -->
+        <mark-down></mark-down>
       </div>
+      <!-- 上传 -->
       <div class="btn_wrapper">
-        <button
+        <!-- <button
           class="g_btn g_btn_larger g_btn_success"
           v-on:click="commitArticle"
         >
           上传
-        </button>
+        </button> -->
+        <el-button-group>
+          <el-button type="primary" icon="el-icon-circle-close" @click="cancleEdit">退出</el-button>
+          <el-button type="primary" icon="el-icon-upload2" @click="commitArticle" >上传</el-button>
+        </el-button-group>
       </div>
     </div>
   </div>
 </template>
 <script>
-import HpEdit from "@/components/other/HpEdit";
 import WangeEdit from "@/components/other/WangEditor";
+import MarkDown from "@/components/other/MarkDown"
 
 import {
   getDirectory,
@@ -58,7 +69,8 @@ import { createDirector } from "@/network/LeftNav.js";
 
 export default {
   components: {
-    WangeEdit
+    WangeEdit,
+    "mark-down":MarkDown
   },
   data() {
     return {
@@ -368,7 +380,7 @@ export default {
   .Article-wrapper {
     box-sizing: border-box;
     position: relative;
-    width: 80%;
+    width: 100%;
     height: 100%;
     margin: 0 auto;
     box-shadow: 0px 0px 10px 10px rgb(146, 146, 144);
@@ -383,6 +395,7 @@ export default {
       border: 0;
       border-bottom:1px solid rgba(146,146,146,0.8);
       height: 18px;
+      flex:none;
     }
     .articleLocation_wrapper {
       height: 40px;
@@ -395,17 +408,22 @@ export default {
     }
     .wangeEdit_wrapper {
       flex:1;
-      min-height: 300px;
+      min-height: 200px;
+      overflow: scroll;
     }
     .article_tags{
       width: 100%;
+      flex:none;
     }
     .btn_wrapper {
+      flex:none;
       width: 100%;
       display: flex;
       flex-direction: row;
       justify-content: flex-end;
-      height: 50px;
+      height: 60px;
+      justify-content: center;
+      align-items: center;
     }
   }
 }

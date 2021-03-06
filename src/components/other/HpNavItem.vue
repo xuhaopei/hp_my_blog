@@ -47,7 +47,40 @@ import {MessageBox} from 'element-ui';
 export default {
   name: "hp-nav-item",
   props: {
-    item: Array
+    item:{
+      type:Array,
+      default:function(){
+        return [
+              {
+                id: 347,
+                pid: 0,
+                name: "HTML",
+                path: "/0/347",
+                childrens: [{
+                        id: 361,
+                        pid: 347,
+                        path: "/0/347/361",
+                        name: "img中alt和title的区别",
+                        articleId: 246
+                    }, {
+                        id: 349,
+                        pid: 347,
+                        path: "/0/347/349",
+                        name: "HTML文档结构（重点是meta）",
+                        articleId: 234
+                    }, {
+                        id: 348,
+                        pid: 347,
+                        path: "/0/347/348",
+                        name: "HTML语义化",
+                        "articleId": 233
+                    },
+                    []
+                ]
+            }
+        ]
+      }
+    }
   },
   data() {
     return {

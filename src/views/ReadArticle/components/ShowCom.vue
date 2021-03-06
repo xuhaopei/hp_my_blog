@@ -26,6 +26,9 @@
         </div>
         <!-- 回复 -->
         <reply-com v-if="isReply"></reply-com>
+        <div style="background:rgba(0,0,0,0.05)">
+            <show-com v-show="comment.children.length"  v-for="(com,index) of comment.children" :comment="com" :key="index"></show-com>
+        </div>
     </div>
   </div>
 </template>
@@ -35,7 +38,7 @@
 import ReplyCom from    '@/views/ReadArticle/components/ReplyCom.vue';
 
 export default {
-name:'ReplyCom',
+name:'show-com',
 components:{
     'reply-com':ReplyCom
 },
@@ -61,6 +64,10 @@ props:{
             return {
                 content:'666',
                 date:'2020-12-15T13:23:59.000Z',
+                commentId:0,
+                commentPId:0,
+                children:[
+                ]
             }
         }
     }
@@ -79,7 +86,7 @@ mounted(){},
 beforeDestory(){},
 methods:{
     reply(msg){
-        this.isReply = true;
+        this.isReply = !this.isReply;
     },
 },
 }
@@ -90,11 +97,10 @@ methods:{
     display: flex;
     flex-direction: row;
     justify-content: row;
-    padding: 10px 30px;
+    padding: 10px 0;
     .ShowCom-wrapper{
         flex:1;
         font-size:13px;
-        border-bottom: 1px solid rgba(0,0,0,0.1);
     }
     .ShowCom-div_footer{
         display: flex;

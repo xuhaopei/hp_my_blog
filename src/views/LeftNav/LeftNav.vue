@@ -181,6 +181,7 @@ export default {
     /**通过vue-x来管理文章与目录，减少了http请求,如果directors更新，则请求数据 */
     "$store.state.article.directors":function(){
        this.allItems = this.$store.getters.getDirector;
+       console.log(JSON.stringify(this.allItems));
     }
   }
 };
