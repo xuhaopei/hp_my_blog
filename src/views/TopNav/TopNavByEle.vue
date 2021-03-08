@@ -37,15 +37,11 @@
                                         <el-menu-item index="/Home/UserHome">我的文章</el-menu-item>
                                         <el-menu-item index="/CreateArticle">创建文章</el-menu-item>
                                     </el-submenu>
-                                    <el-submenu index="1-2">
-                                        <template slot="title"><i class="el-icon-bell"></i>消息管理</template>
-                                        <el-menu-item index="/user/article/commet/new">文章新增评论</el-menu-item>
-                                        <el-menu-item index="/user/system/inform">系统通知</el-menu-item>
-                                        <el-menu-item index="1-2-3">私聊信息</el-menu-item>
-                                    </el-submenu>
+                                    <el-menu-item index="/Home/MessageHandle" > <i class="el-icon-bell"></i>消息管理</el-menu-item>
+                                    <el-menu-item index="/Home/UserSetting" > <i class="el-icon-setting"></i>设置</el-menu-item>
                                     <el-menu-item index="/" @click="logout()"> <i class="el-icon-truck"></i>登出</el-menu-item>
                                 </el-submenu>
-                                <el-menu-item v-else index="LoginByEle"> <i class="el-icon-user"></i> 登录 / 注册 </el-menu-item>
+                                <el-menu-item v-else index="/LoginByEle"> <i class="el-icon-user"></i> 登录 / 注册 </el-menu-item>
                             </el-menu> 
                         </div>
                     </el-col>
@@ -150,13 +146,13 @@ export default {
          * 点击搜索按钮。
          */
         doSearch(obj){
-            console.log(obj);
+            //console.log(obj);
         },
         /**
          * 
          */
         handleSelect(key, keyPath) {
-            console.log(key, keyPath);
+            //console.log(key, keyPath);
         },
         logout(){
             this.$store.commit('clearUser');

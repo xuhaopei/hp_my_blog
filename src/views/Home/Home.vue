@@ -6,7 +6,9 @@
         <top-nav-by-ele></top-nav-by-ele>
       </el-header>
       <!-- 主体内容 -->
-      <router-view />
+      <transition name="slide-fade">
+        <router-view />
+      </transition>
     </el-container>
     
   </div>

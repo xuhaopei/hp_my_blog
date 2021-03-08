@@ -11,6 +11,8 @@ const ReadArticle = ()=> import('@/views/ReadArticle/Base.vue');
 const AllArticle = ()=> import('@/views/Article/AllArticle.vue');
 const Register = () => import('@/views/Register/Register.vue');
 const UserHome = () => import('@/views/UserHome/Base.vue');
+const UserSetting = () => import('@/views/UserSetting/Base.vue');
+const MessageHandle = () => import('@/views/MessageHandle/Base.vue')
 
 Vue.use(VueRouter);
 
@@ -39,7 +41,21 @@ Vue.use(VueRouter);
         name:'UserHome',
         component:UserHome,
         children:[],
-      },  
+      }, 
+      // 主页--用户设置页
+      {
+        path:'/Home/UserSetting',
+        name:'UserSetting',
+        component:UserSetting,
+        children:[],
+      },    
+      // 主页--消息管理页
+      {
+        path:'/Home/MessageHandle',
+        name:'MessageHandle',
+        component:MessageHandle,
+        children:[],
+      },      
     ]
   },
   {

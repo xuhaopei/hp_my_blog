@@ -72,6 +72,8 @@ import HpNavItem from "@/components/other/HpNavItem.vue"
 import ArticleIntroduce from "@/components/other/ArticleIntroduce.vue"
 import CalenderPlan from "@/components/other/CalenderPlan.vue";
 
+import {throttle} from "@/assets/js/throttle.js";
+
 export default {
     name:'user-home',
     components:{
@@ -111,6 +113,33 @@ export default {
                 like:'6',
                 comments:'3',
             },
+            {
+                alertDate: "2021-02-04T01:15:33.000Z",
+                articleName: "存储1",
+                id: 150,
+                pid: 97,
+                tags: '浏览器,服务器,必会,cookie',
+                like:'6',
+                comments:'3',
+            },
+            {
+                alertDate: "2021-02-04T01:15:33.000Z",
+                articleName: "存储2",
+                id: 151,
+                pid: 97,
+                tags: '浏览器,服务器,必会,cookie',
+                like:'6',
+                comments:'3',
+            },
+            {
+                alertDate: "2021-02-04T01:15:33.000Z",
+                articleName: "存储3",
+                id: 152,
+                pid: 97,
+                tags: '浏览器,服务器,必会,cookie',
+                like:'6',
+                comments:'3',
+            },            
             ],
             multipleSelection: [],
             allSelectedArticleIds:new Set(), // 避免id重复
@@ -120,7 +149,9 @@ export default {
     watch:{},
     created(){
     },
-    mounted(){},
+    mounted(){
+      this.addTableData();
+    },
     beforeDestory(){},
     methods:{
       /**
@@ -217,7 +248,8 @@ export default {
        * 懒加载数据
        */
       addTableData(){
-          let temp =             {
+          let temp =  
+            {
                 alertDate: "2021-02-04T01:15:33.000Z",
                 articleName: "存储",
                 id: 151,
@@ -226,8 +258,15 @@ export default {
                 like:'6',
                 comments:'3',
             }
-
-          this.tableData.push(temp);
+          
+          throttle.scroolRun(100,()=>{
+            return new Promise((resolve,reject)=>{
+              setTimeout(() => {
+                this.tableData.push(temp);
+                resolve();
+              }, 1000);
+            })
+          });
       },
     },
 
