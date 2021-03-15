@@ -8,8 +8,8 @@ import {createLoading,cancelLoading} from '@/assets/js/androidLoading.js';
 let i = 0;
 //完成基本配置
 const instance = axios.create({
-  baseURL: 'http://106.75.167.111:80',	        // 请求服务器的地址
-  //  baseURL: 'http://localhost:3000',          // 本地服务器地址
+  //baseURL: 'http://106.75.167.111:80',	        // 请求服务器的地址
+   baseURL: 'http://localhost:3000',          // 本地服务器地址
    timeout: 5000,
     //withCredentials: true, 
     /**
@@ -34,7 +34,7 @@ instance.interceptors.request.use(function (config) {
 // 添加响应拦截器
 instance.interceptors.response.use(function (response) {
     /* 对响应数据做点什么*/
-    Tip(response,true);
+    //Tip(response,true);
     cancelLoading();
     return response;
 

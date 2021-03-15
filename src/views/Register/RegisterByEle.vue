@@ -8,8 +8,8 @@
             <!-- 表单信息 -->
             <el-col :span="24" >
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="姓名" prop="name">
-                    <el-input v-model="ruleForm.name"></el-input>
+                <el-form-item label="姓名" prop="userName">
+                    <el-input v-model="ruleForm.userName"></el-input>
                 </el-form-item>
                 <el-form-item label="学校" prop="school">
                       <el-cascader
@@ -27,12 +27,15 @@
                   </el-form-item>
                  <el-form-item label="年级" prop="class">
                     <el-select v-model="ruleForm.class" placeholder="请选择您的年级">
-                    <el-option label="大一" value="1"></el-option>
-                    <el-option label="大二" value="2"></el-option>
-                    <el-option label="大三" value="3"></el-option>
-                    <el-option label="大四" value="4"></el-option>
+                    <el-option v-for="(value,index) of classes" :key="index" :label="value" :value="value"></el-option>
                     </el-select>                             
                 </el-form-item>
+                 <el-form-item label="性别" prop="sex">
+                    <el-select v-model="ruleForm.sex" placeholder="请选择您的性别">
+                    <el-option label="男" value="男"></el-option>
+                    <el-option label="女" value="女"></el-option>
+                    </el-select>                            
+                </el-form-item> 
                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="ruleForm.email" type="email"></el-input>
                 </el-form-item>
@@ -56,24 +59,27 @@
 </template>
 
 <script>
-  import {doRegister} from '@/network/Register.js';
+// 静态数据
   import {schoolList} from '@/assets/js/chinaUniversityList.js';
   import {majorList} from '@/assets/js/majorList.js';
+
+// 网络请求  
+  import {httpRegister} from '@/network/User.js';
 
   export default {
     data() {
       return {
         ruleForm: {
-          name: '',
+          userName: '',
           school: '',
-          college:'',
           major:'',
           class:'',
           email: '',
           password: '',
+          sex:'',
         },
         rules: {
-          name: [
+          userName: [
             { required: true, message: '请输入您的名字', trigger: 'blur' },
             { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
           ],
@@ -92,7 +98,6 @@
           password: [
             { required: true, message: '请输入密码', trigger: 'blur' },
             { min: 6, max: 8, message: '长度在 6 到 8 个字符', trigger: 'blur' }
-
           ],
           major:[
             { required: true, message: '请选择专业', trigger: 'blur' },
@@ -100,25 +105,33 @@
           class:[
             { required: true, message: '请选择您的年级', trigger: 'blur' },
           ],
+          sex:[
+            { required: true, message: '请选择您的性别', trigger: 'blur' },
+          ],
         },
         schools:schoolList,
         majors:majorList,
-
+        classes:[],
       };
     },
     created(){
-      
+      this.classes = this.SetClasses();
     },
     methods: {
+      /**
+       * 提交表单
+       */
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             // 注册
-            doRegister('/user/register',this.ruleForm).then((response)=>{
-                    this.$message({
-                      message: '注册成功,请您登录',
-                      type: 'success'
-                    }); 
+            httpRegister(this.ruleForm)
+            .then((response)=>{
+                this.$message({
+                  message: '注册成功,请您登录',
+                  type: 'success'
+                }); 
+
             })
             
           } else {
@@ -127,9 +140,23 @@
           }
         });
       },
+      /**
+       * 重置表单
+       */
       resetForm(formName) {
         this.$refs[formName].resetFields();
-      }
+      },
+      /**
+       * 根据今年年份设置年级。
+       */
+      SetClasses(){
+        let date = new Date();
+        let array = [];
+        for(let i = date.getFullYear() - 4; i < date.getFullYear(); i++) {
+          array.push(i + '届');
+        };
+        return array;
+      },
     }
   }
 </script>

@@ -31,7 +31,7 @@
                         <div style="position:relative;height:60px;min-width: 160px;z-index:999">
                             <el-menu   :router="true" class="el-menu-demo" mode="vertical" @select="handleSelect">
                                 <el-submenu v-if="$store.state.people.user"  index="1">
-                                    <template slot="title"><i class="el-icon-user"></i>个人信息</template>
+                                    <template slot="title"><i class="el-icon-user"></i>{{$store.state.people.user.userName}}</template>
                                     <el-submenu index="1-1">
                                         <template slot="title"><i class="el-icon-edit"></i>文章管理</template>
                                         <el-menu-item index="/Home/UserHome">我的文章</el-menu-item>

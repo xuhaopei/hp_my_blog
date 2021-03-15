@@ -1,4 +1,6 @@
 export let throttle = {
+    // 保留函数指针，方便window销毁监听
+    saveFn:null,
     // 基础的节流函数
     baseFn(callback_Promise,time){
         let timer = null;
@@ -24,7 +26,11 @@ export let throttle = {
     },
     // 执行动态加载函数。
     scroolRun(time,callback_Promise){
-        let that = this;
-        window.addEventListener('scroll',that.baseFn(that.scrool(callback_Promise),time),false);
+        this.saveFn = this.baseFn(this.scrool(callback_Promise),time);  // 保留函数指针，方便window销毁监听
+        window.addEventListener('scroll',this.saveFn,false);
     },
+    // 清除滚动监听
+    removeScrool(){
+        window.removeEventListener('scroll',this.saveFn);
+    }
 }

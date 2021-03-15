@@ -32,7 +32,7 @@
 <script>
 import jwt from 'jsonwebtoken';
 
-import {doLogin} from '@/network/Login.js';
+import {httpLogin} from '@/network/User.js';
 
 import {setHeaderToken} from '@/network/Token.js';
 
@@ -65,15 +65,16 @@ import {setHeaderToken} from '@/network/Token.js';
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            doLogin('/user/login',this.ruleForm).then((Response)=>{
-              let token = Response.token ;   // 获取到token
-              let user  = Response;     // 获取到用户信息
-              localStorage.setItem('user',user); 
+            httpLogin(this.ruleForm)
+            .then((Response)=>{
+              let token = Response.data.token ;    // 获取到token
+              let user  = Response.data.user;           // 获取到用户信息
+              localStorage.setItem('user',JSON.stringify(user)); 
               localStorage.setItem('token',token);
               setHeaderToken(token);
               this.$store.commit('setUser',user);
               this.$message({
-                message: '欢迎您,' + user.name,
+                message: '欢迎您：' + user.userName,
                 type: 'success'
               });
               this.$router.push("/");

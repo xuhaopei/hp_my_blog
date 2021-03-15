@@ -63,6 +63,7 @@
           <el-col :span="5">
               <calender-plan></calender-plan>
           </el-col>
+          <button @click="test()">123</button>
       </el-row>
   </div>
 </template>
@@ -152,7 +153,11 @@ export default {
     mounted(){
       this.addTableData();
     },
-    beforeDestory(){},
+    beforeDestroy(){
+      throttle.removeScrool();
+    },
+    destroyed(){
+    },
     methods:{
       /**
        * 取消选择

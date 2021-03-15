@@ -17,6 +17,7 @@
 <script>
 
 import TopNavByEle from "@/views/TopNav/TopNavByEle.vue";
+import {setHeaderToken} from '@/network/Token.js';
 
 export default {
   name: 'Home',
@@ -28,6 +29,9 @@ export default {
     }
   },
   created(){
+    let user = localStorage.getItem("user")?JSON.parse(localStorage.getItem("user")) : null;
+    setHeaderToken(localStorage.getItem("token"))
+    this.$store.commit('setUser',user);
   },
   methods:{
       handleClick(tab, event) {

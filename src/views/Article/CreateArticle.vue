@@ -37,7 +37,7 @@
       <!-- 富文本内容 -->
       <div class='wangeEdit_wrapper'>
         <!-- <WangeEdit v-model="articleContent" v-on:getArticle='getMsgFromSon'></WangeEdit> -->
-        <mark-down></mark-down>
+        <mark-down v-model="articleContent"></mark-down>
       </div>
       <!-- 上传 -->
       <div class="btn_wrapper">
@@ -78,13 +78,16 @@ export default {
       articleContent: '',
       articleContentText:'',
       directorys: Array,
-      articleTags:''
+      articleTags:'',
     };
   },
   created() {
-    this.getDirectory();
+    //this.getDirectory();
+
   },
-  beforeDestroy() {},
+  beforeDestroy() {
+    console.log(this.articleContent)
+  },
   methods: {
     /**
      * 退出
