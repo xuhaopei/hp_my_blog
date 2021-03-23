@@ -1,14 +1,16 @@
 export default {
     state:()=>({
         // user:{
-        //     name:'',
-        //     school:'',
-        //     college:'',
-        //     major:'',
-        //     class:'',
-        //     email: '',
-        //     password: '',
-        //     token:''
+            // authority:0
+            // class:"2017届"
+            // creatDate:"2021-03-14T11:07:22.000Z"
+            // email:"986119817@qq.com"
+            // id:4
+            // major:"["管理科学与工程类","信息管理和信息系统"]"
+            // password:"123456"
+            // school:"["北京","清华大学"]"
+            // sex:"男"
+            // userName:"许浩培"
         // }
         user:null,
     }),

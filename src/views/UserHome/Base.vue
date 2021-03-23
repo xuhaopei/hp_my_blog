@@ -63,7 +63,6 @@
           <el-col :span="5">
               <calender-plan></calender-plan>
           </el-col>
-          <button @click="test()">123</button>
       </el-row>
   </div>
 </template>

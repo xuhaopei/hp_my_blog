@@ -118,17 +118,9 @@ export function updateArticle(url,id,articleName,articleContent,tags,articleCont
 
 /**
  * 提交一篇文章
- * @param {String} url 
- * @param {Number} pid 
- * @param {String} articleName 
- * @param {String} articleContent 
- * @param {String} author 
- * @param {String} tags 
  */
- export function httpArticleAdd(pid,articleName,articleContent,author,tags) {
-    let obj = {pid,articleName,articleContent,author,tags,articleContentText};
-    console.log(obj)
-    return;
+ export function httpArticleAdd(pid, articleName, articleContent, author, tags,uid) {
+    let obj = {pid, articleName, articleContent, author, tags, uid};
     return instance.post(
         '/article/add',
         obj

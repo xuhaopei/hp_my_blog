@@ -1,6 +1,7 @@
 <!--这是导航模块-->
 <template>
   <div id="HpNavItem">
+    <div class="HpNavItem-title"   v-on:click.right.stop="showMenu2">个人目录区</div>
     <!--zone代表每个学习区-->
     <div v-for="(zone, index) in data" :key="index">
       <div
@@ -190,6 +191,51 @@ export default {
       document.body.appendChild(menu);
     },
     /**
+     * 右击弹出菜单
+     */
+    showMenu2(event) {
+      event.preventDefault(); // 阻止默认行为
+      // 创建菜单容器
+      var menu = document.createElement("ul");
+      menu.setAttribute("id", "HpNavItem_menu");
+      menu.style["left"] = event.pageX - 10 + "px";
+      menu.style["top"] = event.pageY - 10 + "px";
+      menu.style["z-index"] = "9999";
+      // 设置离开菜单的时候菜单消失
+      menu.addEventListener("mouseleave", function(event) {
+        menu.parentNode.removeChild(menu);
+      });
+
+      // 创建子目录
+      var item_directorSon = document.createElement("li");
+      item_directorSon.addEventListener(
+        "click",
+        () => {
+          this.createDilog(event);
+        },
+        false
+      );
+      item_directorSon.setAttribute("class", " g-navHref");
+      item_directorSon.innerText = "创建子目录";
+
+      // 创建子文章
+      var item_articleSon = document.createElement("li");
+      item_articleSon.addEventListener(
+        "click",
+        () => {
+          // 跳转进子文章创建
+          
+        },
+        false
+      );
+      item_articleSon.setAttribute("class", " g-navHref");
+      item_articleSon.innerText = "创建子文章";
+
+      menu.appendChild(item_articleSon);
+      menu.appendChild(item_directorSon);
+      document.body.appendChild(menu);
+    },
+    /**
      * 移动到此处时，给这个元素的className添加class
      */
     addClass(e) {
@@ -332,10 +378,17 @@ export default {
   }
 };
 </script>
-<style >
+<style  >
+
 #HpNavItem {
   position: relative;
   width: 100%;
+}
+.HpNavItem-title{
+  display: flex;
+  align-items: center;
+  padding:12px;
+  border-bottom: 1px solid #EBEEF5;
 }
 .HpNavItem-name {
   position: relative;

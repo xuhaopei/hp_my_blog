@@ -62,10 +62,11 @@ import MarkDown from "@/components/other/MarkDown"
 import {
   getDirectory,
   updateDirectory,
-  putArticle
+  putArticle,
+  httpArticleAdd,
 } from "@/network/Article.js";
 
-import { createDirector } from "@/network/LeftNav.js";
+import { httpCreateDirector } from "@/network/Directory.js";
 
 export default {
   components: {
@@ -83,7 +84,8 @@ export default {
   },
   created() {
     //this.getDirectory();
-
+    console.log(this.$store.state.people.user.id)
+    console.log(this.$store.state.people.user.userName)
   },
   beforeDestroy() {
     console.log(this.articleContent)
@@ -99,7 +101,7 @@ export default {
     /**
      * 上传文章
      */
-    async commitArticle(e) {
+    commitArticle(e) {
       /**第一步 创建文章对象*/
       let articleName = this.articleName;
       if (articleName.trim() === "") {
@@ -107,7 +109,6 @@ export default {
         return;
       }
       let articleContent = this.articleContent; // 获取文章HTML内容
-      let articleContentText = this.articleContentText;
 
       /**第二步 获取目录的信息*/
       let selecttions = document.getElementById("select_hp").childNodes; // 获取所有选择框元素
@@ -116,29 +117,51 @@ export default {
         arrays.push([i,selecttions[i].selectedIndex]);
       }
       let temp = arrays.pop();
+      let isRootTree = false;  //用来判断是否为没有选择目录（根目录）
       try {
         while(temp[1]==0){
           temp = arrays.pop();
         }
-      } catch (error) {
-        alert('请选择目录');
-        return;
+      } catch (error) {        // 说明选择的是根目录
+        isRootTree = true;
+        console.log("报错了")
       }
-      let option = selecttions[temp[0]][temp[1]];     // 这是最终选择的option 从里面获取目录信息
+      let option = isRootTree ? null :selecttions[temp[0]][temp[1]];     // 这是最终选择的option 从里面获取目录信息
 
-      let pid = option.getAttribute('id');
-      let path = option.getAttribute('path');
-      let author = localStorage.getItem('userName'); 
+      let pid = isRootTree ? this.$store.state.people.user.id : option.getAttribute('id');
+      let path = isRootTree ? `/${this.$store.state.people.user.id}` : option.getAttribute('id');
       let tags = this.articleTags;
       let articleId;
       /**第三步 文章上传服务器 添加文章 */
-      await putArticle("/Article/add", pid,articleName,articleContent,'author',tags,articleContentText)
+      // putArticle("/Article/add", pid,articleName,articleContent,'author',tags,articleContentText)
+      //   .then(Response => {
+      //     //console.log("文章添加成功");
+      //     articleId = Response.data.insertId;
+      //     return createDirector('/Directory/createDirectory',[pid,path,articleName,articleId]);
+      //   })
+      //   .then((Response)=>{
+      //     //console.log("文章添加到目录成功~");
+      //     this.$store.commit('changeDirctor'); 
+      //     this.$router.push('/ReadArticle/'+articleId);
+          
+      //   })
+      //   .catch(err => {
+      //     //console.log("文章添加失败");
+      //   });
+      httpArticleAdd(
+        pid,
+        articleName,
+        articleContent,
+        this.$store.state.people.user.userName,
+        tags,
+        this.$store.state.people.user.id)
         .then(Response => {
           //console.log("文章添加成功");
           articleId = Response.data.insertId;
-          return createDirector('/Directory/createDirectory',[pid,path,articleName,articleId]);
+          return httpCreateDirector(pid,path,articleName,articleId,this.$store.state.people.user.id);
         })
         .then((Response)=>{
+          return
           //console.log("文章添加到目录成功~");
           this.$store.commit('changeDirctor'); 
           this.$router.push('/ReadArticle/'+articleId);
@@ -147,6 +170,7 @@ export default {
         .catch(err => {
           //console.log("文章添加失败");
         });
+
     },
     /**
      * 获取元素
