@@ -1,5 +1,5 @@
 <template>
-  <div id="createArticle" >
+  <div id="createArticle">
     <div class="Article-wrapper">
       <!-- 输入标题 -->
       <!-- <input class="input_wrapper" type="text" placeholder="请输入您的标题"   v-model="articleName"/> -->
@@ -13,7 +13,10 @@
       placeholder="请输入标签，注意每个标签用英文逗号隔开~"
       v-model="articleTags"
       /> -->
-      <el-input placeholder="请输入标签，注意每个标签用英文逗号隔开" v-model="articleTags">
+      <el-input
+        placeholder="请输入标签，注意每个标签用英文逗号隔开"
+        v-model="articleTags"
+      >
         <template slot="prepend">文章标签</template>
       </el-input>
       <!-- 文章所属目录 -->
@@ -27,15 +30,15 @@
               v-for="(value, index) in directorys"
               :key="index"
               :index="index"
-              :path ='value.path'
-              :id ='value.id'
+              :path="value.path"
+              :id="value.id"
               >{{ value.name }}</option
             >
           </select>
         </div>
       </div>
       <!-- 富文本内容 -->
-      <div class='wangeEdit_wrapper'>
+      <div class="wangeEdit_wrapper">
         <!-- <WangeEdit v-model="articleContent" v-on:getArticle='getMsgFromSon'></WangeEdit> -->
         <mark-down v-model="articleContent"></mark-down>
       </div>
@@ -48,8 +51,18 @@
           上传
         </button> -->
         <el-button-group>
-          <el-button type="primary" icon="el-icon-circle-close" @click="cancleEdit">退出</el-button>
-          <el-button type="primary" icon="el-icon-upload2" @click="commitArticle" >上传</el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-circle-close"
+            @click="cancleEdit"
+            >退出</el-button
+          >
+          <el-button
+            type="primary"
+            icon="el-icon-upload2"
+            @click="commitArticle"
+            >上传</el-button
+          >
         </el-button-group>
       </div>
     </div>
@@ -57,7 +70,7 @@
 </template>
 <script>
 import WangeEdit from "@/components/other/WangEditor";
-import MarkDown from "@/components/other/MarkDown"
+import MarkDown from "@/components/other/MarkDown";
 
 import {
   getDirectory,
@@ -71,24 +84,24 @@ import { httpCreateDirector } from "@/network/Directory.js";
 export default {
   components: {
     WangeEdit,
-    "mark-down":MarkDown
+    "mark-down": MarkDown,
   },
   data() {
     return {
       articleName: "",
-      articleContent: '',
-      articleContentText:'',
-      directorys: Array,
-      articleTags:'',
+      articleContent: "",
+      articleContentText: "",
+      directorys: [],
+      articleTags: "",
     };
   },
   created() {
     //this.getDirectory();
-    console.log(this.$store.state.people.user.id)
-    console.log(this.$store.state.people.user.userName)
+    console.log(this.$store.state.people.user.id);
+    console.log(this.$store.state.people.user.userName);
   },
   beforeDestroy() {
-    console.log(this.articleContent)
+    console.log(this.articleContent);
   },
   methods: {
     /**
@@ -113,23 +126,38 @@ export default {
       /**第二步 获取目录的信息*/
       let selecttions = document.getElementById("select_hp").childNodes; // 获取所有选择框元素
       let arrays = [];
-      for(let i = 0; i < selecttions.length; i++) {
-        arrays.push([i,selecttions[i].selectedIndex]);
+      for (let i = 0; i < selecttions.length; i++) {
+        arrays.push([i, selecttions[i].selectedIndex]);
       }
       let temp = arrays.pop();
-      let isRootTree = false;  //用来判断是否为没有选择目录（根目录）
+      let isRootTree = false; //用来判断是否为没有选择目录（根目录）
       try {
-        while(temp[1]==0){
+        while (temp[1] == 0) {
           temp = arrays.pop();
         }
-      } catch (error) {        // 说明选择的是根目录
+      } catch (error) {
+        // 说明选择的是根目录
         isRootTree = true;
-        console.log("报错了")
+        this.directorys.length === 0 
+        ? this.$alert("请您请问我的文章页面在个人目录右键创建文章", "提示", {
+          confirmButtonText: "确定",
+          callback: (action) => {
+          },
+        })
+        : this.$alert("请您选择目录", "提示", {
+          confirmButtonText: "确定",
+          callback: (action) => {
+          },
+        });
       }
-      let option = isRootTree ? null :selecttions[temp[0]][temp[1]];     // 这是最终选择的option 从里面获取目录信息
+      let option = isRootTree ? null : selecttions[temp[0]][temp[1]]; // 这是最终选择的option 从里面获取目录信息
 
-      let pid = isRootTree ? this.$store.state.people.user.id : option.getAttribute('id');
-      let path = isRootTree ? `/${this.$store.state.people.user.id}` : option.getAttribute('id');
+      let pid = isRootTree
+        ? this.$store.state.people.user.id
+        : option.getAttribute("id");
+      let path = isRootTree
+        ? `/${this.$store.state.people.user.id}`
+        : option.getAttribute("id");
       let tags = this.articleTags;
       let articleId;
       /**第三步 文章上传服务器 添加文章 */
@@ -141,9 +169,9 @@ export default {
       //   })
       //   .then((Response)=>{
       //     //console.log("文章添加到目录成功~");
-      //     this.$store.commit('changeDirctor'); 
+      //     this.$store.commit('changeDirctor');
       //     this.$router.push('/ReadArticle/'+articleId);
-          
+
       //   })
       //   .catch(err => {
       //     //console.log("文章添加失败");
@@ -154,23 +182,28 @@ export default {
         articleContent,
         this.$store.state.people.user.userName,
         tags,
-        this.$store.state.people.user.id)
-        .then(Response => {
+        this.$store.state.people.user.id
+      )
+        .then((Response) => {
           //console.log("文章添加成功");
           articleId = Response.data.insertId;
-          return httpCreateDirector(pid,path,articleName,articleId,this.$store.state.people.user.id);
+          return httpCreateDirector(
+            pid,
+            path,
+            articleName,
+            articleId,
+            this.$store.state.people.user.id
+          );
         })
-        .then((Response)=>{
-          return
+        .then((Response) => {
+          return;
           //console.log("文章添加到目录成功~");
-          this.$store.commit('changeDirctor'); 
-          this.$router.push('/ReadArticle/'+articleId);
-          
+          this.$store.commit("changeDirctor");
+          this.$router.push("/ReadArticle/" + articleId);
         })
-        .catch(err => {
+        .catch((err) => {
           //console.log("文章添加失败");
         });
-
     },
     /**
      * 获取元素
@@ -195,10 +228,9 @@ export default {
      * 待选择第一个后，如果有子目录(msg[msg.length-1].length>0)，则创建后面的selection选项。
      */
     createSelection(msg, documentObj) {
-
       // 如果有子目录则创建 否则返回
       msg = JSON.parse(msg);
-      if(msg[msg.length-1].length === 0) return;
+      if (msg[msg.length - 1].length === 0) return;
 
       const parent = documentObj.parentNode.parentNode; // 获取创建的selection的容器
       const selectObj = document.createElement("select");
@@ -212,7 +244,6 @@ export default {
       selectObj.appendChild(option);
 
       try {
-        
         // 选择性创建"子目录"的otion
         for (let obj of msg) {
           // 如果obj长度大于0说明是目录数组，则创建目录名单。
@@ -224,8 +255,8 @@ export default {
                 JSON.stringify(obj[index].childrens)
               );
               option.setAttribute("index", index); // index 代表目录下面的目录索引值
-              option.setAttribute("path", obj[index].path); 
-              option.setAttribute("id", obj[index].id); 
+              option.setAttribute("path", obj[index].path);
+              option.setAttribute("id", obj[index].id);
               option.innerHTML = obj[index].name;
               selectObj.appendChild(option);
             }
@@ -355,9 +386,7 @@ export default {
     /**
      * 创建文章
      */
-    createArticle(name, id, content) {
-
-    },
+    createArticle(name, id, content) {},
     /**
      * 根据时间生成唯一ID
      */
@@ -374,33 +403,33 @@ export default {
     /**
      * 获取目录
      */
-    async getDirectory(){
+    async getDirectory() {
       await getDirectory("/Directory/getAllDirectory")
-        .then(Response => {
+        .then((Response) => {
           this.directorys = Response.data;
         })
-        .catch(err => {
+        .catch((err) => {
           //console.log(err);
         });
     },
     /**
      * 获取子组件传递过来的信息
      */
-    getMsgFromSon(msg){
-        this.articleContent = msg.articleContent;
-        this.articleContentText = msg.articleContentText;
-    }
-  }
+    getMsgFromSon(msg) {
+      this.articleContent = msg.articleContent;
+      this.articleContentText = msg.articleContentText;
+    },
+  },
 };
 </script>
-<style lang="less" >
+<style lang="less">
 .editer-modle {
   background: white;
 }
 #createArticle {
   position: absolute;
-  left:0;
-  top:0;
+  left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
   background: rgba(146, 146, 146, 0.3);
@@ -420,9 +449,9 @@ export default {
       padding: 10px;
       outline: none;
       border: 0;
-      border-bottom:1px solid rgba(146,146,146,0.8);
+      border-bottom: 1px solid rgba(146, 146, 146, 0.8);
       height: 18px;
-      flex:none;
+      flex: none;
     }
     .articleLocation_wrapper {
       height: 40px;
@@ -431,19 +460,19 @@ export default {
       display: flex;
       flex-direction: row;
       justify-content: start;
-       border-bottom:1px solid rgba(146,146,146,0.8);
+      border-bottom: 1px solid rgba(146, 146, 146, 0.8);
     }
     .wangeEdit_wrapper {
-      flex:1;
+      flex: 1;
       min-height: 200px;
       overflow: scroll;
     }
-    .article_tags{
+    .article_tags {
       width: 100%;
-      flex:none;
+      flex: none;
     }
     .btn_wrapper {
-      flex:none;
+      flex: none;
       width: 100%;
       display: flex;
       flex-direction: row;
