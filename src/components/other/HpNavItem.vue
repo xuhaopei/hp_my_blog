@@ -152,19 +152,11 @@ export default {
         obj.className = str + " g-navHref";
       }
     },
-    /**
-     * 离开到此处时，删除添加的元素
-     */
-    removeClass(e) {
-      var obj = e.target;
-      obj.className.replace(/g-navHref/g, "");
-    },
-
     addHandle(event) {
       this.$prompt("请输入目录名称", "添加", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        inputPattern: /\w+/,
+        inputPattern: /^(\w|\W)+$/,
         inputErrorMessage: "请输入目录名称",
       })
         .then(({ value }) => {
@@ -174,7 +166,9 @@ export default {
           let name = value;
           let articleId = 0;
           let uid = this.$store.state.people.user.id;
-          httpCreateDirector(pid, path, value, 0, uid).then(() => {});
+          httpCreateDirector(pid, path, value, 0, uid).then(() => {
+            this.$emit("success")
+          });
         })
         .catch(() => {
           this.$message({
@@ -195,7 +189,9 @@ export default {
         }
       )
         .then(() => {
-          httpDeleteDirector(event.target.getAttribute("id"));
+          httpDeleteDirector(event.target.getAttribute("id")).then(()=>{
+            this.$emit("success")
+          });
         })
         .catch(() => {});
     },
@@ -203,7 +199,7 @@ export default {
       this.$prompt("请输入目录名称", "修改", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        inputPattern: /\w+/,
+        inputPattern: /^(\w|\W)+$/,
         inputErrorMessage: "请输入目录名称",
         inputValue: event.target.innerText,
       })
@@ -211,7 +207,10 @@ export default {
           let directorItem = event.target;
           let id = parseInt(directorItem.getAttribute("id"));
           let path = directorItem.getAttribute("path");
-          return httpUpdateDirectory(id, path, value);
+          
+          httpUpdateDirectory(id, path, value).then((value)=>{
+            this.$emit("success")
+          });
         })
         .catch(() => {
           this.$message({

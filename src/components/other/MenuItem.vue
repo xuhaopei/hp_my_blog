@@ -3,7 +3,7 @@
     class="MenuItem"
     v-show="isVisible"
     @mouseleave="isVisible = false"
-    :style="{ left: event.pageX - 10 + 'px', top: event.pageY - 10 + 'px' }"
+    :style="{ left: event.pageX - 10 - pageXOffset + 'px', top: event.pageY - 10 - pageYOffset + 'px' }"
   >
     <slot></slot>
   </div>
@@ -21,19 +21,25 @@ export default {
   data() {
     return {
       isVisible: this.visible,
+      pageYOffset: 0,
+      pageXOffset:0,
     };
   },
   computed: {},
   watch: {
     visible(val, oldVal) {
        this.isVisible = val;
+       this.pageYOffset = window.pageYOffset
+       this.pageXOffset = window.pageXOffset
     },
     isVisible(val, oldVal) {
       this.$emit("update:visible", val);
     },
   },
   created() {},
-  mounted() {},
+  mounted() {
+    
+  },
   beforeDestroy() {},
   methods: {},
 };

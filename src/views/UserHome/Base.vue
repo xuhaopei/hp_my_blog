@@ -10,7 +10,10 @@
           >
             个人目录区
           </div>
-          <hp-nav-item :data="directorData"></hp-nav-item>
+          <hp-nav-item
+            :data="directorData"
+            @success="getDirectory"
+          ></hp-nav-item>
         </div>
       </el-col>
       <!-- 显示所有文章 -->
@@ -45,6 +48,7 @@
                 <el-button
                   type="primary"
                   size="mini"
+                   @click="$router.push({path:`ReadArticle/${scope.row.id}`})"
                   icon="el-icon-view"
                 ></el-button>
                 <!-- 删除 -->
@@ -76,6 +80,7 @@
         <calender-plan></calender-plan>
       </el-col>
     </el-row>
+    <!-- 动态创建子目录 -->
     <menu-item :visible.sync="visible" :event="event">
       <a @click="addHandle(null)">创建子目录</a>
     </menu-item>
@@ -86,9 +91,13 @@ import HpNavItem from "@/components/other/HpNavItem.vue";
 import ArticleIntroduce from "@/components/other/ArticleIntroduce.vue";
 import CalenderPlan from "@/components/other/CalenderPlan.vue";
 import MenuItem from "@/components/other/MenuItem.vue";
-
-import { throttle } from "@/assets/js/throttle.js";
+import { throttle } from "@/utils/throttle.js";
 import { httpCreateDirector, httpGetDirectory } from "@/network/Directory.js";
+import {
+  httpArticleQuery,
+  httpArticleQueryByUIdAndContent,
+  httpDeleteArticles,
+} from "@/network/Article.js";
 
 export default {
   name: "user-home",
@@ -102,77 +111,36 @@ export default {
   props: {},
   data() {
     return {
-      tableData: [
-        {
-          alertDate: "2021-02-04T01:15:33.000Z",
-          articleName: "存储1",
-          id: 150,
-          pid: 97,
-          tags: "浏览器,服务器,必会,cookie",
-          like: "6",
-          comments: "3",
-        },
-        {
-          alertDate: "2021-02-04T01:15:33.000Z",
-          articleName: "存储2",
-          id: 151,
-          pid: 97,
-          tags: "浏览器,服务器,必会,cookie",
-          like: "6",
-          comments: "3",
-        },
-        {
-          alertDate: "2021-02-04T01:15:33.000Z",
-          articleName: "存储3",
-          id: 152,
-          pid: 97,
-          tags: "浏览器,服务器,必会,cookie",
-          like: "6",
-          comments: "3",
-        },
-        {
-          alertDate: "2021-02-04T01:15:33.000Z",
-          articleName: "存储1",
-          id: 150,
-          pid: 97,
-          tags: "浏览器,服务器,必会,cookie",
-          like: "6",
-          comments: "3",
-        },
-        {
-          alertDate: "2021-02-04T01:15:33.000Z",
-          articleName: "存储2",
-          id: 151,
-          pid: 97,
-          tags: "浏览器,服务器,必会,cookie",
-          like: "6",
-          comments: "3",
-        },
-        {
-          alertDate: "2021-02-04T01:15:33.000Z",
-          articleName: "存储3",
-          id: 152,
-          pid: 97,
-          tags: "浏览器,服务器,必会,cookie",
-          like: "6",
-          comments: "3",
-        },
-      ],
+      tableData: [],
       multipleSelection: [],
       allSelectedArticleIds: new Set(), // 避免id重复
       directorData: [],
       event: new PointerEvent(""),
       visible: false,
+      start: 0, // 请求数据的起始值
+      sum: 5, // 请求数据的量
     };
   },
   computed: {},
   watch: {},
+  // 进入此组件,组件还没渲染
+  beforeRouteEnter(to, from, next) {
+    next();
+  },
+  // 离开此组件
+  beforeRouteLeave(to, from, next) {
+      throttle.removeScrool();
+      this.start = 0;
+      this.tableData = [];
+      next();
+  },
   created() {},
   mounted() {
     this.addTableData();
-    httpGetDirectory(this.$store.state.people.user.id).then((data) => {
-      this.directorData = data.data;
-    });
+    this.getDirectory();
+    this.getArticle();
+  },
+  updated(){
   },
   beforeDestroy() {
     throttle.removeScrool();
@@ -201,9 +169,10 @@ export default {
     },
     /**
      * set: 保存所有文章id
-     * 根据set里面的id删除所有文章。
+     * 删除所选择的文章。
      */
     deleteAllSelecteds(set) {
+      let _this = this;
       this.$confirm("此操作将永久删除所选文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -211,11 +180,17 @@ export default {
       })
         .then(() => {
           // 这里进行删除操作。
-          console.log(set);
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
+          httpDeleteArticles(Array.from(_this.allSelectedArticleIds)).then(
+            (data) => {
+              _this.$message({
+                type: "success",
+                message: "删除成功!",
+              });
+
+              _this.getDirectory();
+              _this.getArticle();
+            }
+          );
         })
         .catch(() => {
           this.$message({
@@ -252,15 +227,20 @@ export default {
      * 删除对应文章
      */
     handleDelete(index, article) {
+      let _this = this;
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!",
+          httpDeleteArticles([article.id]).then((data) => {
+            _this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+            _this.getDirectory();
+            _this.getArticle();
           });
         })
         .catch(() => {
@@ -274,30 +254,32 @@ export default {
      * 懒加载数据
      */
     addTableData() {
-      let temp = {
-        alertDate: "2021-02-04T01:15:33.000Z",
-        articleName: "存储",
-        id: 151,
-        pid: 97,
-        tags: "浏览器,服务器,必会,cookie",
-        like: "6",
-        comments: "3",
-      };
-
+      let _this = this;
       throttle.scroolRun(100, () => {
         return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            this.tableData.push(temp);
-            resolve();
-          }, 1000);
+          let uId = _this.$store.state.people.user.id;
+          httpArticleQueryByUIdAndContent(uId, "", _this.start, _this.sum)
+            .then((response) => {
+              response.data.forEach((element) => {
+                _this.tableData.push(element);
+              });
+              _this.start += _this.sum;
+              resolve();
+            })
+            .catch((err) => {
+              reject();
+            });
         });
       });
     },
+    /**
+     * 添加数据
+     */
     addHandle(event) {
       this.$prompt("请输入目录名称", "添加", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        inputPattern: /\w+/,
+        inputPattern: /^(\w|\W)+$/,
         inputErrorMessage: "请输入目录名称",
       })
         .then(({ value }) => {
@@ -306,7 +288,9 @@ export default {
           let name = value;
           let articleId = 0;
           let uid = this.$store.state.people.user.id;
-          httpCreateDirector(pid, path, value, 0, uid).then(() => {});
+          httpCreateDirector(pid, path, value, 0, uid).then(() => {
+            this.getDirectory();
+          });
         })
         .catch(() => {
           this.$message({
@@ -322,6 +306,32 @@ export default {
       this.event = event;
       this.visible = true;
     },
+    /**
+     * 获取目录
+     */
+    getDirectory() {
+      httpGetDirectory(this.$store.state.people.user.id)
+        .then((response) => {
+          this.directorData = Array.isArray(response.data) ? response.data : [];
+        })
+        .catch((err) => {
+          this.directorData = [];
+        });
+    },
+    /**
+     * 获取文章
+     */
+    getArticle() {
+      let uId = this.$store.state.people.user.id;
+      httpArticleQueryByUIdAndContent(uId, "", this.start, this.sum)
+        .then((response) => {
+          this.tableData =  Array.isArray(response.data) ? response.data : [];
+          this.start += this.sum;
+        })
+        .catch((err) => {
+          this.tableData = [];
+        });
+    },
   },
 };
 </script>
@@ -329,6 +339,7 @@ export default {
 <style lang="less" scoped>
 .UserHome {
   margin-top: 10px;
+  overflow: hidden;
   .UserHome-left__wrapper {
     background-color: #ffffff;
     padding: 10px;

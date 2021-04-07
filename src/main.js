@@ -9,7 +9,6 @@ import './filtres/dateInit.js'
 // ele组件
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import {MessageBox} from  'element-ui';
 Vue.use(ElementUI);
 
 Vue.config.productionTip = false

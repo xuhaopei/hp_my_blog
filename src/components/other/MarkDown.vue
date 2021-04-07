@@ -1,6 +1,6 @@
 <template>
   <div class="mavonEditor">
-    <mavon-editor v-model="content"></mavon-editor>
+    <mavon-editor v-model="content" :defaultOpen="defaultOpen" :subfield="subfield" :toolbarsFlag="toolbarsFlag" ref="markDown"></mavon-editor>
   </div>
 </template>
 
@@ -20,21 +20,43 @@ export default {
     articleContent: {
       type: String,
     },
+    subfield:{
+      type:Boolean,
+      default:true
+    },
+    defaultOpen:{
+      type:String,
+      default:'preview'
+    },
+    toolbarsFlag:{
+      type:Boolean,
+      default:true
+    },
   },
   data(){
     return {
-      content:this.articleContent
+      content:""
     }
   },
   computed:{},
   watch:{
     content:function (val, oldVal) {
       this.$emit("change",val);  
+      this.$emit("success",{
+        articleContent:val,
+        articleHtml:this.$refs['markDown'].d_render,
+        });  
+    },
+    articleContent(){
+      this.content = this.articleContent;
     },
   },
   created(){
   },
-  mounted(){},
+  mounted(){
+  },
+  updated(){
+  },
   beforeDestory(){
   },
   methods:{},

@@ -89,15 +89,14 @@ export function deleteDirector(url,params) {
  * @param {String} name   目录名称
  */
  export function httpUpdateDirectory(id,path,name) {
-
     return instance.post(
-        url,
+        '/directory/update',
         {id,path,name}
     );
 }
 
 /**
- * 查询所有目录
+ * 查询用户所有目录
  * @param {number} uid 用户id
  * 返回一个promise
  */

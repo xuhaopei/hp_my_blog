@@ -89,6 +89,12 @@ Vue.use(VueRouter);
         name:'Main',
         component:Main
       },
+      // 主页--查询页
+      {
+        path:'/Home-*',
+        name:'Main',
+        component:Main
+      },
       // 主页--用户页
       {
         path:'/Home/UserHome',
@@ -123,6 +129,7 @@ Vue.use(VueRouter);
     name: 'Login',
     component:Login
   },
+  // 注册页
   {
     path:'/LoginByEle',
     name: 'LoginByEle',

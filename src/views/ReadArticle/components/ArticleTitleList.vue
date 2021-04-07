@@ -11,26 +11,19 @@
 <script>
 
 
+import { ParseArticleContentToHs } from "@/utils/ArticleParse.js";
+
 export default {
   name:'ArticleTitleList',
   components:{},
   model:{},
   props:{
-      titles:{
-          type:Array,
-          default:()=>{
-              return [
-                {
-                  tag:'h1',
-                  content:'官方文档'
-                },
-              ]
-          }
-      }
+
   },
   data(){
     return {
       fn:null,
+      titles:[],
     }
   },
   computed:{},
@@ -38,8 +31,13 @@ export default {
   created(){
   },
   mounted(){
+    setTimeout(() => {
+      this.titles = ParseArticleContentToHs(document.getElementById("_articleHTML"))
+    }, 100);
     this.fn = this.SetTitleNavTop(this.$el);
     window.addEventListener("scroll", this.fn, false);
+  },
+  updated(){
   },
   beforeDestroy(){
     window.removeEventListener("scroll", this.fn);
@@ -51,7 +49,7 @@ export default {
     SetTitleNavTop(el) {
       return function(){
         if(el === undefined || el === null) return;
-        let articleH = 84;
+        let articleH = 86;
         const top =
           window.pageYOffset ||
           document.documentElement.scrollTop ||
@@ -76,8 +74,8 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     background:white;
-    border-radius: 5px;
     padding:10px ;
+    top:86px;
     li {
       line-height: 30px;
       font-size: 15px;

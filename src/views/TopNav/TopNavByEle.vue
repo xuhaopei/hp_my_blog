@@ -13,13 +13,13 @@
                     </el-col>
                     <!-- 输入框 -->
                     <el-col :span="7" >
-                        <el-input placeholder="请输入内容" v-model="search.content" class="input-with-select">
+                        <el-input placeholder="请输入内容" v-model="search.content" class="input-with-select"  @keyup.native.enter="doSearch()">
                                 <el-select v-model="search.select" slot="prepend" placeholder="查询类别">
                                 <el-option label="个人文章" value="1"></el-option>
                                 <el-option label="群体文章" value="2"></el-option>
                                 <el-option label="用户" value="3"></el-option>
                                 </el-select>
-                                <el-button slot="append" icon="el-icon-search" @click="doSearch(search)"></el-button>
+                                <el-button slot="append" icon="el-icon-search" @click="doSearch()"></el-button>
                         </el-input>
                     </el-col>
                     <!-- 创建文章 -->
@@ -73,7 +73,7 @@ export default {
             ],
             search:{
                 content:'',
-                select:'',
+                select:'2',
             },
             activeIndex:'1',
 
@@ -146,7 +146,30 @@ export default {
          * 点击搜索按钮。
          */
         doSearch(obj){
-            //console.log(obj);
+            switch (this.search.select){
+                //  个人文章查询
+                case '1' :
+                    this.$router.push({
+                        path:'/Home-',
+                        query:{
+                            uId:this.$store.state.people.user.id,
+                            content:this.search.content,
+                        }
+                    })
+                    break;
+                // 群体文章查询    
+                case '2' :
+                    this.$router.push({
+                        path:'/Home-',
+                        query:{
+                            content:this.search.content,
+                        }
+                    })                    
+                    break;
+                // 用户查询    
+                case '3' :
+                    break;                                        
+            }
         },
         /**
          * 

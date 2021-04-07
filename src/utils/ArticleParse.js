@@ -6,7 +6,6 @@
  */
 export function ParseArticleContentToHs(ele) {
     /**获取ele元素里面的h标签 */
-
     if(ele == null) return [];
     let sons = ele.getElementsByTagName("*");
     let hsArray = [];
@@ -23,8 +22,5 @@ export function ParseArticleContentToHs(ele) {
       }
     });
 
-    // 特意去除头一个h标签。
-    hsArray.shift();
-    
     return hsArray;
 }

@@ -2,17 +2,11 @@
   <div id="createArticle">
     <div class="Article-wrapper">
       <!-- 输入标题 -->
-      <!-- <input class="input_wrapper" type="text" placeholder="请输入您的标题"   v-model="articleName"/> -->
       <el-input placeholder="请输入标题" v-model="articleName">
         <template slot="prepend">文章标题 </template>
       </el-input>
       <!-- 输入标签 -->
-      <!-- <input
-      class="input_wrapper"
-      type="text"
-      placeholder="请输入标签，注意每个标签用英文逗号隔开~"
-      v-model="articleTags"
-      /> -->
+     
       <el-input
         placeholder="请输入标签，注意每个标签用英文逗号隔开"
         v-model="articleTags"
@@ -39,17 +33,10 @@
       </div>
       <!-- 富文本内容 -->
       <div class="wangeEdit_wrapper">
-        <!-- <WangeEdit v-model="articleContent" v-on:getArticle='getMsgFromSon'></WangeEdit> -->
-        <mark-down v-model="articleContent"></mark-down>
+        <mark-down v-model="articleContent" @success="getArticle"></mark-down>
       </div>
       <!-- 上传 -->
       <div class="btn_wrapper">
-        <!-- <button
-          class="g_btn g_btn_larger g_btn_success"
-          v-on:click="commitArticle"
-        >
-          上传
-        </button> -->
         <el-button-group>
           <el-button
             type="primary"
@@ -79,7 +66,7 @@ import {
   httpArticleAdd,
 } from "@/network/Article.js";
 
-import { httpCreateDirector } from "@/network/Directory.js";
+import { httpCreateDirector,httpGetDirectory } from "@/network/Directory.js";
 
 export default {
   components: {
@@ -90,18 +77,17 @@ export default {
     return {
       articleName: "",
       articleContent: "",
-      articleContentText: "",
+      articleHtml: "",
       directorys: [],
       articleTags: "",
     };
   },
   created() {
-    //this.getDirectory();
-    console.log(this.$store.state.people.user.id);
-    console.log(this.$store.state.people.user.userName);
+    httpGetDirectory(this.$store.state.people.user.id).then((data) => {
+      this.directorys = data.data;
+    });
   },
   beforeDestroy() {
-    console.log(this.articleContent);
   },
   methods: {
     /**
@@ -118,10 +104,12 @@ export default {
       /**第一步 创建文章对象*/
       let articleName = this.articleName;
       if (articleName.trim() === "") {
-        alert("请输入标题");
+        this.$message({
+          message: '请您<span style="color:red">输入标题</span>',
+          dangerouslyUseHTMLString: true,
+        });
         return;
       }
-      let articleContent = this.articleContent; // 获取文章HTML内容
 
       /**第二步 获取目录的信息*/
       let selecttions = document.getElementById("select_hp").childNodes; // 获取所有选择框元素
@@ -138,17 +126,17 @@ export default {
       } catch (error) {
         // 说明选择的是根目录
         isRootTree = true;
-        this.directorys.length === 0 
-        ? this.$alert("请您请问我的文章页面在个人目录右键创建文章", "提示", {
-          confirmButtonText: "确定",
-          callback: (action) => {
-          },
-        })
-        : this.$alert("请您选择目录", "提示", {
-          confirmButtonText: "确定",
-          callback: (action) => {
-          },
-        });
+        this.directorys.length === 0
+          ? this.$message({
+              dangerouslyUseHTMLString: true,
+              message:
+                '请您前往<strong>我的文章</strong>在<strong>个人目录区</strong><span style="color:red">右键</span>新建目录',
+            })
+          : this.$message({
+              message: '请您<span style="color:red">选择</span>目录',
+              dangerouslyUseHTMLString: true,
+            });
+            return;
       }
       let option = isRootTree ? null : selecttions[temp[0]][temp[1]]; // 这是最终选择的option 从里面获取目录信息
 
@@ -157,35 +145,20 @@ export default {
         : option.getAttribute("id");
       let path = isRootTree
         ? `/${this.$store.state.people.user.id}`
-        : option.getAttribute("id");
+        : option.getAttribute("path");
       let tags = this.articleTags;
       let articleId;
       /**第三步 文章上传服务器 添加文章 */
-      // putArticle("/Article/add", pid,articleName,articleContent,'author',tags,articleContentText)
-      //   .then(Response => {
-      //     //console.log("文章添加成功");
-      //     articleId = Response.data.insertId;
-      //     return createDirector('/Directory/createDirectory',[pid,path,articleName,articleId]);
-      //   })
-      //   .then((Response)=>{
-      //     //console.log("文章添加到目录成功~");
-      //     this.$store.commit('changeDirctor');
-      //     this.$router.push('/ReadArticle/'+articleId);
-
-      //   })
-      //   .catch(err => {
-      //     //console.log("文章添加失败");
-      //   });
       httpArticleAdd(
         pid,
         articleName,
-        articleContent,
+        this.articleContent,
         this.$store.state.people.user.userName,
         tags,
-        this.$store.state.people.user.id
+        this.$store.state.people.user.id,
+        this.articleHtml,
       )
         .then((Response) => {
-          //console.log("文章添加成功");
           articleId = Response.data.insertId;
           return httpCreateDirector(
             pid,
@@ -196,10 +169,9 @@ export default {
           );
         })
         .then((Response) => {
-          return;
-          //console.log("文章添加到目录成功~");
-          this.$store.commit("changeDirctor");
-          this.$router.push("/ReadArticle/" + articleId);
+          this.$router.push({
+            path:`/Home/ReadArticle/${articleId}`,
+          });
         })
         .catch((err) => {
           //console.log("文章添加失败");
@@ -384,23 +356,6 @@ export default {
       document.body.appendChild(divObj);
     },
     /**
-     * 创建文章
-     */
-    createArticle(name, id, content) {},
-    /**
-     * 根据时间生成唯一ID
-     */
-    createUID() {
-      let date = new Date();
-      let year = date.getFullYear();
-      let mounth = date.getMonth() + 1;
-      let day = date.getDate();
-      let hours = date.getHours();
-      let minutes = date.getMinutes();
-      let seconds = date.getSeconds();
-      return "" + year + mounth + day + hours + minutes + seconds;
-    },
-    /**
      * 获取目录
      */
     async getDirectory() {
@@ -412,13 +367,10 @@ export default {
           //console.log(err);
         });
     },
-    /**
-     * 获取子组件传递过来的信息
-     */
-    getMsgFromSon(msg) {
-      this.articleContent = msg.articleContent;
-      this.articleContentText = msg.articleContentText;
-    },
+    /**获取子组件的文章信息 */
+    getArticle(event){
+      this.articleHtml = event.articleHtml;
+    }
   },
 };
 </script>
