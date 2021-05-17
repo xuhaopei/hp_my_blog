@@ -35,7 +35,7 @@
             white-space: nowrap;
             overflow: hidden;"
           >
-            <router-link :to="'/ReadArticle/' + article.articleId">
+            <router-link :to="'/Home/ReadArticle/' + article.articleId">
               {{ article.name }}</router-link
             >
           </li>
@@ -189,7 +189,7 @@ export default {
         }
       )
         .then(() => {
-          httpDeleteDirector(event.target.getAttribute("id")).then(()=>{
+          httpDeleteDirector({id:event.target.getAttribute("id")}).then(()=>{
             this.$emit("success")
           });
         })

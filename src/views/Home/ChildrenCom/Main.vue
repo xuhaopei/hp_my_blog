@@ -2,8 +2,8 @@
   <div class="Main">
     <el-row>
       <!-- 标签选项 -->
-      <small-links :links="links"></small-links>
-      <el-col :span="20" :offset="2">
+      <!-- <small-links :links="links"></small-links> -->
+      <el-col :span="20" :offset="2" style="margin-top:2vw">
         <el-row :gutter="30">
           <!-- 热门、最新 -->
           <el-col :span="18" style="background:white;overflow:hidden">
@@ -20,14 +20,14 @@
                   :article="article"
                 ></article-introduce>
               </el-tab-pane>
-              <el-tab-pane label="热门" name="second">
-                <!-- <all-article></all-article> -->
-              </el-tab-pane>
+              <!-- <el-tab-pane label="热门" name="second">
+                <all-article></all-article>
+              </el-tab-pane> -->
             </el-tabs>
           </el-col>
           <el-col :span="6">
             <!-- 作者榜 -->
-            <study></study>
+            <!-- <study></study> -->
             <!-- 计划表 -->
             <calender-plan></calender-plan>
           </el-col>
@@ -63,111 +63,10 @@ export default {
   data() {
     return {
       activeName: "first",
-      links: [
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript",
-        },
-        {
-          link: "/user/all/article/query/",
-          content: "javaScript1",
-        },
-      ],
       articles: [
-        {
-          alertDate: "2021-02-04T01:15:33.000Z",
-          articleName: "存储1",
-          id: 150,
-          pid: 97,
-          tags: "浏览器,服务器,必会,cookie",
-          like: "6",
-          comments: "3",
-        },
-        {
-          alertDate: "2021-02-04T01:15:33.000Z",
-          articleName: "存储2",
-          id: 151,
-          pid: 97,
-          tags: "浏览器,服务器,必会,cookie",
-          like: "6",
-          comments: "3",
-        },
-        {
-          alertDate: "2021-02-04T01:15:33.000Z",
-          articleName: "存储3",
-          id: 152,
-          pid: 97,
-          tags: "浏览器,服务器,必会,cookie",
-          like: "6",
-          comments: "3",
-        },
       ],
       start: 0, // 请求数据的起始值
-      sum: 5, // 请求数据的量
+      sum: 10, // 请求数据的量
     };
   },
   computed: {},
@@ -215,6 +114,7 @@ export default {
             .then((response) => {
               this.articles = response.data;
               this.start += this.sum;
+              
             })
             .catch((err) => {
               this.articles = [];

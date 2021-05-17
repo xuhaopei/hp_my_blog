@@ -76,6 +76,7 @@ export default {
     background:white;
     padding:10px ;
     top:86px;
+    width: 13vw;
     li {
       line-height: 30px;
       font-size: 15px;

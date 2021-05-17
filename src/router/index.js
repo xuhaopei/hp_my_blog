@@ -8,8 +8,8 @@ import LoginByEle from '@/views/Login/LoginByEle.vue'
 import RegisterByEle from '@/views/Register/RegisterByEle.vue'
 const CreateArticle = () => import('@/views/Article/CreateArticle.vue');
 const EditArticle = () => import('@/views/Article/EditArticle.vue');
-const ReadArticle = ()=> import('@/views/ReadArticle/Base.vue');
-const AllArticle = ()=> import('@/views/Article/AllArticle.vue');
+const ReadArticle = () => import('@/views/ReadArticle/Base.vue');
+const AllArticle = () => import('@/views/Article/AllArticle.vue');
 const Register = () => import('@/views/Register/Register.vue');
 const UserHome = () => import('@/views/UserHome/Base.vue');
 const UserSetting = () => import('@/views/UserSetting/Base.vue');
@@ -22,100 +22,96 @@ const ShowUser = () => import('@/views/ManagerHome/components/ShowUser.vue');
 
 Vue.use(VueRouter);
 
-  const routes = [
+const routes = [
   // 管理员主页
   {
     path: '/ManagerHome',
     name: 'ManagerHome',
     component: ManagerHome,
-    children:[
+    redirect: '/ManagerHome/Article',
+    children: [
       // 管理用户页
       {
         path: '/ManagerHome/User',
         name: 'ManagerUser',
         component: ManagerUser,
-        children:[ 
-        ]   
+        children: []
       },
       // 管理文章页
       {
         path: '/ManagerHome/Article',
         name: 'ManagerArticle',
         component: ManagerArticle,
-        children:[ 
-        ]   
-      }, 
+        children: []
+      },
       // 添加用户页
       {
         path: '/ManagerHome/AddUser',
         name: 'AddUser',
         component: AddUser,
-        children:[ 
-        ]   
-      },  
+        children: []
+      },
       // 编辑用户页
       {
         path: '/ManagerHome/EditUser/:id',
         name: 'EditUser',
         component: EditUser,
-        children:[ 
-        ]   
-      }, 
+        children: []
+      },
       // 编辑用户页
       {
         path: '/ManagerHome/ShowUser/:id',
         name: 'ShowUser',
         component: ShowUser,
-        children:[ 
-        ]   
-      },                       
-    ]    
+        children: []
+      },
+    ]
   },
   // 用户主页
   {
     path: '/',
     name: 'Home',
     component: Home,
-    children:[
+    children: [
       // 主页--阅读页
       {
-        path:'/Home/ReadArticle/:Id',
-        name:'ReadArticle',
-        component:ReadArticle
+        path: '/Home/ReadArticle/:Id',
+        name: 'ReadArticle',
+        component: ReadArticle
       },
       // 主页--默认页
       {
-        path:'/',
-        name:'Main',
-        component:Main
+        path: '/',
+        name: 'Main',
+        component: Main
       },
       // 主页--查询页
       {
-        path:'/Home-*',
-        name:'Main',
-        component:Main
+        path: '/Home-*',
+        name: 'Main',
+        component: Main
       },
       // 主页--用户页
       {
-        path:'/Home/UserHome',
-        name:'UserHome',
-        component:UserHome,
-        children:[],
-      }, 
+        path: '/Home/UserHome',
+        name: 'UserHome',
+        component: UserHome,
+        children: [],
+      },
       // 主页--用户设置页
       {
-        path:'/Home/UserSetting',
-        name:'UserSetting',
-        component:UserSetting,
-        children:[],
-      },    
+        path: '/Home/UserSetting/:id',
+        name: 'UserSetting',
+        component: UserSetting,
+        children: [],
+      },
       // 主页--消息管理页
       {
-        path:'/Home/MessageHandle',
-        name:'MessageHandle',
-        component:MessageHandle,
-        children:[],
-      },      
+        path: '/Home/MessageHandle',
+        name: 'MessageHandle',
+        component: MessageHandle,
+        children: [],
+      },
     ]
   },
   {
@@ -125,43 +121,43 @@ Vue.use(VueRouter);
   },
   // 登录页
   {
-    path:'/Login',
+    path: '/Login',
     name: 'Login',
-    component:Login
+    component: Login
   },
   // 注册页
   {
-    path:'/LoginByEle',
+    path: '/LoginByEle',
     name: 'LoginByEle',
-    component:LoginByEle
+    component: LoginByEle
   },
   // 创建文章页
   {
-    path:'/CreateArticle',
+    path: '/CreateArticle',
     name: 'CreateArticle',
-    component:CreateArticle
+    component: CreateArticle
   },
   // 编辑文章页
   {
-    path:'/EditArticle/:Id',
+    path: '/EditArticle/:Id',
     name: 'EditArticle',
-    component:EditArticle
+    component: EditArticle
   },
   // 注册页
   {
-    path:'/Register',
+    path: '/Register',
     name: 'Register',
-    component:Register
+    component: Register
   },
   {
-    path:'/RegisterByEle',
+    path: '/RegisterByEle',
     name: 'RegisterByEle',
-    component:RegisterByEle
+    component: RegisterByEle
   },
   {
-    path:'/ReadArticle/:Id',
-    name:'ReadArticle',
-    component:ReadArticle
+    path: '/ReadArticle/:Id',
+    name: 'ReadArticle',
+    component: ReadArticle
   }
 
 ]

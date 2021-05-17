@@ -8,10 +8,10 @@
       active-text-color="#ffd04b"
       :router="true">
       <!-- 首页 -->
-      <el-menu-item index="/ManagerHome">
+      <!-- <el-menu-item index="/ManagerHome">
         <i class="el-icon-user"></i>
         <span slot="title">首页</span>
-      </el-menu-item>
+      </el-menu-item> -->
       <!-- 数据管理 -->
       <el-submenu index="">
         <template slot="title">
@@ -22,21 +22,21 @@
         <el-menu-item index="/ManagerHome/Article">文章列表</el-menu-item>
       </el-submenu>
       <!-- 添加数据 -->
-      <el-submenu index="1">
+      <!-- <el-submenu index="1">
         <template slot="title">
           <i class="el-icon-plus"></i>
           <span>添加数据</span>
         </template>
         <el-menu-item index="/ManagerHome/AddUser">添加用户</el-menu-item>
-      </el-submenu>
+      </el-submenu> -->
       <!-- 设置 -->
-      <el-submenu index="2">
+      <!-- <el-submenu index="2">
         <template slot="title">
           <i class="el-icon-setting"></i>
           <span>设置</span>
         </template>
         <el-menu-item index="/ManagerHome/Setting">个人资料</el-menu-item>
-      </el-submenu>
+      </el-submenu> -->
     </el-menu>
   </div>
 </template>

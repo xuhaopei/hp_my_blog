@@ -5,7 +5,8 @@
                 <el-row class="TopNavByEle-div-wrapper">
                     <!-- 笔记头像图片 -->
                     <el-col :span="4" >
-                        <div class="img-wrapper"></div>
+                        <div class="img-wrapper">
+                           <strong> 笔记</strong></div>
                     </el-col>
                     <!-- 各个小导航 -->
                     <el-col :span="3">
@@ -17,7 +18,7 @@
                                 <el-select v-model="search.select" slot="prepend" placeholder="查询类别">
                                 <el-option label="个人文章" value="1"></el-option>
                                 <el-option label="群体文章" value="2"></el-option>
-                                <el-option label="用户" value="3"></el-option>
+                                <!-- <el-option label="用户" value="3"></el-option> -->
                                 </el-select>
                                 <el-button slot="append" icon="el-icon-search" @click="doSearch()"></el-button>
                         </el-input>
@@ -38,7 +39,7 @@
                                         <el-menu-item index="/CreateArticle">创建文章</el-menu-item>
                                     </el-submenu>
                                     <el-menu-item index="/Home/MessageHandle" > <i class="el-icon-bell"></i>消息管理</el-menu-item>
-                                    <el-menu-item index="/Home/UserSetting" > <i class="el-icon-setting"></i>设置</el-menu-item>
+                                    <el-menu-item :index="'/Home/UserSetting/'+user.id" > <i class="el-icon-setting"></i>设置</el-menu-item>
                                     <el-menu-item index="/" @click="logout()"> <i class="el-icon-truck"></i>登出</el-menu-item>
                                 </el-submenu>
                                 <el-menu-item v-else index="/LoginByEle"> <i class="el-icon-user"></i> 登录 / 注册 </el-menu-item>
@@ -63,7 +64,7 @@ export default {
     },
     data(){
         return {
-            userName:Object,
+            user:{},
             searchContent:'',
             links:[
                 {
@@ -83,65 +84,18 @@ export default {
         
     },
     mounted(){
-        this.userName = localStorage.getItem('userName');
+        this.user = JSON.parse(localStorage.getItem('user'));
     },
     watch:{
         $route(to, from){
             let fromName = from.name;
             // 当从'/EditArticle'跳转时
             if(fromName === 'Login') {
-                this.userName = localStorage.getItem('userName');
+                this.user = JSON.parse(localStorage.getItem('user'));
             }
         }
     },
     methods:{
-        /**
-         * 弹出菜单
-         */
-        showMenu(event) {
-            event.stopPropagation();
-            event.preventDefault(); // 阻止默认行为
-            // 创建菜单容器
-            var menu = document.createElement("ul");
-            menu.setAttribute("id", "HpNavItem_menu1");
-            menu.setAttribute('style',`
-                background: white;
-                position: absolute;
-                padding:10px;
-                width: 120px;
-                right: 20px;
-                top: 68px;
-                box-shadow: 2px 2px 5px 5px rgba(0, 0, 0, 0.2);
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            `);
-            // 设置菜单的消失
-            document.body.addEventListener('click',function(){
-                let menu = document.getElementById('HpNavItem_menu1');
-                menu && document.body.removeChild(menu);
-            },false)
-            // 创建 退出
-            var item_signOut = document.createElement("li");
-            item_signOut.setAttribute('style',`
-            height:30px;
-            line-height: 30px;
-            font-size: 14px;
-            `);
-            item_signOut.addEventListener(
-                "click",
-                (e) => {
-                    clearToken();
-                    this.userName = '';
-                },
-                false
-            );
-            item_signOut.setAttribute("class", " g-navHref");
-            item_signOut.innerText = "退出";
-
-            menu.appendChild(item_signOut);
-            document.body.appendChild(menu);
-        },
         /**
          * 点击搜索按钮。
          */
@@ -191,9 +145,13 @@ export default {
     background-color: #FFFFFF;
     box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);
     .img-wrapper {
-        width: 100px;
         height: 60px;
-        background: brown;
+        line-height: 60px;
+        color: black;
+        text-align: center ;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size: 30px;
+        border-radius: 10px;
         
     }
     .TopNavByEle-div-wrapper {

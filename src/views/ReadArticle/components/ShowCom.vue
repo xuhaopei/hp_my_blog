@@ -1,29 +1,30 @@
 <template>
   <div class="ShowCom">
-    <div class="img-wrapper"></div>
+    <div class="img-wrapper">
+      {{ user.userName && user.userName[0] }}
+    </div>
     <div class="ShowCom-wrapper">
       <!-- 用户个人信息 -->
       <div>
-        {{ user.name }}
-        <el-tag effect="dark" :type="lvs[user.lv]" size="mini"
+        {{ user.userName }} @ 
+        <!-- <el-tag effect="dark" :type="lvs[user.lv]" size="mini"
           >Lv{{ user.lv }}</el-tag
-        >
+        > -->
         <span class="study-div-introduce">
-          {{ user.university }} @ {{ user.college }} @ {{ user.class }} @
-          {{ user.major }}
+          {{ user.school && user.school[1] }} @ {{ user.major && user.major[1] }} @ {{ user.class }} 
         </span>
       </div>
       <!-- 评论内容 -->
-      <div style="font-size:16px">
+      <div style="font-size:16px;padding:1vw;">
         {{ comment.content }}
       </div>
       <!-- 发布日期 点赞 回复 -->
       <div class="ShowCom-div_footer">
         <span> {{ comment.date | date2current }}天前 </span>
         <el-button-group>
-          <el-button type="default" size="mini" icon="el-icon-thumb"
+          <!-- <el-button type="default" size="mini" icon="el-icon-thumb"
             >1</el-button
-          >
+          > -->
           <el-button
             type="default"
             size="mini"
@@ -52,6 +53,7 @@
 import ReplyCom from "@/views/ReadArticle/components/ReplyCom.vue";
 
 import { httpCommentAdd, httpCommentQuery } from "@/network/Comment.js";
+import { httpUserQuery } from "@/network/User.js";
 
 export default {
   name: "show-com",
@@ -60,20 +62,6 @@ export default {
   },
   model: {},
   props: {
-    user: {
-      type: Object,
-      default: function() {
-        return {
-          name: "许浩培",
-          lv: "1",
-          university: "广东技术师范大学",
-          college: "计算机科学学院",
-          major: "计算机科学技术",
-          class: "大三",
-          id: 0,
-        };
-      },
-    },
     comment: {
       type: Object,
       default: function() {
@@ -95,12 +83,15 @@ export default {
     return {
       lvs: ["info", "success", "danger", "warning"],
       isReply: false,
+      user:{},
     };
   },
   computed: {},
   watch: {},
   created() {},
-  mounted() {},
+  mounted() {
+    this.getUserMsg(this.comment.uId);
+  },
   beforeDestory() {},
   methods: {
     reply(msg) {
@@ -124,6 +115,18 @@ export default {
         })
         .catch((err) => {});
     },
+    getUserMsg(userId) {
+      httpUserQuery(userId)
+      .then((res)=>{
+        let user = res.data;
+        user.school =  JSON.parse( user.school);
+        user.major = JSON.parse( user.major);
+        this.user = user;
+      })
+      .catch((err)=>{
+        this.$message.error("用户信息不存在")
+      })
+   }
   },
 };
 </script>
@@ -154,6 +157,10 @@ export default {
     border-radius: 50px;
     background-color: brown;
     margin-right: 10px;
+    line-height: 50px;
+    color:white;
+    text-align: center;
+    font-size: 18px;
   }
 }
 </style>

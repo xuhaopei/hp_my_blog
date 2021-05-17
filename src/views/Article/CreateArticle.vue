@@ -6,7 +6,7 @@
         <template slot="prepend">文章标题 </template>
       </el-input>
       <!-- 输入标签 -->
-     
+
       <el-input
         placeholder="请输入标签，注意每个标签用英文逗号隔开"
         v-model="articleTags"
@@ -66,7 +66,9 @@ import {
   httpArticleAdd,
 } from "@/network/Article.js";
 
-import { httpCreateDirector,httpGetDirectory } from "@/network/Directory.js";
+import { httpCreateDirector, httpGetDirectory } from "@/network/Directory.js";
+
+import { validateLogin } from "@/utils/Validate";
 
 export default {
   components: {
@@ -83,12 +85,12 @@ export default {
     };
   },
   created() {
+    if (validateLogin() === false) this.$router.push("/");
     httpGetDirectory(this.$store.state.people.user.id).then((data) => {
       this.directorys = data.data;
     });
   },
-  beforeDestroy() {
-  },
+  beforeDestroy() {},
   methods: {
     /**
      * 退出
@@ -126,7 +128,7 @@ export default {
       } catch (error) {
         // 说明选择的是根目录
         isRootTree = true;
-        this.directorys.length === 0
+        this.directorys.length === undefined
           ? this.$message({
               dangerouslyUseHTMLString: true,
               message:
@@ -136,7 +138,7 @@ export default {
               message: '请您<span style="color:red">选择</span>目录',
               dangerouslyUseHTMLString: true,
             });
-            return;
+        return;
       }
       let option = isRootTree ? null : selecttions[temp[0]][temp[1]]; // 这是最终选择的option 从里面获取目录信息
 
@@ -156,10 +158,10 @@ export default {
         this.$store.state.people.user.userName,
         tags,
         this.$store.state.people.user.id,
-        this.articleHtml,
+        this.articleHtml
       )
-        .then((Response) => {
-          articleId = Response.data.insertId;
+        .then((data) => {
+          articleId = data.insertId;
           return httpCreateDirector(
             pid,
             path,
@@ -170,11 +172,11 @@ export default {
         })
         .then((Response) => {
           this.$router.push({
-            path:`/Home/ReadArticle/${articleId}`,
+            path: `/Home/ReadArticle/${articleId}`,
           });
         })
         .catch((err) => {
-          //console.log("文章添加失败");
+          // console.log("文章添加失败");
         });
     },
     /**
@@ -368,9 +370,9 @@ export default {
         });
     },
     /**获取子组件的文章信息 */
-    getArticle(event){
+    getArticle(event) {
       this.articleHtml = event.articleHtml;
-    }
+    },
   },
 };
 </script>

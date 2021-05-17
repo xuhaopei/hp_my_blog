@@ -12,7 +12,7 @@ export function validateLogin(){
             })
             return false;
         } else {
-            setHeaderToken(localStorage.getItem("token"));
+            
             store.commit('setUser',user);
             return true;
         }

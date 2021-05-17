@@ -53,11 +53,9 @@ export default {
       event: new PointerEvent(""),
     };
   },
-  mounted() {
-    
-  },
+  mounted() {},
   updated() {
-    this.SetAllHsId(this.$refs['articleHTML']);
+    this.SetAllHsId(this.$refs["articleHTML"]);
   },
   methods: {
     SetAllHsId(ele) {
@@ -95,15 +93,20 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
         dangerouslyUseHTMLString: true,
-      })
-        .then(() => {
-          httpDeleteArticles([this.$route.params.Id]).then(() => {
+      }).then(() => {
+        httpDeleteArticles([this.$route.params.Id])
+          .then(() => {
             this.$router.push({
               path: "/",
             });
+          })
+          .catch((err) => {
+            this.$message({
+              message: "无权限操作",
+              type: "error",
+            });
           });
-        })
-        .catch(() => {});
+      });
     },
     updateHandle() {
       this.$router.push({

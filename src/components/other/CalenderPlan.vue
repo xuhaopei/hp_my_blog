@@ -87,8 +87,9 @@
 import {
   http_post_commitCalenderPlan, 
   http_get_getCalenderPlan,
+  http_get_updateCalenderPlan,
   } from '@/network/CalenderPlan.js';
-
+import {validateLogin} from "@/utils/Validate";
 export default {
   name: 'CalenderPlan',
 
@@ -127,6 +128,7 @@ export default {
   watch:{
     // 当用户点击日历的时候，日期会发生变化，此时弹出对话框
     date(newValue, oldValue){
+      if(validateLogin() === false) return;
       this.outDialogDate.visible = true;
       this.outDialogDate.date = this.changDate(newValue);
     },
@@ -142,10 +144,9 @@ export default {
 
     // 当用户打开/关闭对话框时，获取/发送http数据。
     'outDialogDate.visible':function(newVal, oldVal){
-        // 当关闭计划表的时候，将数据上传到服务器
-        if(newVal == false) {
-          if(this.planItems.length === 0) return;
-
+        // 当关闭计划表的时候，将数据更新到服务器
+        if(newVal === false) {
+          //if(this.planItems.length === 0) return;
           // 如果所有计划都完成，则标记完成
           this.outDialogDate.allFinish = true;
           for (const iterator of this.planItems) {
@@ -154,22 +155,40 @@ export default {
             }
           }
           this.outDialogDate.gridData = this.planItems;
-          http_post_commitCalenderPlan('/commitCalender',this.outDialogDate).then((data)=>{
+          http_get_updateCalenderPlan(this.outDialogDate).then((data)=>{
           })
         }
         // 当打开计划表的时候，从服务器请求数据 , 从浏览器读取初始化的initPlanItems
-        else if(newVal == true) {
-          http_get_getCalenderPlan('/getCalender',this.outDialogDate.date).then((data)=>{
+        else if(newVal === true) {
+          http_get_getCalenderPlan(this.outDialogDate.date)
+          .then((data)=>{
             this.planItems = JSON.parse(data.data.gridData);
             this.outDialogDate.id = data.data.id;
             this.initPlanItems = this.getInitPlanDataByLocalStorage();
-
-            // 如果数据库没有数据，说明需要添加初始化数据
+            
+            // 如果数据库没有记录计划数据，说明需要添加初始化数据
             if(this.planItems.length === 0) {
               for(let v of this.initPlanItems) {
                 this.planItems.push(v);
               }
             }
+          })
+          // 如果数据库没有数据，则向服务器新增一条空数据，为了后面关闭对话框直接更新数据
+          .catch((err)=>{
+            this.outDialogDate.gridData = [];
+            this.planItems = [];
+            http_post_commitCalenderPlan(this.outDialogDate).then((data)=>{
+              this.planItems = [];
+              this.outDialogDate.id = data.data.id;
+              this.initPlanItems = this.getInitPlanDataByLocalStorage();
+              
+              // 如果数据库没有记录计划数据，说明需要添加初始化数据
+              if(this.planItems.length === 0) {
+                for(let v of this.initPlanItems) {
+                  this.planItems.push(v);
+                }
+              }              
+            })
           })
         }
     }
@@ -239,7 +258,7 @@ export default {
 
     },
 
-    // 在localStorage获取initPlanItems的值。
+    // 在localStorage设置initPlanItems的值。
     setInitPlanDataByLocalStorage(array) {
 
       if(Array.isArray(array) == false) return;

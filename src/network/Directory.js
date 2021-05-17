@@ -49,9 +49,6 @@ export function createDirector(url,params) {
 
 /**
  * 删除目录
- * @param {String} url 
- * @param {Array} params 存储各个参数，格式如下。
- * @param {Number} id   目录ID
  */
 export function deleteDirector(url,params) {
     return instance.post(url,params);
@@ -76,10 +73,15 @@ export function deleteDirector(url,params) {
  * 删除目录
  * @param {Number} id   目录ID
  */
- export function httpDeleteDirector(id) {
-    return instance.get(
-        `/director/delete?id=${id}`
-    );
+ export function httpDeleteDirector({id,uid}) {
+    return instance.request({
+        url: '/director/delete',
+        method: 'get', // default
+        params: {
+            id,
+            uid,
+        },
+    })
 }
 
 /**

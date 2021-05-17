@@ -18,7 +18,7 @@
 
 import TopNavByEle from "@/views/TopNav/TopNavByEle.vue";
 import {setHeaderToken} from '@/network/Token.js';
-
+import {validateLogin} from "@/utils/Validate";
 export default {
   name: 'Home',
   components: {
@@ -29,9 +29,7 @@ export default {
     }
   },
   created(){
-    let user = localStorage.getItem("user")?JSON.parse(localStorage.getItem("user")) : null;
-    setHeaderToken(localStorage.getItem("token"))
-    this.$store.commit('setUser',user);
+    if(validateLogin() === false) this.$router.push("/");
   },
   methods:{
       handleClick(tab, event) {

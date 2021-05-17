@@ -38,6 +38,7 @@
 </template>
 <script>
 import MarkDown from "@/components/other/MarkDown";
+import {validateLogin} from "@/utils/Validate";
 
 import {
   httpArticleAdd,
@@ -59,17 +60,20 @@ export default {
     };
   },
   created() {
+    if(validateLogin() === false) this.$router.push("/");
     httpArticleQueryOne(this.$route.params.Id).then((Response) => {
       let article = Response.data;
       this.articleName = article.articleName;
       this.articleContent = article.articleContent;
       this.articleTags = article.tags;
+      this.articleHtml = article.articleHtml;
     });
   },
   beforeDestroy() {},
   methods: {
     /**获取子组件的文章信息 */
     getArticle(event) {
+      if(event.articleHtml === "") return;
       this.articleHtml = event.articleHtml;
     },
     /**

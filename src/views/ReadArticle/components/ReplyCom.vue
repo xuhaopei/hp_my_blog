@@ -13,8 +13,8 @@
     </el-row>
     <div class="ReplyCom-div_footer">
       <div class="left">
-        <emoji-picker @emoji="insert" :search="search">
-          <!-- 打开表情 -->
+        <!-- <emoji-picker @emoji="insert" :search="search">
+          打开表情
           <div
             slot="emoji-invoker"
             slot-scope="{ events: { click: clickEvent } }"
@@ -24,7 +24,7 @@
               >表情</el-link
             >
           </div>
-          <!-- 表情内容 -->
+          表情内容
           <div
             slot="emoji-picker"
             slot-scope="{ insert }"
@@ -53,7 +53,7 @@
         </emoji-picker>
         <el-link :underline="false" type="primary" style="margin-left:15px"
           ><i class="el-icon-picture-outline"></i> 图片
-        </el-link>
+        </el-link> -->
       </div>
       <el-button type="primary" plain size="small" @click="submit"
         >评论</el-button

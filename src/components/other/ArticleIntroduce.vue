@@ -5,11 +5,11 @@
       <div class="Article_warpper_top">
         <div class='left'>
           <span class="Article_date">{{ article.alertDate | dateInit }}</span>
-          <el-button-group>
+          <!-- <el-button-group>
             <el-button type="default" size="mini" icon="el-icon-thumb">{{article.like}}</el-button>
             <el-button type="default" size="mini" icon="el-icon-chat-square">{{article.comments}}</el-button>
             <el-button type="default" size="mini" icon="el-icon-share"></el-button>
-          </el-button-group>
+          </el-button-group> -->
         </div>
       </div>
       <div class="Article_warpper_body">
@@ -28,8 +28,8 @@
                     type="info"
                     effect="plain"
                     style="margin-right:10px"
+                    v-html="tag"
                     >
-                    {{tag}}
                 </el-tag>
         </div>
         <div class="Article-btns-control_wrapper">
@@ -47,7 +47,7 @@ import {
   } from '@/network/Article.js';
 
 import {TagsToArray} from '@/utils/StrToArray.js'
-
+import {strKeyToSpan} from '@/utils/StrToHtml.js'
 export default {
   props: {
     article: {
@@ -70,89 +70,15 @@ export default {
     };
   },
   created(){
-      
-  },
+ 
+    let key = this.$route.query.content ? this.$route.query.content : "";
+    this.article.articleName =  strKeyToSpan(this.article.articleName , key);
+    this.article.tags = strKeyToSpan(this.article.tags , key);
+ },
   mounted(){
-    // this.initPage();
+    
   },
   methods: {
-    /**
-     * 右击弹出菜单
-     */
-    showMenu(event) {
-      // 创建菜单容器
-      var menu = document.createElement("ul");
-      menu.setAttribute("id", "HpNavItem_menu");
-      menu.style["left"] = event.pageX - 10 + "px";
-      menu.style["top"] = event.pageY - 10 + "px";
-      // 设置离开菜单的时候菜单消失
-      menu.addEventListener("mouseleave", function(event) {
-        menu.parentNode.removeChild(menu);
-      });
-
-      var item_director = document.createElement("li"); // 创建文章
-      item_director.addEventListener(
-        "click",
-        () => {
-          this.$router.push("/CreateArticle");
-        },
-        false
-      );
-      item_director.setAttribute("class", " g-navHref");
-      item_director.innerText = "创建文章";
-      menu.appendChild(item_director);
-      document.body.appendChild(menu);
-    },
-
-    /**
-     * enter按钮查询文章
-     */
-    async searchArticle(content,pageId){
-      await getSearchAllArticleNumber('/Article/queryArticleSum',content).then((Response)=>{
-         this.page.total = Response.data[0]['COUNT(*)'];
-         this.page.size  = 7;
-         this.page.count = 10;
-         this.page.current = 1;
-       });
-      await searchArticle('/Article/query',content,pageId).then((Response)=>{
-        this.allAricle = Response.data;
-        this.derecoterContent(this.allAricle,content);
-      })
-      
-    },
-    /**
-     * 根据页码请求数据
-     */
-    async getSomeArticle(pageId){
-      
-      let searchContent = this.$store.state.searchArticleContent;
-      this.$router.push(`/AllArticle/${pageId}`);
-      await searchArticle('/Article/query',searchContent,pageId).then((Response)=>{
-          this.allAricle = Response.data;
-          this.derecoterContent(this.allAricle,searchContent)
-      }).catch(err=>{
-        console.log(err)
-      })
-    },
-    /**
-     * 初始化数据
-     */
-    async initPage(){
-       let content = document.getElementById('hp_searchContent').value; // 获取搜索框的内容
-       let pageId = this.$route.params.pageId || 1;
-       this.page.current = pageId;
-       this.searchArticle(content,pageId);
-    },
-    /**
-     * 将文章的标题，跟标签添加一些元素
-     */
-    derecoterContent(AllArticle,content){
-        let reg = new RegExp(`${content}`,`ig`);
-        AllArticle.forEach(v=>{
-            v.tags = v.tags.replace(reg,`<span style="color: red;">${content}</span>`);
-            v.articleName = v.articleName.replace(reg,`<span style="color: red;">${content}</span>`);
-        })
-    },
     TagsToArray:TagsToArray,
   },
   computed:{
@@ -184,7 +110,6 @@ export default {
         margin-right: 20px;
       }
       .Article_title {
-        font-size: 30px;
       }
     }
     .Article_warpper_body {

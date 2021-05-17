@@ -4,7 +4,7 @@
       <div class="ArticleMessage--wrapper g_layout_flex_justify-content_space-between">
         <div class="UserMessage--wrapper g_layout_flex_row">
           <div class="UserMessage__profilePhoto g_layout_flex_column_flex_end">
-            <span class="profile">{{article.author}}</span>
+            <span class="profile">{{article.author&&article.author[0]}}</span>
           </div>
           <div class="g_layout_flex_column_flex_end">
             <strong style="font-size:20px;">{{article.author}}</strong>
@@ -23,7 +23,7 @@
             </div>
           </div>
         </div>
-        <div class="guanzhu">关注</div>
+        <!-- <div class="guanzhu">关注</div> -->
       </div>
       <h1>{{article.articleName}}</h1>
     </div>
@@ -72,6 +72,7 @@ export default {
     color: white;
     margin-bottom: 0px;
     margin-right: 10px;
+    font-size: 2vw;
   }
 }
 .ArticleMessage--wrapper {

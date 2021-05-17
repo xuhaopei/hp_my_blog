@@ -48,7 +48,7 @@
                 <el-button
                   type="primary"
                   size="mini"
-                   @click="$router.push({path:`ReadArticle/${scope.row.id}`})"
+                  @click="$router.push({ path: `ReadArticle/${scope.row.id}` })"
                   icon="el-icon-view"
                 ></el-button>
                 <!-- 删除 -->
@@ -72,6 +72,16 @@
               icon="el-icon-document-delete"
               >删除所选</el-button
             >
+          </div>
+          <!-- 分页操作 -->
+          <div class="pageHandle">
+            <el-pagination
+              layout="prev, pager, next"
+              :page-size="pageSize"
+              :total="pageSum"
+              :current-page.sync="pageNum"   
+            >
+            </el-pagination>
           </div>
         </div>
       </el-col>
@@ -97,6 +107,7 @@ import {
   httpArticleQuery,
   httpArticleQueryByUIdAndContent,
   httpDeleteArticles,
+  httpArticleQueryByUIdAndContentSum,
 } from "@/network/Article.js";
 
 export default {
@@ -119,29 +130,36 @@ export default {
       visible: false,
       start: 0, // 请求数据的起始值
       sum: 5, // 请求数据的量
+      pageNum: 1,
+      pageSize: 10, // 每一页请求数
+      pageSum: 0,
     };
   },
   computed: {},
-  watch: {},
+  watch: {
+    pageNum(newValue, oldVaue) {
+      this.getData((this.pageNum - 1)*10, this.pageSize);
+    },
+  },
   // 进入此组件,组件还没渲染
   beforeRouteEnter(to, from, next) {
     next();
   },
   // 离开此组件
   beforeRouteLeave(to, from, next) {
-      throttle.removeScrool();
-      this.start = 0;
-      this.tableData = [];
-      next();
+    throttle.removeScrool();
+    this.start = 0;
+    this.tableData = [];
+    next();
   },
   created() {},
-  mounted() {
-    this.addTableData();
+  async mounted() {
+    // this.addTableData();
     this.getDirectory();
-    this.getArticle();
+    this.getData((this.pageNum - 1)*10, this.pageSize);
+    this.pageSum = await httpArticleQueryByUIdAndContentSum("",this.$store.state.people.user.id);
   },
-  updated(){
-  },
+  updated() {},
   beforeDestroy() {
     throttle.removeScrool();
   },
@@ -172,7 +190,6 @@ export default {
      * 删除所选择的文章。
      */
     deleteAllSelecteds(set) {
-      let _this = this;
       this.$confirm("此操作将永久删除所选文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -180,22 +197,22 @@ export default {
       })
         .then(() => {
           // 这里进行删除操作。
-          httpDeleteArticles(Array.from(_this.allSelectedArticleIds)).then(
-            (data) => {
-              _this.$message({
+          httpDeleteArticles(Array.from(this.allSelectedArticleIds)).then(
+           async (data) => {
+              this.$message({
                 type: "success",
                 message: "删除成功!",
               });
-
-              _this.getDirectory();
-              _this.getArticle();
+              this.getDirectory();
+              this.getData(0,this.pageSize);
+              this.pageSum = await httpArticleQueryByUIdAndContentSum("",this.$store.state.people.user.id);
             }
           );
         })
-        .catch(() => {
+        .catch((error) => {
           this.$message({
             type: "info",
-            message: "已取消删除",
+            message: error,
           });
         });
     },
@@ -235,18 +252,18 @@ export default {
       })
         .then(() => {
           httpDeleteArticles([article.id]).then((data) => {
-            _this.$message({
+            this.$message({
               type: "success",
               message: "删除成功!",
             });
-            _this.getDirectory();
-            _this.getArticle();
+            this.getDirectory();
+            this.getData(0,this.pageSize)
           });
         })
-        .catch(() => {
+        .catch((error) => {
           this.$message({
             type: "info",
-            message: "已取消删除",
+            message: error,
           });
         });
     },
@@ -317,6 +334,7 @@ export default {
         .catch((err) => {
           this.directorData = [];
         });
+      this.getData(0,this.pageSize)
     },
     /**
      * 获取文章
@@ -325,8 +343,21 @@ export default {
       let uId = this.$store.state.people.user.id;
       httpArticleQueryByUIdAndContent(uId, "", this.start, this.sum)
         .then((response) => {
-          this.tableData =  Array.isArray(response.data) ? response.data : [];
+          this.tableData = Array.isArray(response.data) ? response.data : [];
           this.start += this.sum;
+        })
+        .catch((err) => {
+          this.tableData = [];
+        });
+    },
+    /**
+     * 获取数据
+     */
+    async getData(pageNum = 0, pageSize = 5) {
+      let uId = this.$store.state.people.user.id;
+      httpArticleQueryByUIdAndContent(uId, "", pageNum, pageSize)
+        .then((response) => {
+          this.tableData = Array.isArray(response.data) ? response.data : [];
         })
         .catch((err) => {
           this.tableData = [];
