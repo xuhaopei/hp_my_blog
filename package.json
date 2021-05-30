@@ -9,7 +9,7 @@
     "analyzer": "cross-env use_analyzer=true npm run serve"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-preset-es2015": "^6.24.1",
     "core-js": "^3.6.4",
     "element-ui": "^2.13.2",
