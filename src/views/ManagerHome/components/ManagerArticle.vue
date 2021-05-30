@@ -105,8 +105,6 @@ export default {
   computed: {},
   watch: {
     $route(to, from) {
-      this.pageNum = 1;
-      this.articles = [];
       this.getData(this.pageNum - 1, this.pageSize);
     },
     pageNum(newValue, oldVaue) {
@@ -115,15 +113,8 @@ export default {
   },
   created() {},
   async mounted() {
-    this.getData(this.pageNum - 1, this.pageSize);
+    this.getData(0, this.pageSize);
     this.pageSum = await httpArticleQuerySum("");
-  },
-  // 离开此组件
-  beforeRouteLeave(to, from, next) {
-    throttle.removeScrool();
-    this.pageNum = 0;
-    this.articles = [];
-    next();
   },
   beforeDestory() {},
   methods: {

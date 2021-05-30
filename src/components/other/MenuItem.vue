@@ -16,7 +16,7 @@ export default {
   model: {},
   props: {
     visible: Boolean,
-    event: PointerEvent,
+    event: MouseEvent,
   },
   data() {
     return {

@@ -91,6 +91,8 @@ export default {
               type: "success",
             });
             this.loginWay === 0 ? this.$router.push("/") : this.$router.push("/ManagerHome");
+          }).catch((error)=>{
+            this.$message.error("登录失败，请您重新登录");
           });
         } else {
           this.$message.error("登录失败，请您重新登录");

@@ -48,12 +48,22 @@
         </el-table-column>
       </el-table>
     </el-col>
+    <!-- 分页操作 -->
+    <div class="pageHandle">
+      <el-pagination
+        layout="prev, pager, next"
+        :page-size="pageSize"
+        :total="pageSum"
+        :current-page.sync="pageNum"
+      >
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
 import { throttle } from "@/utils/throttle.js";
-import { httpUserQueryMore, httpUserDelete } from "@/network/User.js";
+import { httpUserQueryMore, httpUserDelete,httpUserQuerySum } from "@/network/User.js";
 export default {
   name: "manager-user",
   components: {},
@@ -66,30 +76,27 @@ export default {
       allSelectedArticleIds: new Set(), // 避免id重复
       start: 0, // 请求数据的起始值
       sum: 20, // 请求数据的量
+      pageNum: 1,
+      pageSize: 10, // 每一页请求数
+      pageSum: 0,
     };
   },
   computed: {},
   watch: {
     $route(to, from) {
-      throttle.removeScrool();
-      this.start = 0;
+      // throttle.removeScrool();
+      // this.start = 0;
       this.articles = [];
-      this.getData(this.start, this.sum);
-      this.addData();
+      this.getData((this.pageNum - 1) * this.pageSize, this.pageSize);
+      // this.addData();
     },
   },
   created() {},
-  mounted() {
-    this.start = 0;
-    this.getData(this.start, this.sum);
-    this.addData();
-  },
-  // 离开此组件
-  beforeRouteLeave(to, from, next) {
-    throttle.removeScrool();
-    this.start = 0;
-    this.articles = [];
-    next();
+  async mounted() {
+    // this.start = 0;
+    this.pageSum = await httpUserQuerySum();
+    this.getData(0 , this.pageSize);
+    // this.addData();
   },
   beforeDestory() {},
   methods: {
@@ -165,16 +172,15 @@ export default {
     /**
      * index 表格行下标
      * article 表格的行数据
-     * 根据进入编辑文章页
      */
     handleShow(index, user) {
       this.$router.push("/ManagerHome/ShowUser/" + user.id);
     },
     /**
-     * 删除对应文章
+     * 删除对应用户
      */
     handleDelete(user) {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -210,7 +216,7 @@ export default {
       httpUserQueryMore(start, end)
         .then((response) => {
           this.users = response.data;
-          this.start += this.sum;
+          //this.start += this.sum;
         })
         .catch((err) => {
           this.users = [];
@@ -244,6 +250,10 @@ export default {
 
 <style lang="less" scoped>
 .ManagerUser {
+  position: relative;
+  padding-bottom: 2vh;
+  display: flex;
+  flex-direction: column;
   .nav-wrapper {
     padding: 15px;
     font-size: 15px;

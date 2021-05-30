@@ -56,7 +56,6 @@
   </div>
 </template>
 <script>
-import WangeEdit from "@/components/other/WangEditor";
 import MarkDown from "@/components/other/MarkDown";
 
 import {
@@ -72,7 +71,6 @@ import { validateLogin } from "@/utils/Validate";
 
 export default {
   components: {
-    WangeEdit,
     "mark-down": MarkDown,
   },
   data() {

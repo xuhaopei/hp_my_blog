@@ -67,8 +67,8 @@
 
 <script>
   import {doRegister} from '@/network/Register.js';
-  import {schoolList} from '@/assets/js/chinaUniversityList.js';
-  import {majorList} from '@/assets/js/majorList.js';
+  import {schoolList} from '@/utils/chinaUniversityList.js';
+  import {majorList} from '@/utils/majorList.js';
 
   export default {
     data() {

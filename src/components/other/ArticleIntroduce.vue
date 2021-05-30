@@ -21,7 +21,7 @@
           </router-link>
       </div>
       <div class="Article_warpper_bottom">
-        <div class="Article_tags">
+        <div class="Article_tags" v-if="article.tags.length != 0">
                 <el-tag
                     v-for="(tag,index) of TagsToArray(article.tags)" 
                     :key='index' 

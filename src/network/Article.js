@@ -11,9 +11,7 @@ import {
  * 提交一篇文章
  */
 export async function httpArticleAdd(pid, articleName, articleContent, author, tags, uid, articleHtml) {
-
     // if (validateLogin() === false) return;
-
     let msg = {};
     try {
         if (validateLogin() === false) throw new Error("请您登录");
@@ -22,21 +20,15 @@ export async function httpArticleAdd(pid, articleName, articleContent, author, t
             data
         } = await instance.request({
             url: '/article/add',
-            method: 'post', // default
+            method: "post",
             data: {
-                pid,
-                articleName,
-                articleContent,
-                author,
-                tags,
-                uid,
-                articleHtml
+                pid, articleName, articleContent, author, tags, uid, articleHtml
             },
         });
         msg = data;
         Message({
             showClose: true,
-            message: "笔记添加成功！",
+            message: "文章添加成功",
             type: 'success',
         });
     } catch (error) {
@@ -105,7 +97,7 @@ export function httpArticleQueryByUIdAndContent(uId, content, start, end) {
 /**
  * 根据内容和用户id，查询文章总数量
  */
-export async function httpArticleQueryByUIdAndContentSum(content,uId) {
+export async function httpArticleQueryByUIdAndContentSum(content, uId) {
     let msg = {};
     try {
         let {
@@ -158,7 +150,7 @@ export async function httpDeleteArticles(ids) {
 /**
  * 修改文章
  */
-export function htttpUpdateArticle(id, articleName, articleContent, tags, articleHtml) {
+export function htttpUpdateArticle(id, articleName, articleContent, tags, articleHtml, uid) {
     return instance.request({
         url: '/article/update',
         method: 'post', // default
@@ -168,6 +160,7 @@ export function htttpUpdateArticle(id, articleName, articleContent, tags, articl
             articleContent,
             tags,
             articleHtml,
+            uid,
         },
     });
 }

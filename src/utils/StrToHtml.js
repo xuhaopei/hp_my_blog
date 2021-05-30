@@ -3,6 +3,7 @@
  * @param {*} Str 
  */
  export function strKeyToSpan(str,key){
+    if(str === '') return '';
     let strHtml = str;
     let reg = new RegExp(`${key}`,`ig`);
     if(typeof str === 'string') {

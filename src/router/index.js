@@ -1,16 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home/Home.vue'
-import ManagerHome from '@/views/ManagerHome/Base.vue'
 import Main from '@/views/Home/ChildrenCom/Main.vue'
-import Login from '@/views/Login/Login.vue'
 import LoginByEle from '@/views/Login/LoginByEle.vue'
-import RegisterByEle from '@/views/Register/RegisterByEle.vue'
+const ManagerHome = ()=> import('@/views/ManagerHome/Base.vue');
+const RegisterByEle = () => import('@/views/Register/RegisterByEle.vue');
 const CreateArticle = () => import('@/views/Article/CreateArticle.vue');
 const EditArticle = () => import('@/views/Article/EditArticle.vue');
 const ReadArticle = () => import('@/views/ReadArticle/Base.vue');
-const AllArticle = () => import('@/views/Article/AllArticle.vue');
-const Register = () => import('@/views/Register/Register.vue');
 const UserHome = () => import('@/views/UserHome/Base.vue');
 const UserSetting = () => import('@/views/UserSetting/Base.vue');
 const MessageHandle = () => import('@/views/MessageHandle/Base.vue');
@@ -58,7 +55,7 @@ const routes = [
         component: EditUser,
         children: []
       },
-      // 编辑用户页
+      // 查看用户页
       {
         path: '/ManagerHome/ShowUser/:id',
         name: 'ShowUser',
@@ -114,18 +111,7 @@ const routes = [
       },
     ]
   },
-  {
-    path: '/AllArticle/:pageId',
-    name: 'AllArticle',
-    component: AllArticle
-  },
   // 登录页
-  {
-    path: '/Login',
-    name: 'Login',
-    component: Login
-  },
-  // 注册页
   {
     path: '/LoginByEle',
     name: 'LoginByEle',
@@ -145,20 +131,10 @@ const routes = [
   },
   // 注册页
   {
-    path: '/Register',
-    name: 'Register',
-    component: Register
-  },
-  {
     path: '/RegisterByEle',
     name: 'RegisterByEle',
     component: RegisterByEle
   },
-  {
-    path: '/ReadArticle/:Id',
-    name: 'ReadArticle',
-    component: ReadArticle
-  }
 
 ]
 

@@ -12,7 +12,6 @@ export function validateLogin(){
             })
             return false;
         } else {
-            
             store.commit('setUser',user);
             return true;
         }

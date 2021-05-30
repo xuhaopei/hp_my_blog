@@ -65,7 +65,7 @@
 <script>
 import EmojiPicker from "vue-emoji-picker";
 
-import { emojisList } from "@/assets/js/emojisList.js";
+import { emojisList } from "@/utils/emojisList.js";
 
 export default {
   name: "ReplyCom",

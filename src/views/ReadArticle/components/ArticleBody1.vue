@@ -7,22 +7,30 @@
     class="ArticleBody"
     v-on:click.right.prevent="showMenu($event)"
   >
-    <div v-html="article.articleHtml" id="_articleHTML" ref="articleHTML"></div>
+    <MarkDown
+      v-model="article.articleContent"
+      :subfield="false"
+      :defaultOpen="'preview'"
+      :toolbarsFlag="false"
+      ref="md"
+    ></MarkDown>
     <!-- 动态创建子目录 -->
     <MenuItem :visible.sync="visible" :event="event">
       <a @click="deleteHandle()">删除文章</a>
       <a @click="updateHandle()">编辑文章</a>
       <a @click="addHandle()">创建文章</a>
     </MenuItem>
+    <!-- 文章导航 -->
+    <ArticleTitleList ></ArticleTitleList>
   </div>
 </template>
 
 <script>
-import MarkDown from "@/components/other/MarkDown";
+import { mavonEditor } from "mavon-editor";
 import MenuItem from "@/components/other/MenuItem.vue";
-
 import { MessageBox } from "element-ui";
 import { httpDeleteArticles } from "@/network/Article.js";
+import ArticleTitleList from "./ArticleTitleList.vue";
 export default {
   name: "ArticleBody",
   props: {
@@ -44,36 +52,23 @@ export default {
     },
   },
   components: {
-    MarkDown,
+    MarkDown: mavonEditor,
     MenuItem,
+    ArticleTitleList,
   },
   data() {
     return {
       visible: false,
       event: new PointerEvent(""),
+      titles: [],
     };
   },
-  mounted() {},
+  mounted() {
+
+  },
   updated() {
-    this.SetAllHsId(this.$refs["articleHTML"]);
   },
   methods: {
-    SetAllHsId(ele) {
-      /**获取ele元素里面的h标签 */
-      if (ele == null) return;
-      let sons = ele.getElementsByTagName("*");
-      let hsArray = [];
-      sons.forEach((element) => {
-        let tagName = element.nodeName;
-        if (tagName[0] === "H") {
-          hsArray.push(element);
-        }
-      });
-
-      hsArray.forEach((v) => {
-        v.setAttribute("id", v.innerText);
-      });
-    },
     /**
      * 右击弹出菜单
      */
@@ -113,10 +108,34 @@ export default {
         path: `/EditArticle/${this.$route.params.Id}`,
       });
     },
+    /**
+     * 动态导航容器navWrapper的top属性，让它显示在跟文章一个顶部
+     */
+    changeTitleNavTop(event) {
+      let navWrapper = document.getElementsByClassName(
+        "v-note-navigation-wrapper"
+      )[0];
+      let articleH = 88;
+      const top =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop; //兼容不同的浏览器
+      if (top > articleH) {
+        navWrapper.style["top"] = 0;
+      } else {
+        let hight = articleH - top;
+        navWrapper.style["top"] = hight + "px";
+      }
+    },
   },
 };
 </script>
-
+<style>
+.v-note-navigation-wrapper {
+  position: fixed !important;
+  right: 0;
+}
+</style>
 <style lang="less" scoped>
 .ArticleBody {
   border-top: 1px solid rgba(0, 0, 0, 0.1);

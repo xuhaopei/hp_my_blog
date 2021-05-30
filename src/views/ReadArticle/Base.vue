@@ -4,12 +4,12 @@
 -->
 <template>
   <div class="ReadArticle">
-    <el-row :gutter="20">
+    <el-row >
       <el-col :span="2" :offset="2">
         <!-- 观看 点赞 收藏 审核-->
         <div class="handle-wrapper">
           <el-button
-            v-if="$store.state.people.user.authority === 1"
+            v-if="$store.state.people.user && $store.state.people.user.authority === 1"
             @click="canCross"
             type="success"
             style="margin-bottom:20px"
@@ -47,7 +47,7 @@
           </el-badge> -->
         </div>
       </el-col>
-      <el-col :span="14" :offset="4">
+      <el-col :span="15" >
         <!-- 文章头部信息 -->
         <article-header :article="article"></article-header>
         <!-- 文章内容 -->
@@ -63,10 +63,7 @@
           ></show-com>
         </div>
       </el-col>
-      <el-col :span="6">
-        <!-- 文章目录 -->
-        <article-title-list></article-title-list>
-      </el-col>
+
     </el-row>
   </div>
 </template>
@@ -74,7 +71,6 @@
 // 组件
 import ArticleHeader from "@/views/ReadArticle/components/ArticleHeader.vue";
 import ArticleBody from "@/views/ReadArticle/components/ArticleBody1.vue";
-import ArticleTitleList from "@/views/ReadArticle/components/ArticleTitleList.vue";
 import ShowCom from "@/views/ReadArticle/components/ShowCom.vue";
 import ReplyCom from "@/views/ReadArticle/components/ReplyCom.vue";
 
@@ -96,7 +92,6 @@ export default {
   components: {
     "article-header": ArticleHeader,
     "article-body": ArticleBody,
-    "article-title-list": ArticleTitleList,
     "show-com": ShowCom,
     ReplyCom,
   },
@@ -247,10 +242,9 @@ export default {
     border-top: 1px solid rgba(0, 0, 0, 0.1);
   }
   .handle-wrapper {
-    position: fixed;
-    top: 20%;
-    display: flex;
-    flex-direction: column;
+    margin-top:1vw ;
+    width: 2vw;
+    position: relative;
   }
 }
 </style>

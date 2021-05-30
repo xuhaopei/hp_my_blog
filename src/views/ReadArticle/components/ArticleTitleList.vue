@@ -1,54 +1,60 @@
 <template>
   <div id="articleTitleList">
-    <strong>目录</strong>
+    <strong class="title">文章导航</strong>
     <nav>
       <li v-for="(value, index) of titles" :key="index">
-        <a :href="'#'+value.content" :title="value.content">{{value.content}}</a>
+        <a :href="'#' + value.idName" :title="value.innerText">{{
+          value.innerText
+        }}</a>
       </li>
     </nav>
   </div>
 </template>
 <script>
-
-
 import { ParseArticleContentToHs } from "@/utils/ArticleParse.js";
+import {
+  domHandle_setId,
+  domHandle_getHs,
+  domHandle_changePosition,
+} from "@/utils/dom.js";
 
 export default {
-  name:'ArticleTitleList',
-  components:{},
-  model:{},
-  props:{
-
-  },
-  data(){
+  name: "ArticleTitleList",
+  components: {},
+  model: {},
+  props: {},
+  data() {
     return {
-      fn:null,
-      titles:[],
-    }
+      titles: [],
+    };
   },
-  computed:{},
-  watch:{},
-  created(){
-  },
-  mounted(){
+  computed: {},
+  watch: {},
+  created() {},
+  mounted() {
     setTimeout(() => {
-      this.titles = ParseArticleContentToHs(document.getElementById("_articleHTML"))
-    }, 100);
-    this.fn = this.SetTitleNavTop(this.$el);
-    window.addEventListener("scroll", this.fn, false);
+      this.titles = domHandle_setId(
+        domHandle_getHs(document.getElementsByClassName("v-note-show")[0])
+      );
+    }, 300);
+    domHandle_changePosition(this.$el, 88);
+    window.addEventListener(
+      "scroll",
+      () => {
+        domHandle_changePosition(this.$el, 88);
+      },
+      false
+    );
   },
-  updated(){
-  },
-  beforeDestroy(){
-    window.removeEventListener("scroll", this.fn);
-  },
-  methods:{
+  updated() {},
+  beforeDestroy() {},
+  methods: {
     /**
      * 当滚动条举例顶点的距离超过78的时候，那么就将组件的top值设置为0，总体效果为粘性布局
      */
     SetTitleNavTop(el) {
-      return function(){
-        if(el === undefined || el === null) return;
+      return function() {
+        if (el === undefined || el === null) return;
         let articleH = 86;
         const top =
           window.pageYOffset ||
@@ -61,25 +67,35 @@ export default {
           let hight = articleH - top;
           el.style["top"] = hight + "px";
         }
-      }
+      };
     },
   },
 };
 </script>
 <style lang="less">
 #articleTitleList {
-    position: fixed;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    background:white;
-    padding:10px ;
-    top:86px;
-    width: 13vw;
-    li {
-      line-height: 30px;
-      font-size: 15px;
-    }
+  position: fixed;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  background: white;
+  padding: 10px;
+  top: 86px;
+  width: 13vw;
+  right: 3vw;
+  li {
+    line-height: 30px;
+    font-size: 15px;
+    overflow: hidden; //超出的文本隐藏
+    text-overflow: ellipsis; //溢出用省略号显示
+    white-space: nowrap; //溢出不换行
+  }
+  .title{
+    display: block;
+    font-size: 18px;
+    padding:0.5vw 0;
+    border-bottom:1px solid rgba(0,0,0,0.1);
+  }
 }
 </style>

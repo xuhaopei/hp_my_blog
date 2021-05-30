@@ -38,7 +38,7 @@
 </template>
 <script>
 import MarkDown from "@/components/other/MarkDown";
-import {validateLogin} from "@/utils/Validate";
+import { validateLogin } from "@/utils/Validate";
 
 import {
   httpArticleAdd,
@@ -56,24 +56,26 @@ export default {
       articleContent: "",
       articleContentText: "",
       articleTags: "",
-      articleHtml:'',
+      articleHtml: "",
+      articleUid: 999,
     };
   },
   created() {
-    if(validateLogin() === false) this.$router.push("/");
+    if (validateLogin() === false) this.$router.push("/");
     httpArticleQueryOne(this.$route.params.Id).then((Response) => {
       let article = Response.data;
       this.articleName = article.articleName;
       this.articleContent = article.articleContent;
       this.articleTags = article.tags;
       this.articleHtml = article.articleHtml;
+      this.articleUid = article.uId;
     });
   },
   beforeDestroy() {},
   methods: {
     /**获取子组件的文章信息 */
     getArticle(event) {
-      if(event.articleHtml === "") return;
+      if (event.articleHtml === "") return;
       this.articleHtml = event.articleHtml;
     },
     /**
@@ -92,15 +94,23 @@ export default {
         this.articleContent,
         this.articleTags,
         this.articleHtml,
-      ).then((res) => {
-        this.$message({
-          message: "文章修改成功",
-          type: "success",
+        this.articleUid
+      )
+        .then((res) => {
+          this.$message({
+            message: "文章修改成功",
+            type: "success",
+          });
+          this.$router.push({
+            path: `/Home/ReadArticle/${this.$route.params.Id}`,
+          });
+        })
+        .catch((err) => {
+          this.$message({
+            message: "无权限修改",
+            type: "error",
+          });
         });
-        this.$router.push({
-          path: `/Home/ReadArticle/${this.$route.params.Id}`,
-        });
-      });
     },
   },
 };

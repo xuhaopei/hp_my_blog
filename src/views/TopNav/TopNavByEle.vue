@@ -38,7 +38,7 @@
                                         <el-menu-item index="/Home/UserHome">我的文章</el-menu-item>
                                         <el-menu-item index="/CreateArticle">创建文章</el-menu-item>
                                     </el-submenu>
-                                    <el-menu-item index="/Home/MessageHandle" > <i class="el-icon-bell"></i>消息管理</el-menu-item>
+                                    <!-- <el-menu-item index="/Home/MessageHandle" > <i class="el-icon-bell"></i>消息管理</el-menu-item> -->
                                     <el-menu-item :index="'/Home/UserSetting/'+user.id" > <i class="el-icon-setting"></i>设置</el-menu-item>
                                     <el-menu-item index="/" @click="logout()"> <i class="el-icon-truck"></i>登出</el-menu-item>
                                 </el-submenu>

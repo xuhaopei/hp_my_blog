@@ -73,8 +73,8 @@
 
 <script>
 // 静态数据
-import { schoolList } from "@/assets/js/chinaUniversityList.js";
-import { majorList } from "@/assets/js/majorList.js";
+import { schoolList } from "@/utils/chinaUniversityList.js";
+import { majorList } from "@/utils/majorList.js";
 
 // 网络请求
 import { httpRegister } from "@/network/User.js";

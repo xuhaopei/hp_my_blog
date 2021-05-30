@@ -51,6 +51,29 @@ export function httpUserQuery(id) {
     });
 }
 /**
+ * 查询用户总数量
+ */
+export async function httpUserQuerySum() {
+    let msg = {};
+    try {
+        let {data} = await instance.request({
+            url: '/user/querySum',
+            method: 'get', // default
+            params: {
+                
+            },
+        });
+        msg = data;
+    } catch (error) {
+        Message({
+            showClose: true,
+            message: error,
+            type: 'error',
+        });        
+    }
+    return msg;
+}
+/**
  * 删除用户
  */
  export function httpUserDelete(ids) {

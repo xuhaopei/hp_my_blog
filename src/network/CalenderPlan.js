@@ -23,7 +23,7 @@ export function http_get_getCalenderPlan(date){
         url: '/calenderplan/queryOne',
         method: 'get', // default
         params: {
-            date: date
+            date: date,
         },
     });
 }
