@@ -36,7 +36,7 @@
       </el-row>
       <el-row type="flex" class="row-bg" justify="center">
         <div class="tip-wrapper">
-          未有账号？赶快<router-link to="/RegisterByEle">注册</router-link>吧
+          未有账号？请点击这里的<router-link to="/RegisterByEle" style="color:red">注册</router-link>吧
         </div>
       </el-row>
     </div>

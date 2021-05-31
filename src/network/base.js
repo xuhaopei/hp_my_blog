@@ -6,9 +6,9 @@ import {
 } from '@/assets/js/androidLoading.js';
 
 const instance = axios.create({
-  // baseURL: 'http://106.75.167.111:80',	          // 请求服务器的地址
-  // baseURL: 'http://106.75.167.111:3001',	        // 请求服务器的地址
-  baseURL: 'http://106.75.167.111:5200',                 // 服务器的地址
+  // baseURL: 'http://106.75.167.111:80',	          // 个人博客网站服务器的地址
+  baseURL: 'http://106.75.167.111:5200',          // 个人笔记网站服务器的地址
+  //baseURL: 'http://localhost:5200',
   timeout: 5000,                                    
 });
 

@@ -64,7 +64,7 @@
       </el-row>
       <el-row type="flex" class="row-bg" justify="center">
         <div class="tip-wrapper">
-          已有账号？赶快<router-link to="/LoginByEle">登录</router-link>吧
+          已有账号？请点击这里的<router-link to="/LoginByEle" style="color:red">登录</router-link>吧
         </div>
       </el-row>
     </div>
