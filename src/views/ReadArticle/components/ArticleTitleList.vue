@@ -2,8 +2,8 @@
   <div id="articleTitleList">
     <strong class="title">文章导航</strong>
     <nav>
-      <li v-for="(value, index) of titles" :key="index">
-        <a :href="'#' + value.idName" :title="value.innerText">{{
+      <li v-for="(value, index) of titles" :key="index" :class="value.nodeName">
+        <a :href="'#' + value.innerText" :title="value.innerText">{{
           value.innerText
         }}</a>
       </li>
@@ -96,6 +96,30 @@ export default {
     font-size: 18px;
     padding:0.5vw 0;
     border-bottom:1px solid rgba(0,0,0,0.1);
+  }
+  .H1{
+    font-weight: 600;
+    margin-left: 0vw;
+  }
+  .H2{
+    margin-left: 1.5vw;
+    font-weight: 500;
+  }
+  .H3{
+    margin-left: 3vw;
+    font-weight: 400;
+  }
+  .H4{
+    margin-left: 4.5vw;
+    font-weight: 300;
+  }
+  .H5{
+    margin-left: 6vw;
+    font-weight: 200;
+  }
+  .H6{
+    margin-left: 7.5vw;
+    font-weight: 100;
   }
 }
 </style>

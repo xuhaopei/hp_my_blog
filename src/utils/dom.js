@@ -1,17 +1,15 @@
 // 给元素数组添加id 返回对应id名与innerText。
 export function domHandle_setId(eleArray) {
-    let index = 0;
     let ids = [];
     eleArray.forEach(element => {
         let obj = {
-            idName: '',
-            innerText: ''
+            innerText: '',
+            nodeName:'',
         };
-        obj.idName = 'nav' + index;
         obj.innerText = element.innerText;
-        element.setAttribute("id", obj.idName);
+        obj.nodeName = element.nodeName
+        element.setAttribute("id", obj.innerText);
         ids.push(obj);
-        index++;
     });
     return ids;
 

@@ -13,7 +13,10 @@
             @click="canCross"
             type="success"
             style="margin-bottom:20px"
-            >审核</el-button
+            >
+            <span v-if="article.canCross == -1">未审核</span>
+            <span v-else>已审核</span>
+            </el-button
           >
           <el-badge
             :value="article.readTime"
@@ -203,6 +206,7 @@ export default {
               type: "success",
               message: "审核通过!",
             });
+            this.article.canCross = 1;
           });
         })
         .catch(() => {
